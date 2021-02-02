@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en" data-theme=""><head>
+    <title> Tobias Larysch | Deploying ML Models using Flask and Heroku </title>
+
+    
+    <meta charset="utf-8"><meta name="generator" content="Hugo 0.74.3" /><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+    <meta name="description" content="Economist, Data Enthusiast, Junior Programmer">
+    
+    <link rel="stylesheet"
+          href="../../css/style.min.9a6700e4461b50dccdddfc4f81dc65d77e7fca22c35665e398a0c36568db59c7.css"
+          integrity="sha256-mmcA5EYbUNzN3fxPgdxl135/yiLDVmXjmKDDZWjbWcc="
+          crossorigin="anonymous"
+          type="text/css">
+    
+    <link rel="stylesheet"
+        href="../../css/markupHighlight.min.9755453ffb7bc4cd220f86ebb5922107b49f193cc62fc17e9785d27b33a8bf5b.css"
+        integrity="sha256-l1VFP/t7xM0iD4brtZIhB7SfGTzGL8F&#43;l4XSezOov1s="
+        crossorigin="anonymous"
+        type="text/css">
+    
+        
+        
+        <link rel="stylesheet"
+        href="../../css/custom4.min.d4488bb11e5106d48d742a8228e00c24c3590a77d3e5456654f6001033217a70.css"
+        integrity="sha256-1EiLsR5RBtSNdCqCKOAMJMNZCnfT5UVmVPYAEDMhenA="
+        crossorigin="anonymous"
+        media="screen" />
+    
+        
+        
+        <link rel="stylesheet"
+        href="../../css/friend.min.d0809843e4028aaa20decda8dda26d1a3bae5e47e87311da5a10b607f015390a.css"
+        integrity="sha256-0ICYQ&#43;QCiqog3s2o3aJtGjuuXkfocxHaWhC2B/AVOQo="
+        crossorigin="anonymous"
+        media="screen" />
+    
+    <link rel="stylesheet" 
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css" 
+    integrity="sha512-+4zCK9k+qNFUR5X+cKL9EIR+ZOhtIloNl9GIKS57V1MyNsYpYcUrUeQc9vNfzsWfV28IaLL3i96P9sdNyeRssA==" 
+    crossorigin="anonymous" />
+
+    
+    <link rel="shortcut icon" href="../../favicons/favicon.ico" type="image/x-icon">
+    <link rel="apple-touch-icon" sizes="180x180" href="../../favicons/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="../../favicons/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="../../favicons/favicon-16x16.png">
+
+    <link rel="canonical" href="../../post/genredeploy/">
+
+    
+    
+    
+    
+    <script type="text/javascript"
+            src="../../js/anatole-header.min.d8599ee07b7d3f11bafbac30657ccc591e8d7fd36a9f580cd4c09e24e0e4a971.js"
+            integrity="sha256-2Fme4Ht9PxG6&#43;6wwZXzMWR6Nf9Nqn1gM1MCeJODkqXE="
+            crossorigin="anonymous"></script>
+
+
+    <script type="text/javascript"
+            src="../../js/custom.min.adead2e63eefe548b5ce0aa68303df62a2e2e975242f58d58c080fb3a61e11d7.js"
+            integrity="sha256-rerS5j7v5Ui1zgqmgwPfYqLi6XUkL1jVjAgPs6YeEdc="
+            crossorigin="anonymous"></script>
+    <meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Deploying ML Models using Flask and Heroku"/>
+<meta name="twitter:description" content="After building and training a ML model, the next step to actually generate business value is to deploy the model so that it can be used in production. In this blog I build a small App and deploy the genre classification model built in the last blogpost on Heroku."/>
+
+</head>
+<body><div class="sidebar . ">
+    <div class="logo-title">
+        <div class="title">
+            <img src="../../images/foto_neu.jpg" alt="profile picture">
+            <h3 title=""><a href="../../">Tobias Larysch - Portfolio Website</a></h3>
+            <div class="description">
+                <p>Economist, Data Enthusiast, Junior Programmer</p>
+            </div>
+        </div>
+    </div>
+    <ul class="social-links">
+        
+            <li>
+                <a href="https://www.linkedin.com/in/tobias-larysch-97981519b/" rel="me" aria-label="Linkedin">
+                    <i class="fab fa-linkedin fa-2x" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            <li>
+                <a href="https://github.com/tlary" rel="me" aria-label="GitHub">
+                    <i class="fab fa-github fa-2x" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            <li>
+                <a href="mailto:tobias-larysch@gmx.net" rel="me" aria-label="e-mail">
+                    <i class="fas fa-envelope fa-2x" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            <li>
+                <a href="https://www.xing.com/profile/Tobias_Larysch/cv" rel="me" aria-label="Xing">
+                    <i class="fab fa-xing fa-2x" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+    </ul>
+    <div class="footer">
+        <div class="by_farbox">&copy; Tobias Larysch  2021 </div>
+    </div>
+</div>
+<div class="main">
+    <div class="page-top  . ">
+    <a role="button" class="navbar-burger" data-target="navMenu" aria-label="menu" aria-expanded="false">
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+    </a>
+    <ul class="nav" id="navMenu">
+        
+        
+            
+            <li><a 
+                   href="../../"
+                        
+                   title="">Projects </a></li>
+        
+            
+            <li><a 
+                   href="../../publications/"
+                        
+                   title="">Publications</a></li>
+        
+            
+            <li><a 
+                   href="../../contact/"
+                        
+                   title="">Contact</a></li>
+        
+        
+        
+    </ul>
+</div>
+
+    <div class="autopagerize_page_element">
+        <div class="content">
+
+    <div class="post  . ">
+    	
+    	
+    		<nav id="TableOfContents">
+  <ul>
+    <li><a href="#1-building-the-app">1. Building the App</a></li>
+    <li><a href="#2-deploying-the-app-to-heroku">2. Deploying the App to Heroku</a></li>
+    <li><a href="#3-the-final-github-repo-and-the-app">3. The final Github Repo and the App</a></li>
+  </ul>
+</nav>
+        
+    	
+        <div class="post-content">
+            
+            <div class="post-title">
+                <h2>Deploying ML Models using Flask and Heroku</h3>
+                
+                    <div class="info">
+                        <em class="fas fa-calendar-day"></em>
+                        <span class="date"> 
+                                                Tue, Dec 22, 2020
+                                           </span>
+                        <em class="fas fa-stopwatch"></em>
+                        <span class="reading-time">6-minute read</span>
+                    </div>
+                    <div>
+                    	<hr style="height:1px;border-width:0;background-color:rgba(0,0,0,0.15)">
+                    </div>
+                
+            </div>
+            
+            
+	    <div class="post-content-text">
+    	        <p>Most people who consider themselves self-taught Data Scientists have probably started their journey by completing some of the countless online courses that are out there. These courses usually start with basic programming skills in R or Python, proceed with data cleaning and exploration, and usually end with basic model training and evaluation using some specific framework like caret (R) or scikit-learn (Python). However, stopping at this point does not provide practitioners to create business value by applying their newly learned skills.</p>
+<p>Often, Machine Learning and Deep Learning models end up in Jupyter Notebooks. These are great for exploration or model training, but usually do not aid in data driven decision making processes. Hence, in order to make use of the predictive analysis, models often need to be taken into production.</p>
+<p>In this notebook I describe the often neglected process of model deployment, which comes after training and building the model. There are many possibilities and frameworks for deploying models. In this post, I create a small App using Flask and basic HTML and deploy it using Heroku since it can be used for free and is perfect for small projects.</p>
+<p><a href="../../post/genreclassifier">In the last post</a> I built a model which classifies songs into one of three genres based on their lyrics. This model will be used in this Example.</p>
+<p>At first, we import the packages needed, which are Flask, and since we trained the model using fastai, fastai and sentencepiece as the tokenizer used in the model.</p>
+<div class="highlight"><pre class="chroma"><code class="language-python" data-lang="python"><span class="kn">from</span> <span class="nn">flask</span> <span class="kn">import</span> <span class="n">Flask</span><span class="p">,</span> <span class="n">render_template</span><span class="p">,</span> <span class="n">url_for</span><span class="p">,</span> <span class="n">redirect</span><span class="p">,</span> <span class="n">request</span>
+<span class="kn">from</span> <span class="nn">fastai.text.all</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">import</span> <span class="nn">sentencepiece</span>
+</code></pre></div><p>We exported the model and saved it to disk, such that we can now use it without needing to retrain it. We can simply import it:</p>
+<div class="highlight"><pre class="chroma"><code class="language-python" data-lang="python"><span class="n">learn_inf</span> <span class="o">=</span> <span class="n">load_learner</span><span class="p">(</span><span class="s2">&#34;genreModel.pkl&#34;</span><span class="p">)</span>
+</code></pre></div><h2 id="1-building-the-app">1. Building the App</h2>
+<p>We first initialize an object of the Flask class called app. Then, we create our first route, which will be the landing page of the App.</p>
+<div class="highlight"><pre class="chroma"><code class="language-python" data-lang="python"><span class="n">app</span> <span class="o">=</span> <span class="n">Flask</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+</code></pre></div><p>On this page, there should be a short introductory text and a field in which the user can paste song lyrics. Moreover, there should be a clickable button which starts the prediction.  This can be achieved by only a few lines of HTML which looks like the following:</p>
+<div class="highlight"><pre class="chroma"><code class="language-html" data-lang="html"><span class="p">&lt;</span><span class="nt">html</span><span class="p">&gt;</span>
+ <span class="p">&lt;</span><span class="nt">body</span><span class="p">&gt;</span>
+  <span class="p">&lt;</span><span class="nt">h1</span><span class="p">&gt;</span> Genre Classifier<span class="p">&lt;/</span><span class="nt">h1</span><span class="p">&gt;</span>
+  Willkommen beim Genre-Classifier für deutsche Musik. Füge im Feld unten einfach die Lyrics eines deutschen Songs ein, um zu erfahren, welchem Genre der Text am ehesten entspricht.
+  
+  <span class="p">&lt;</span><span class="nt">p</span><span class="p">&gt;</span>Derzeit unterstützte Genres:<span class="p">&lt;/</span><span class="nt">p</span><span class="p">&gt;</span>
+         <span class="p">&lt;</span><span class="nt">nav</span><span class="p">&gt;</span>
+           <span class="p">&lt;</span><span class="nt">ul</span><span class="p">&gt;</span>
+             <span class="p">&lt;</span><span class="nt">li</span><span class="p">&gt;</span>Hip-Hop<span class="p">&lt;/</span><span class="nt">li</span><span class="p">&gt;</span>
+             <span class="p">&lt;</span><span class="nt">li</span><span class="p">&gt;</span>Pop<span class="p">&lt;/</span><span class="nt">li</span><span class="p">&gt;</span>
+             <span class="p">&lt;</span><span class="nt">li</span><span class="p">&gt;</span>Schlager<span class="p">&lt;/</span><span class="nt">li</span><span class="p">&gt;</span>
+           <span class="p">&lt;/</span><span class="nt">ul</span><span class="p">&gt;</span>
+         <span class="p">&lt;/</span><span class="nt">nav</span><span class="p">&gt;</span>	
+  <span class="p">&lt;</span><span class="nt">form</span> <span class="na">action</span><span class="o">=</span><span class="s">&#34;{{ url_for(&#39;lyrics&#39;) }}&#34;</span> <span class="na">method</span><span class="o">=</span><span class="s">&#34;post&#34;</span> <span class="na">class</span><span class="o">=</span><span class="s">&#34;lyrics&#34;</span> <span class="na">id</span><span class="o">=</span><span class="s">&#34;textzeilen&#34;</span><span class="p">&gt;</span>
+    Lyrics:<span class="p">&lt;</span><span class="nt">br</span><span class="p">&gt;&lt;</span><span class="nt">br</span><span class="p">&gt;</span>
+  <span class="p">&lt;</span><span class="nt">textarea</span> <span class="na">id</span><span class="o">=</span><span class="s">&#34;textzeilen&#34;</span> <span class="na">rows</span><span class="o">=</span><span class="s">&#34;30&#34;</span> <span class="na">cols</span><span class="o">=</span><span class="s">&#34;60&#34;</span> <span class="na">name</span><span class="o">=</span><span class="s">&#34;lyrics&#34;</span><span class="p">&gt;&lt;/</span><span class="nt">textarea</span><span class="p">&gt;</span>
+  <span class="p">&lt;</span><span class="nt">br</span><span class="p">&gt;&lt;</span><span class="nt">br</span><span class="p">&gt;&lt;</span><span class="nt">br</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="nt">input</span> <span class="na">class</span><span class="o">=</span><span class="s">&#34;button&#34;</span> <span class="na">type</span><span class="o">=</span><span class="s">&#34;submit&#34;</span> <span class="na">value</span><span class="o">=</span><span class="s">&#34;Go!&#34;</span><span class="p">&gt;</span>
+  <span class="p">&lt;/</span><span class="nt">form</span><span class="p">&gt;</span>
+ <span class="p">&lt;/</span><span class="nt">body</span><span class="p">&gt;</span>
+<span class="p">&lt;/</span><span class="nt">html</span><span class="p">&gt;</span>
+</code></pre></div><p>In the root directory of the project, we create a folder called &ldquo;templates&rdquo;, paste the above code into an empty file and save it as &ldquo;index.html&rdquo;. We now tell Flask to render this html file when the base URL is accessed.</p>
+<div class="highlight"><pre class="chroma"><code class="language-python" data-lang="python"><span class="nd">@app.route</span><span class="p">(</span><span class="s2">&#34;/&#34;</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s2">&#34;GET&#34;</span><span class="p">])</span>
+<span class="k">def</span> <span class="nf">index</span><span class="p">():</span>
+    <span class="k">return</span> <span class="n">render_template</span><span class="p">(</span><span class="s2">&#34;index.html&#34;</span><span class="p">)</span>
+</code></pre></div><p>We further need a function which takes the lrics input from the user as an argument, passes it to the model and returns the prediction. TO achieve this, Flask&rsquo;s <code>request.form</code> is used. It returns the content from a HTML post form, which is exactly what the lyrics textarea on the index.html page is. The lyrics is then passed as input to fastai&rsquo;s predict function and the prediction is saved.</p>
+<div class="highlight"><pre class="chroma"><code class="language-python" data-lang="python"><span class="nd">@app.route</span><span class="p">(</span><span class="s2">&#34;/lyrics&#34;</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s2">&#34;POST&#34;</span><span class="p">])</span>
+<span class="k">def</span> <span class="nf">lyrics</span><span class="p">():</span>
+    <span class="n">lyrics</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">form</span><span class="p">[</span><span class="s2">&#34;lyrics&#34;</span><span class="p">]</span>
+    <span class="n">pred</span> <span class="o">=</span> <span class="n">learn_inf</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">lyrics</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>   
+</code></pre></div><p>The results page should show an image that somehow relates to one of the genres and the predicted genre. We choose one image per genre and save them as &ldquo;hiphop.jpg&rdquo;, &ldquo;schlager.jpg&rdquo;, and &ldquo;pop.jpg&rdquo; in a folder named static. Lastly, the results page should have a clickable button which redirects back to the landing page saying &ldquo;Do it again!&rdquo;. We define three html pages, one for each genre, which look as follows:</p>
+<div class="highlight"><pre class="chroma"><code class="language-html" data-lang="html"><span class="p">&lt;</span><span class="nt">html</span><span class="p">&gt;</span>
+ <span class="p">&lt;</span><span class="nt">body</span><span class="p">&gt;</span>
+  <span class="p">&lt;</span><span class="nt">div</span> <span class="na">align</span><span class="o">=</span><span class="s">&#34;center&#34;</span> <span class="na">style</span><span class="o">=</span><span class="s">&#34;padding-top:20px;&#34;</span><span class="p">&gt;</span>
+   <span class="p">&lt;</span><span class="nt">img</span> <span class="na">src</span><span class="o">=</span><span class="s">&#34;/static/genre.jpg&#34;</span><span class="p">&gt;</span>
+   <span class="p">&lt;</span><span class="nt">h3</span><span class="p">&gt;</span>{{ pred }}<span class="p">&lt;/</span><span class="nt">h3</span><span class="p">&gt;</span>
+   <span class="p">&lt;</span><span class="nt">br</span> <span class="p">/&gt;</span>
+   <span class="p">&lt;</span><span class="nt">form</span> <span class="na">action</span><span class="o">=</span><span class="s">&#34;{{ url_for(&#39;index&#39;) }}&#34;</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="nt">input</span> <span class="na">type</span><span class="o">=</span><span class="s">&#34;submit&#34;</span> <span class="na">value</span><span class="o">=</span><span class="s">&#34;Do it again!&#34;</span> <span class="p">/&gt;</span>
+   <span class="p">&lt;/</span><span class="nt">form</span><span class="p">&gt;</span>
+  <span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
+ <span class="p">&lt;/</span><span class="nt">body</span><span class="p">&gt;</span>
+<span class="p">&lt;/</span><span class="nt">html</span><span class="p">&gt;</span>
+</code></pre></div><p>Some string editing is added on the prediction and then the route renders the corresponding genre page:</p>
+<div class="highlight"><pre class="chroma"><code class="language-python" data-lang="python"><span class="nd">@app.route</span><span class="p">(</span><span class="s2">&#34;/lyrics&#34;</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s2">&#34;POST&#34;</span><span class="p">])</span>
+<span class="k">def</span> <span class="nf">lyrics</span><span class="p">():</span>
+    <span class="n">lyrics</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">form</span><span class="p">[</span><span class="s2">&#34;lyrics&#34;</span><span class="p">]</span>
+    <span class="n">pred</span> <span class="o">=</span> <span class="n">learn_inf</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">lyrics</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>   
+    
+    <span class="c1"># edit string output</span>
+    <span class="k">if</span> <span class="n">pred</span> <span class="o">==</span> <span class="s2">&#34;hiphop&#34;</span><span class="p">:</span>
+        <span class="n">pred</span> <span class="o">=</span> <span class="s2">&#34;Hip-Hop&#34;</span>
+    <span class="k">if</span> <span class="n">pred</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&#34;pop&#34;</span><span class="p">,</span> <span class="s2">&#34;schlager&#34;</span><span class="p">]:</span>
+        <span class="n">pred</span> <span class="o">=</span> <span class="n">pred</span><span class="o">.</span><span class="n">capitalize</span><span class="p">()</span>
+    
+    <span class="c1"># render corresponding html file</span>
+    <span class="k">if</span> <span class="n">pred</span> <span class="o">==</span> <span class="s2">&#34;Hip-Hop&#34;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">render_template</span><span class="p">(</span><span class="s2">&#34;hiphop.html&#34;</span><span class="p">,</span> <span class="n">pred</span><span class="o">=</span><span class="n">pred</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">pred</span> <span class="o">==</span> <span class="s2">&#34;Pop&#34;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">render_template</span><span class="p">(</span><span class="s2">&#34;pop.html&#34;</span><span class="p">,</span> <span class="n">pred</span><span class="o">=</span><span class="n">pred</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">pred</span> <span class="o">==</span> <span class="s2">&#34;Schlager&#34;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">render_template</span><span class="p">(</span><span class="s2">&#34;schlager.html&#34;</span><span class="p">,</span> <span class="n">pred</span><span class="o">=</span><span class="n">pred</span><span class="p">)</span>
+</code></pre></div><p>The app can be run and tested locally using the <code>run()</code> function.</p>
+<div class="highlight"><pre class="chroma"><code class="language-python" data-lang="python"><span class="n">app</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+</code></pre></div><h2 id="2-deploying-the-app-to-heroku">2. Deploying the App to Heroku</h2>
+<p>After building our App, we will now use <a href="https://www.heroku.com/">Heroku</a> to deploy it. The first step is to combine all of the above code snippets into a single app.py file.</p>
+<div class="highlight"><pre class="chroma"><code class="language-python" data-lang="python"><span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&#34;__main__&#34;</span><span class="p">:</span>
+    <span class="n">app</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">host</span><span class="o">=</span><span class="s1">&#39;0.0.0.0&#39;</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="mi">5000</span><span class="p">)</span>
+</code></pre></div><p>The above statement is included at the end of the script. This ensures that <code>app.run()</code> is run when the script is executed, e.g. from the commmand line. We then create a file named &ldquo;Procfile&rdquo; which contains &ldquo;web: python app.py&rdquo;. Under linux this can be done with the terminal:</p>
+<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash">!echo <span class="s2">&#34;web: python app.py&#34;</span> &gt; Procfile
+</code></pre></div><p>We further need a requirements.txt file which contains all the dependencies and python packages for the project. By providing this file, we make sure that all of these get installed when the App is deployed on Heroku. The following command line does this:</p>
+<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash">!pip freeze &gt; requirements.txt
+</code></pre></div><p>Next, we need to create a repository on github, initialize our project folder as a git repository and push it to the just created github repo. Since Github has a size limit of 100 MB for files, we use <a href="https://git-lfs.github.com/">git lfs</a> to track our model file, which is around 125 MB.</p>
+<p>The next step is to create a Heroku account. There are two ways to deploy an app, either using Heroku CLI or using the website. We use the  latter approach here. After logging in, choose &ldquo;Create new app&rdquo;, add a name for your app and create the app. Click on &ldquo;Deploy&rdquo;, choose Github as the deployment method, connect to your Github and choose the repository. To start the deployment, click on &ldquo;Deploy Branch&rdquo; on the bottom of the page.</p>
+<p>Since we used git lfs in our project, we need to adjust some settings since Heroku cannot handle git lfs files by default. To solve this issue, navigate to &ldquo;Settings&rdquo; and click on &ldquo;Add buildpack&rdquo;. Paste &ldquo;<a href="https://github.com/raxod502/heroku-buildpack-git-lfs.git%22">https://github.com/raxod502/heroku-buildpack-git-lfs.git&quot;</a> as the URL. Lastly, we need to add config vars for this buildpack. Choose &ldquo;Reveal Config Vars&rdquo; and use &ldquo;HEROKU_BUILDPACK_GIT_LFS_REPO&rdquo; for the key field. The value needs to be a personal access token which can be generated via GitHub. To do so, go to your GitHub &gt; Settings &gt; Developer Settings &gt; Personal access tokens. Here you can generate a new SSH key. Copy this key. The value field requires your token in the following form:</p>
+<blockquote>
+<p>&ldquo;https://<token>@github.com/username/repository.git&rdquo;</p>
+</blockquote>
+<p>In addition to the git lfs buildpack we also need to add the python buildpack. To do this, simply click on &ldquo;Add buildpack&rdquo; and choose Python from the list.</p>
+<p>You can now navigate back to &ldquo;Deploy&rdquo; and click on &ldquo;Deploy Branch&rdquo;. The app is now being built and deployed, which might take a few minutes. After that, you can access your website.</p>
+<h2 id="3-the-final-github-repo-and-the-app">3. The final Github Repo and the App</h2>
+<p>The complete Github Repository for this project can be seen <a href="https://github.com/tlary/music-genre-classifier">here</a>. My App can be accessed via <a href="https://whichgenreisthis.herokuapp.com/">https://whichgenreisthis.herokuapp.com/</a>.</p>
+
+            </div></div>
+        
+        
+
+        
+    </div>
+    
+
+
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript"
+        src="../../js/jquery.min.86b1e8f819ee2d9099a783e50b49dff24282545fc40773861f9126b921532e4c.js"
+        integrity="sha256-hrHo&#43;BnuLZCZp4PlC0nf8kKCVF/EB3OGH5EmuSFTLkw="
+        crossorigin="anonymous"></script>
+
+
+
+
+<script type="text/javascript"
+        src="../../js/bundle.min.0f9c74cb78f13d1f15f33daff4037c70354f98acfbb97a6f61708966675c3cae.js"
+        integrity="sha256-D5x0y3jxPR8V8z2v9AN8cDVPmKz7uXpvYXCJZmdcPK4="
+        crossorigin="anonymous"></script>
+
+<script type="text/javascript"
+        src="../../js/medium-zoom.min.92f21c856129f84aeb719459b3e6ac621a3032fd7b180a18c04e1d12083f8aba.js"
+        integrity="sha256-kvIchWEp&#43;ErrcZRZs&#43;asYhowMv17GAoYwE4dEgg/iro="
+        crossorigin="anonymous"></script>
+<link rel="stylesheet"
+              href="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.css"
+              integrity="sha384-zB1R0rpPzHqg7Kpt0Aljp8JPLqbXI3bhnPWROx27a9N0Ll6ZP/&#43;DiW/UqRcLbRjq"
+              crossorigin="anonymous"><script defer
+                src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.js"
+                integrity="sha384-y23I5Q6l&#43;B6vatafAwxRu/0oK/79VlbSz7Q9aiSZUvyWYIYsd&#43;qj&#43;o24G5ZU2zJz"
+                crossorigin="anonymous"></script><script defer
+                src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/contrib/auto-render.min.js"
+                integrity="sha384-kWPLUVMOks5AQFrykwIup5lo0m3iMkkHrD0uJ4H5cjeGihAutqP0yW0J6dpFiVkI"
+                crossorigin="anonymous"
+                onload="renderMathInElement(document.body);"></script></body>
+
+</html>

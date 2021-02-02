@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="en" data-theme=""><head>
+    <title> Tobias Larysch | Generic ML Inference on Heterogeneous Treatment Effects </title>
+
+    
+    <meta charset="utf-8"><meta name="generator" content="Hugo 0.74.3" /><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+    <meta name="description" content="Economist, Data Enthusiast, Junior Programmer">
+    
+    <link rel="stylesheet"
+          href="../../css/style.min.9a6700e4461b50dccdddfc4f81dc65d77e7fca22c35665e398a0c36568db59c7.css"
+          integrity="sha256-mmcA5EYbUNzN3fxPgdxl135/yiLDVmXjmKDDZWjbWcc="
+          crossorigin="anonymous"
+          type="text/css">
+    
+    <link rel="stylesheet"
+        href="../../css/markupHighlight.min.9755453ffb7bc4cd220f86ebb5922107b49f193cc62fc17e9785d27b33a8bf5b.css"
+        integrity="sha256-l1VFP/t7xM0iD4brtZIhB7SfGTzGL8F&#43;l4XSezOov1s="
+        crossorigin="anonymous"
+        type="text/css">
+    
+        
+        
+        <link rel="stylesheet"
+        href="../../css/custom4.min.d4488bb11e5106d48d742a8228e00c24c3590a77d3e5456654f6001033217a70.css"
+        integrity="sha256-1EiLsR5RBtSNdCqCKOAMJMNZCnfT5UVmVPYAEDMhenA="
+        crossorigin="anonymous"
+        media="screen" />
+    
+        
+        
+        <link rel="stylesheet"
+        href="../../css/friend.min.d0809843e4028aaa20decda8dda26d1a3bae5e47e87311da5a10b607f015390a.css"
+        integrity="sha256-0ICYQ&#43;QCiqog3s2o3aJtGjuuXkfocxHaWhC2B/AVOQo="
+        crossorigin="anonymous"
+        media="screen" />
+    
+    <link rel="stylesheet" 
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css" 
+    integrity="sha512-+4zCK9k+qNFUR5X+cKL9EIR+ZOhtIloNl9GIKS57V1MyNsYpYcUrUeQc9vNfzsWfV28IaLL3i96P9sdNyeRssA==" 
+    crossorigin="anonymous" />
+
+    
+    <link rel="shortcut icon" href="../../favicons/favicon.ico" type="image/x-icon">
+    <link rel="apple-touch-icon" sizes="180x180" href="../../favicons/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="../../favicons/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="../../favicons/favicon-16x16.png">
+
+    <link rel="canonical" href="../../post/genericmlinference/">
+
+    
+    
+    
+    
+    <script type="text/javascript"
+            src="../../js/anatole-header.min.d8599ee07b7d3f11bafbac30657ccc591e8d7fd36a9f580cd4c09e24e0e4a971.js"
+            integrity="sha256-2Fme4Ht9PxG6&#43;6wwZXzMWR6Nf9Nqn1gM1MCeJODkqXE="
+            crossorigin="anonymous"></script>
+
+
+    <script type="text/javascript"
+            src="../../js/custom.min.adead2e63eefe548b5ce0aa68303df62a2e2e975242f58d58c080fb3a61e11d7.js"
+            integrity="sha256-rerS5j7v5Ui1zgqmgwPfYqLi6XUkL1jVjAgPs6YeEdc="
+            crossorigin="anonymous"></script>
+    <meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Generic ML Inference on Heterogeneous Treatment Effects"/>
+<meta name="twitter:description" content="This blog post provides an introduction to and brief explanation of a recently developed method combining Machine Learning algorithms and classical ideas from econometrics to obtain statistically valid inferential statements on heterogeneous treatment effects in Randomized Controlled Trials (RCTs)."/>
+
+</head>
+<body><div class="sidebar . ">
+    <div class="logo-title">
+        <div class="title">
+            <img src="../../images/foto_neu.jpg" alt="profile picture">
+            <h3 title=""><a href="../../">Tobias Larysch - Portfolio Website</a></h3>
+            <div class="description">
+                <p>Economist, Data Enthusiast, Junior Programmer</p>
+            </div>
+        </div>
+    </div>
+    <ul class="social-links">
+        
+            <li>
+                <a href="https://www.linkedin.com/in/tobias-larysch-97981519b/" rel="me" aria-label="Linkedin">
+                    <i class="fab fa-linkedin fa-2x" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            <li>
+                <a href="https://github.com/tlary" rel="me" aria-label="GitHub">
+                    <i class="fab fa-github fa-2x" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            <li>
+                <a href="mailto:tobias-larysch@gmx.net" rel="me" aria-label="e-mail">
+                    <i class="fas fa-envelope fa-2x" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            <li>
+                <a href="https://www.xing.com/profile/Tobias_Larysch/cv" rel="me" aria-label="Xing">
+                    <i class="fab fa-xing fa-2x" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+    </ul>
+    <div class="footer">
+        <div class="by_farbox">&copy; Tobias Larysch  2021 </div>
+    </div>
+</div>
+<div class="main">
+    <div class="page-top  . ">
+    <a role="button" class="navbar-burger" data-target="navMenu" aria-label="menu" aria-expanded="false">
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+    </a>
+    <ul class="nav" id="navMenu">
+        
+        
+            
+            <li><a 
+                   href="../../"
+                        
+                   title="">Projects </a></li>
+        
+            
+            <li><a 
+                   href="../../publications/"
+                        
+                   title="">Publications</a></li>
+        
+            
+            <li><a 
+                   href="../../contact/"
+                        
+                   title="">Contact</a></li>
+        
+        
+        
+    </ul>
+</div>
+
+    <div class="autopagerize_page_element">
+        <div class="content">
+
+    <div class="post  . ">
+    	
+    	
+    		<nav id="TableOfContents">
+  <ul>
+    <li><a href="#1-notation-and-framework">1. Notation and Framework</a></li>
+    <li><a href="#2-best-linear-predictor---blp">2. Best Linear Predictor - BLP</a></li>
+    <li><a href="#3-sorted-group-average-treatment-effects---gates">3. Sorted Group Average Treatment Effects - GATES</a></li>
+    <li><a href="#4-sample-splitting-and-estimation-uncertainty">4. Sample Splitting and Estimation Uncertainty</a></li>
+    <li><a href="#5-implementation-and-example">5. Implementation and Example</a></li>
+  </ul>
+</nav>
+        
+    	
+        <div class="post-content">
+            
+            <div class="post-title">
+                <h2>Generic ML Inference on Heterogeneous Treatment Effects</h3>
+                
+                    <div class="info">
+                        <em class="fas fa-calendar-day"></em>
+                        <span class="date"> 
+                                                Thu, Jan 28, 2021
+                                           </span>
+                        <em class="fas fa-stopwatch"></em>
+                        <span class="reading-time">11-minute read</span>
+                    </div>
+                    <div>
+                    	<hr style="height:1px;border-width:0;background-color:rgba(0,0,0,0.15)">
+                    </div>
+                
+            </div>
+            
+            
+	    <div class="post-content-text">
+    	        <p>In empirical economics, researchers are often interested in how single factors and variables influence outcome variables of interest. The research questions are usually in the form of: <em>How does y change (on average) as a result of a change in x?</em> More formally, this is called the average causal effect of a change in x on y. Several econometric techniques and methods were and are being developed to isolate this effect in a variety of settings and obtain consistent and unbiased estimates. In contrast to that, Machine Learning (ML) focuses primarily on prediction problems. In most cases, it does not matter which of the predictors actually drives the outcome as long as the model results in an accurate prediction.</p>
+<p>Although both fields have different main tasks and strengths, there is econometric work which combines techniques from both topics. In this blog post, I will introduce one of such methods developed by <a href="https://arxiv.org/abs/1712.04802">Chernozhukov and coauthors</a>. I start with an introduction of the framework used in the paper and provide a short overview and explanation.</p>
+<h2 id="1-notation-and-framework">1. Notation and Framework</h2>
+<p>The authors provide an empirical approach to assess heterogeneous treatment effects (HTE) in Randomized Controlled Trials (RCTs). In these experiments, the participants, often not even aware that they are taking part in a study, are randomly divided into a control and a treatment group. This ensures that the difference between the measured outcome variable in both groups can be attributed to the difference in treatment status, i.e. to the intervention itself. HTE describe how the effect of the studied intervention, also called treatment, varies among participants, i.e. if there exist heterogeneity, the treatment effect is not the same for all observations. In contrast to that, if there is no heterogeneity, the treatment effect is simply a constant. The method aims at making statements on HTE by estimating key features of the so-called conditional average treatment effect (CATE) function. This function describes the average treatment effects as a function of observed characteristics, also called covariates.</p>
+<p>To more rigorously define causal effects introduced above, I will use <a href="https://content.apa.org/record/1975-06502-001">Rubin&rsquo;s causal model of potential outcomes</a>. Let \({D\in{0,1}}\) be a binary variable indicating treatment status and \(Z\) be a vector of observed covariates. \(Y(1)\) and \(Y(0)\) denote potential outcomes under treatment and under no treatment. The baseline conditional average (BCA) function and the conditional average treatment effect function are defined as:</p>
+<p>$$
+b_0(Z) := \textbf{E} \big[Y(0) \mid Z \big]
+$$
+$$
+s_0(Z) := \textbf{E} \big[Y(1)\mid Z \big]-\textbf{E} \big[Y(0) \mid Z \big].
+$$</p>
+<p>Using these definitions the outcome function can be written as</p>
+<p>$$
+Y = b_0(Z) + s_0(Z)D + U.
+$$</p>
+<p>The main idea from the paper is that a proxy \(S(Z)\) of the true CATE function \(s_0(Z)\) can be used to make inferential statements about the actual function which are statistically valid and justified. In order to create this proxy, any Machine Learning algorithm can be used. To do so, one predictive model is trained in the control group and a second predictive model is trained in the treatment group. In a second step, these models are used to predict the (hypothetical) outcomes under treatment and no treatment for the pooled sample of treated and control observations.</p>
+<p>Using this proxy, the authors consider three key features of the true CATE function:</p>
+<ol>
+<li>The Best Linear Predictor (BLP) of \(s_0(Z)\) using \(S(Z)\)</li>
+<li>Group Average Treatment Effects (GATES) based on the proxy</li>
+<li>Average characteristics of the most and least affected groups, called Classification Analysis (CLAN)</li>
+</ol>
+<p>In this post, I will cover the first two characteristics.</p>
+<h2 id="2-best-linear-predictor---blp">2. Best Linear Predictor - BLP</h2>
+<p>The authors show that the parameters \(\beta_1\) and \(\beta_2\) solving the problem of the best linear approximation can be identified by the following weighted linear regression:</p>
+<p>$$
+Y=\alpha^{\prime} X_1 + \beta_1\big(D-p(Z)\big)+\beta_2\big(D-p(Z)\big)\big(S(Z)-\textbf{E} [S(Z)]\big)+\epsilon,
+$$</p>
+<p>with weights</p>
+<p>$$
+w(Z)= \frac{1}{p(Z)(1-p(Z))}
+$$</p>
+<p>\(X_1\) contains a constant, the estimated BCA function and the CATE proxy. \(p(Z)\) denotes the propensity score, i.e. the probability of being treatment. For example, in a RCT in which half of the participants are randomly chosen to be treated, the propensity score for each observation is 0.5.</p>
+<p>The parameter \(\beta_1\) from this weighted regression is equal to \(\textbf{E}[s_0(Z)]\), hence it corresponds to the average treatment effect for all observations. \(\beta_2\), on the other hand, corresponds to the coefficient of a simple linear regression of \(s_0(Z)\) on \(S(Z)\) and can be utilized to evaluate how well \(S(Z)\) approximates \(s_0(Z)\) as well as to gain insights about treatment effect heterogeneity. If \(\beta_2 = 0\), the CATE proxy and the true function are completely uncorrelated. Additionally, \(\beta_2\) would also be zero if there was no heterogeneity, and thus \(s_0(Z)\) was a constant. In contrast to this, \(\beta_2 \ne 0\) implies that there is substantial heterogeneity and that it can be predicted by the proxy \(S(Z)\). Therefore, testing for heterogeneous treatment effects corresponds to testing the hypothesis that \(\beta_2 \ne 0\).</p>
+<h2 id="3-sorted-group-average-treatment-effects---gates">3. Sorted Group Average Treatment Effects - GATES</h2>
+<p>In addition to the BLP of the CATE function, the authors provide a strategy to identify groups of observations, which are more or less affected by the treatment, and to estimate ATEs in those groups. To do this, the observations are first sorted according to the predicted ML proxy \(S(Z)\) and then divided into \(k\) non-overlapping groups \(G_1, G_2, &hellip;, G_K\) of arbitrary sizes. They might for example be chosen by quantiles of the proxy predictor. The parameters of interest are the average treatment effects in these groups, called sorted group average treatment effects (GATES) which are denoted by</p>
+<p>$$
+\gamma_k = \textbf{E}\big[s_0(Z) \mid G_k\big] \text{ for } k=1, &hellip;, K.
+$$</p>
+<p>These parameters can again be identified by a weighted linear regression using the same weights as in the estimation of the BLP coefficients. Specifically, the regression has the following form:</p>
+<p>$$
+Y=\alpha^{\prime} X_1 + \sum_{k=1}^K \gamma_k\big(D-p(Z)\big)\textbf{1}(G_k) + \nu.
+$$</p>
+<p>Chernozhukov and coauthors show that the coefficients \(\gamma_k\) from this regression can be interpreted as the average treatment effects in the respective \(k\)th group.</p>
+<h2 id="4-sample-splitting-and-estimation-uncertainty">4. Sample Splitting and Estimation Uncertainty</h2>
+<p>To avoid overfitting the data, the data is split into two roughly equally sized samples: an auxiliary and a main sample. The auxiliary dataset is used to construct and train the ML models, and the main sample is used to actually construct the proxy and estimate the parameters of interest. In order to prevent accidentally splitting the sample into subsamples that largely deviate from the whole sample, the authors suggest 1) to run the estimation for many different splits (their recommendation is 100 splits) and to report medians of the estimates; and 2) to account for the additional uncertainty from sample splitting by reporting adjusted confidence intervals and p-values. For details, refer to the paper or to the detailed explanation in <a href="https://github.com/tlary/genericmlinference">my master thesis</a>.</p>
+<p>In addition to that, the authors also provide a way to examine how well the respective algorithm approximates the true CATE function. They provide multiple ways to calculate these information criteria from both the BLP as well as the GATES estimation.</p>
+<h2 id="5-implementation-and-example">5. Implementation and Example</h2>
+<p>The below stated implementation algorithm summarizes the steps needed to apply the above introduced estimation approach:</p>
+<p><img src="genericMLInference_files/algorithm.png" alt="png"></p>
+<p>I recently implemented this estimation approach in my master thesis with a few additional tweaks and changes. However, in <a href="https://github.com/tlary/genericmlinference">this Github Repo</a> I also provide code recreating the methodology as stated in the above provided algorithm. The implementation builds on <a href="http://topepo.github.io/caret/index.html">Max Kuhn&rsquo;s caret package</a> to facilitate the construction of the CATE proxy using multiple algorithms. Currently, the provided code implements the approach for Elastic Net, XGBoost, Random Forests, simple Neural Networks and Neural Networks with a preceding principal component analysis (PCA) step. Since the code is rather extensive, I will not describe it in detail here, but rather explain how to use it and provide a short synthetic example.</p>
+<p>The code base is split into three broad categories: the first category comprises helper functions used throughout the main functions and implement some custom statistics, as for example upper and lower medians as explained in the authors&rsquo; paper. The second category contains the functionality which actually implements the estimation approach and the analyses. This function returns a large object containing all the results. The functions from the third category are then used to aggregate and extract the results.</p>
+<p>The main function used for the estimation is called <code>create_cddf_object()</code>:</p>
+<div class="highlight"><pre class="chroma"><code class="language-R" data-lang="R"><span class="n">create_cddf_object</span> <span class="o">&lt;-</span> <span class="nf">function</span><span class="p">(</span><span class="n">datatable</span><span class="p">,</span> <span class="n">treatVar</span><span class="p">,</span> <span class="n">outcomeVar</span><span class="p">,</span> <span class="n">groupVar</span><span class="o">=</span><span class="kc">NULL</span><span class="p">,</span> 
+                               <span class="n">method</span><span class="p">,</span> <span class="n">colsNotToUse</span><span class="o">=</span><span class="kc">NULL</span><span class="p">,</span> <span class="n">numSplits</span><span class="o">=</span><span class="m">100</span><span class="p">,</span> 
+                               <span class="n">preprocess</span> <span class="o">=</span> <span class="nf">c</span><span class="p">(</span><span class="s">&#34;center&#34;</span><span class="p">,</span> <span class="s">&#34;scale&#34;</span><span class="p">),</span>
+                               <span class="n">sigLevel</span><span class="o">=</span><span class="m">0.05</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="m">123</span><span class="p">,</span> <span class="n">numGroups</span><span class="o">=</span><span class="m">10</span><span class="p">,</span> <span class="n">quantiles</span><span class="o">=</span><span class="kc">NULL</span><span class="p">,</span>
+                               <span class="n">CLANvars</span><span class="o">=</span><span class="kc">NULL</span><span class="p">,</span> <span class="n">propensityScores</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="m">0</span><span class="p">)</span>
+</code></pre></div><p>The function takes the following inputs:</p>
+<ul>
+<li><em>datatable</em>: input data as a data.table</li>
+<li><em>treatVar</em>: string containing the name of the binary treatment indicator</li>
+<li><em>outcomeVar</em>: string containing the name of the outcome variable</li>
+<li><em>groupVar</em>: string containing the name of a grouping variable, e.g. postcode; needs to be a factor variable; if provided, stratified sample splitting is used</li>
+<li><em>method</em>: string containing the name of the ML algorithm used to create the CATE proxy; currently implemented: &ldquo;enet&rdquo;, &ldquo;ranger&rdquo;, &ldquo;xgbTree&rdquo;, &ldquo;nnet&rdquo;, &ldquo;pcaNnet&rdquo;</li>
+<li><em>colsNotToUse</em>: vector of column names that should not be used for the model training</li>
+<li><em>numSplits</em>: number of data splits</li>
+<li><em>preprocess</em>: preprocessing option as used in caret&rsquo;s <code>train()</code> function</li>
+<li><em>sigLevel</em>: significance level</li>
+<li><em>seed</em>: seed to create identical splits for different methods</li>
+<li><em>numGroups</em>: number of non-overlapping groups for GATES estimation; if provided, observations are split into (roughly) equally sized groups</li>
+<li><em>quantiles</em>: alternative to <em>numGroups</em>; instead of number of groups a list of quantiles can be provided for custom groups; only one out of <em>numGroups</em> and <em>quantiles</em> can be used</li>
+<li><em>CLANvars</em>: vector containing names of variables that should be used for the classification analysis (see paper or master thesis for more details)</li>
+<li><em>propensityScores</em>: numeric vector containing the propensity scores for the observations contained in <em>datatable</em></li>
+<li><em>verbose</em>: values &gt; 0 can be used to provide more information about the estimation process</li>
+</ul>
+<p>Calling this function returns an object containing multiple nested lists with the results. This object can then be passed to the class of <code>extract_</code> functions to extract the desired information. These functions contain:</p>
+<ul>
+<li><code>extract_blp()</code></li>
+<li><code>extract_gates()</code></li>
+<li><code>extract_performance_metrics()</code></li>
+<li><code>extract_test_results()</code> [not covered here]</li>
+</ul>
+<p>In the following I use a brief example to demonstrate the main functionality:</p>
+<p>I use a synthetic dataset generated with the <a href="https://humboldt-wi.github.io/blog/research/applied_predictive_modeling_19/data_generating_process_blogpost/">python opossum package</a>, the code can be found in my GitHub repo as well. The data consists of 20,000 observations, half of which are considered treated. There are heterogeneous treatment effects, around 50% of the sample have positive treatment effects, the remaining 50% exhibit negative treatment effects. Condsidering the treated units only, the distribution of treatment effects looks like this:</p>
+<div class="highlight"><pre class="chroma"><code class="language-R" data-lang="R"><span class="nf">source</span><span class="p">(</span><span class="s">&#34;cddf_implementation.R&#34;</span><span class="p">)</span>
+</code></pre></div><p><img src="genericMLInference_files/genericMLInference_21_0.png" alt="png"></p>
+<p>The average treatment effect is -0.060 and the GATES for 5 groups are as follows:</p>
+<div class="highlight"><pre class="chroma"><code class="language-R" data-lang="R"><span class="n">treatment</span> <span class="o">&lt;-</span> <span class="nf">fread</span><span class="p">(</span><span class="s">&#34;treatment.csv&#34;</span><span class="p">)</span>
+<span class="n">q</span> <span class="o">&lt;-</span> <span class="nf">quantcut</span><span class="p">(</span><span class="n">treatment\\</span><span class="p">)</span><span class="n">TE</span><span class="p">,</span> <span class="n">q</span><span class="o">=</span><span class="m">5</span><span class="p">)</span>
+<span class="n">treatment[</span><span class="p">,</span> <span class="n">group</span> <span class="o">:=</span> <span class="n">q]</span>
+<span class="n">treatment[</span><span class="p">,</span> <span class="n">group</span> <span class="o">:=</span> <span class="nf">factor</span><span class="p">(</span><span class="n">group</span><span class="p">,</span> <span class="n">labels</span> <span class="o">=</span> <span class="m">1</span><span class="o">:</span><span class="m">5</span><span class="p">)</span><span class="n">]</span>
+<span class="nf">setorder</span><span class="p">(</span><span class="n">treatment</span><span class="p">,</span> <span class="n">group</span><span class="p">)</span>
+<span class="n">treatment[</span><span class="p">,</span> <span class="nf">mean</span><span class="p">(</span><span class="n">TE</span><span class="p">),</span> <span class="n">by</span><span class="o">=</span><span class="n">group]</span>
+</code></pre></div><table border="0" class="dataframe">
+  <thead>
+    <tr>
+      <th></th>
+      <th style="text-align: center;">Group 1</th>
+      <th style="text-align: center;">Group 2</th>
+      <th style="text-align: center;">Group 3</th>
+      <th style="text-align: center;">Group 4</th>
+      <th style="text-align: center;">Group 5</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr style="text-align: center;">
+      <td style="text-align: left;">Average Treatment Effect (ATE)</td>
+      <td>-0.986 </td>
+      <td>-0.165</td>
+      <td>0.000</td>
+      <td>0.129</td>
+      <td>0.703</td>
+    </tr>
+  </tbody>
+</table>
+<p>We now start by creating the results object for the implemented methods. Since the treated observations are randomly chosen, the propensity scores are 0.5 for all units.</p>
+<p><em>Note: Depending on the size of the data, the estimation procedure may take some time. The runtime using elastic net and nnet/pcaNNet can be reduced by parallel tuning the models. To do so, simply register a parallel backend before running the code. The code would then look like the following:</em></p>
+<div class="highlight"><pre class="chroma"><code class="language-R" data-lang="R"><span class="n">cl</span> <span class="o">&lt;-</span> <span class="nf">makePSOCKcluster</span><span class="p">(</span><span class="nf">detectCores</span><span class="p">()</span><span class="m">-1</span><span class="p">)</span> <span class="c1"># leave one core for OS</span>
+<span class="nf">registerDoParallel</span><span class="p">(</span><span class="n">cl</span><span class="p">)</span> <span class="c1"># register parallel backend</span>
+<span class="n">cddfEnet</span> <span class="o">&lt;-</span> <span class="nf">create_cddf_object</span><span class="p">(</span><span class="n">dt</span><span class="p">,</span> <span class="n">treatVar</span><span class="o">=</span><span class="s">&#34;treatment&#34;</span><span class="p">,</span> <span class="n">outcomeVar</span><span class="o">=</span><span class="s">&#34;outcome&#34;</span><span class="p">,</span>
+                           <span class="n">method</span><span class="o">=</span><span class="s">&#34;enet&#34;</span><span class="p">,</span> <span class="n">numSplits</span><span class="o">=</span><span class="m">100</span><span class="p">,</span> <span class="n">numGroups</span><span class="o">=</span><span class="m">5</span><span class="p">,</span> 
+                           <span class="n">propensityScores</span><span class="o">=</span><span class="n">propScores</span><span class="p">)</span>
+<span class="nf">stopCluster</span><span class="p">(</span><span class="n">cl</span><span class="p">)</span> <span class="c1"># stop the cluster</span>
+<span class="n">registerDoSEQ</span> <span class="c1"># register sequential backend again</span>
+</code></pre></div><p><em>XGBoost and ranger run in parallel by default without explicitly registering a parallel backend.</em></p>
+<div class="highlight"><pre class="chroma"><code class="language-R" data-lang="R"><span class="n">dt</span> <span class="o">&lt;-</span> <span class="nf">fread</span><span class="p">(</span><span class="s">&#34;syntheticData.csv&#34;</span><span class="p">)</span>
+<span class="n">propScores</span>  <span class="o">&lt;-</span> <span class="nf">rep</span><span class="p">(</span><span class="m">0.5</span><span class="p">,</span> <span class="m">20000</span><span class="p">)</span>
+
+
+<span class="n">cddfEnet</span> <span class="o">&lt;-</span> <span class="nf">create_cddf_object</span><span class="p">(</span><span class="n">dt</span><span class="p">,</span> <span class="n">treatVar</span><span class="o">=</span><span class="s">&#34;treatment&#34;</span><span class="p">,</span> <span class="n">outcomeVar</span><span class="o">=</span><span class="s">&#34;outcome&#34;</span><span class="p">,</span>
+                           <span class="n">method</span><span class="o">=</span><span class="s">&#34;enet&#34;</span><span class="p">,</span> <span class="n">numSplits</span><span class="o">=</span><span class="m">100</span><span class="p">,</span> <span class="n">numGroups</span><span class="o">=</span><span class="m">5</span><span class="p">,</span> 
+                           <span class="n">propensityScores</span><span class="o">=</span><span class="n">propScores</span><span class="p">)</span>
+
+<span class="n">cddfRF</span> <span class="o">&lt;-</span> <span class="nf">create_cddf_object</span><span class="p">(</span><span class="n">dt</span><span class="p">,</span> <span class="n">treatVar</span><span class="o">=</span><span class="s">&#34;treatment&#34;</span><span class="p">,</span> <span class="n">outcomeVar</span><span class="o">=</span><span class="s">&#34;outcome&#34;</span><span class="p">,</span>
+                           <span class="n">method</span><span class="o">=</span><span class="s">&#34;ranger&#34;</span><span class="p">,</span> <span class="n">numSplits</span><span class="o">=</span><span class="m">100</span><span class="p">,</span> <span class="n">numGroups</span><span class="o">=</span><span class="m">5</span><span class="p">,</span> 
+                           <span class="n">propensityScores</span><span class="o">=</span><span class="n">propScores</span><span class="p">)</span>
+
+<span class="n">cddfXGB</span> <span class="o">&lt;-</span> <span class="nf">create_cddf_object</span><span class="p">(</span><span class="n">dt</span><span class="p">,</span> <span class="n">treatVar</span><span class="o">=</span><span class="s">&#34;treatment&#34;</span><span class="p">,</span> <span class="n">outcomeVar</span><span class="o">=</span><span class="s">&#34;outcome&#34;</span><span class="p">,</span>
+                           <span class="n">method</span><span class="o">=</span><span class="s">&#34;xgbTree&#34;</span><span class="p">,</span> <span class="n">numSplits</span><span class="o">=</span><span class="m">100</span><span class="p">,</span> <span class="n">numGroups</span><span class="o">=</span><span class="m">5</span><span class="p">,</span> 
+                           <span class="n">propensityScores</span><span class="o">=</span><span class="n">propScores</span><span class="p">)</span>
+
+<span class="n">cddfPcaNNet</span> <span class="o">&lt;-</span> <span class="nf">create_cddf_object</span><span class="p">(</span><span class="n">dt</span><span class="p">,</span> <span class="n">treatVar</span><span class="o">=</span><span class="s">&#34;treatment&#34;</span><span class="p">,</span> <span class="n">outcomeVar</span><span class="o">=</span><span class="s">&#34;outcome&#34;</span><span class="p">,</span>
+                           <span class="n">method</span><span class="o">=</span><span class="s">&#34;pcaNNet&#34;</span><span class="p">,</span> <span class="n">numSplits</span><span class="o">=</span><span class="m">100</span><span class="p">,</span> <span class="n">numGroups</span><span class="o">=</span><span class="m">5</span><span class="p">,</span> 
+                           <span class="n">propensityScores</span><span class="o">=</span><span class="n">propScores</span><span class="p">)</span>
+</code></pre></div><p>Before reviewing the results, we first take a look at the performance criteria using <code>extract_performance_metrics()</code> to see which algorithm provides the best approximation to the CATE function. The higher the criteria, the better the approximation.</p>
+<div class="highlight"><pre class="chroma"><code class="language-R" data-lang="R"><span class="n">perfEnet</span> <span class="o">&lt;-</span> <span class="nf">extract_performance_metrics</span><span class="p">(</span><span class="n">cddfEnet</span><span class="p">)</span>
+<span class="n">perfRF</span>  <span class="o">&lt;-</span> <span class="nf">extract_performance_metrics</span><span class="p">(</span><span class="n">cddfRF</span><span class="p">)</span>
+<span class="n">perfXGB</span>  <span class="o">&lt;-</span> <span class="nf">extract_performance_metrics</span><span class="p">(</span><span class="n">cddfXGB</span><span class="p">)</span>
+<span class="n">perfPcaNNet</span>  <span class="o">&lt;-</span> <span class="nf">extract_performance_metrics</span><span class="p">(</span><span class="n">cddfPcaNNet</span><span class="p">)</span>
+</code></pre></div><table border="0" class="dataframe">
+  <thead>
+    <tr>
+      <th></th>
+      <th style="text-align: center;">Elastic Net</th>
+      <th style="text-align: center;">Random Forest</th>
+      <th style="text-align: center;">XGBoost</th>
+      <th style="text-align: center;">Neural Net with PCA</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr style="text-align: center;">
+      <td style="text-align: left;">BLP-Criterion</td>
+      <td>0.0012 </td>
+      <td>0.0777</td>
+      <td>0.0744</td>
+      <td>0.4601</td>
+    </tr>
+    <tr style="text-align: center;">
+      <td style="text-align: left;">GATES-Criterion</td>
+      <td>0.0292 </td>
+      <td>0.0971</td>
+      <td>0.0958</td>
+      <td>0.4845</td>
+    </tr>
+  </tbody>
+</table>
+<p>As can be seen from the table, the neural network with preceding PCA approximates the CATE by far the best. Hence, in the following only the results from this algorithm are reported. The BLP results reveal an estimated ATE of -0.107, which is close to the true ATE of -0.060. Moreover, as expected, from \)\beta_2\) it follows that there exists heterogeneity and that the pcaNNet model in fact provides a very good approximation since the HET parameter it is close to one and highly significant.</p>
+<div class="highlight"><pre class="chroma"><code class="language-R" data-lang="R"><span class="n">blpPcaNNet</span>  <span class="o">&lt;-</span> <span class="nf">extract_blp</span><span class="p">(</span><span class="n">cddfPcaNNet</span><span class="p">)</span>
+<span class="n">blpPcaNNet[[2]]</span>
+</code></pre></div><table border="0" class="dataframe">
+  <thead>
+    <tr>
+      <th></th>
+      <th style="text-align: center;">ATE (&beta;&#x2081;)</th>
+      <th style="text-align: center;">HET (&beta;&#x2082;)</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr style="text-align: center;">
+      <td style="text-align: left;">Coefficients</td>
+      <td>-0.107 </td>
+      <td>0.928</td>
+    </tr>
+    <tr style="text-align: center;">
+      <td style="text-align: left;">Confidence bands</td>
+      <td>(-0.148 ; -0.066)</td>
+      <td>(0.871 ; 0.984)</td>
+    </tr>
+    <tr style="text-align: center;">
+      <td style="text-align: left;">Adjusted p-values</td>
+      <td>[0.000]</td>
+      <td>[0.000]</td>
+    </tr>
+  </tbody>
+</table>
+<p>Looking at the GATES, we see that the estimated group average treatment effects are also close to the actual effects. The parameters for the first, last and middle group are almost exactly the true values. The average treatment effects for the second and fourth group seem to be overestimated in their absolute size.</p>
+<div class="highlight"><pre class="chroma"><code class="language-R" data-lang="R"><span class="n">gatesPcaNNet</span> <span class="o">&lt;-</span> <span class="nf">extract_gates</span><span class="p">(</span><span class="n">cddfPcaNNet</span><span class="p">,</span> <span class="n">numOfGroups</span><span class="o">=</span><span class="m">5</span><span class="p">)</span>
+<span class="n">gatesPcaNNet[[1]]</span>
+</code></pre></div><table border="0" class="dataframe">
+  <thead>
+    <tr>
+      <th></th>
+      <th style="text-align: center;">Group 1 <br> (&gamma;&#x2081;)</th>
+      <th style="text-align: center;">Group 2 <br> (&gamma;&#x2082;)</th>
+      <th style="text-align: center;">Group 3 <br> (&gamma;&#x2083;)</th>
+      <th style="text-align: center;">Group 4 <br> (&gamma;&#x2084;)</th>
+      <th style="text-align: center;">Group 5 <br> (&gamma;&#x2085;)</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr style="text-align: center;">
+      <td style="text-align: left;">Coefficients</td>
+      <td>-1.068</td>
+      <td>-0.697</td>
+      <td>-0.003</td>
+      <td>0.499</td>
+      <td>0.741</td>
+    </tr>
+    <tr style="text-align: center;">
+      <td style="text-align: left;">Confidence bands</td>
+      <td>(-1.159 ; -0.976)</td>
+      <td>(-0.788 ; -0.605)</td>
+      <td>(-0.096 ; 0.089) </td>
+      <td>(0.408 ; 0.590)</td>
+      <td>(0.650 ; 0.833)</td>
+    </tr>
+    <tr style="text-align: center;">
+      <td style="text-align: left;">Adjusted p-values</td>
+      <td>[0.000]</td>
+      <td>[0.000]</td>
+      <td>[1.000]</td>
+      <td>[0.000]</td>
+      <td>[0.000]</td>
+    </tr>
+  </tbody>
+</table>
+<p>To sum up the results, the <code>plot_gates()</code> function can be used to provide a visual overview of the estimated effects. It takes three arguments: an object returned by <code>extract_gates()</code>, an object returned by <code>extract_blp()</code>, and an optional plot title.</p>
+<div class="highlight"><pre class="chroma"><code class="language-R" data-lang="R"><span class="nf">plot_gates</span><span class="p">(</span><span class="n">gatesPcaNNet</span><span class="p">,</span> <span class="n">blpPcaNNet[[2]]</span><span class="p">)</span>
+</code></pre></div><p><img src="genericMLInference_files/genericMLInference_46_0.png" alt="png"></p>
+
+            </div></div>
+        
+        
+
+        
+    </div>
+    
+
+
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript"
+        src="../../js/jquery.min.86b1e8f819ee2d9099a783e50b49dff24282545fc40773861f9126b921532e4c.js"
+        integrity="sha256-hrHo&#43;BnuLZCZp4PlC0nf8kKCVF/EB3OGH5EmuSFTLkw="
+        crossorigin="anonymous"></script>
+
+
+
+
+<script type="text/javascript"
+        src="../../js/bundle.min.0f9c74cb78f13d1f15f33daff4037c70354f98acfbb97a6f61708966675c3cae.js"
+        integrity="sha256-D5x0y3jxPR8V8z2v9AN8cDVPmKz7uXpvYXCJZmdcPK4="
+        crossorigin="anonymous"></script>
+
+<script type="text/javascript"
+        src="../../js/medium-zoom.min.92f21c856129f84aeb719459b3e6ac621a3032fd7b180a18c04e1d12083f8aba.js"
+        integrity="sha256-kvIchWEp&#43;ErrcZRZs&#43;asYhowMv17GAoYwE4dEgg/iro="
+        crossorigin="anonymous"></script>
+<link rel="stylesheet"
+              href="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.css"
+              integrity="sha384-zB1R0rpPzHqg7Kpt0Aljp8JPLqbXI3bhnPWROx27a9N0Ll6ZP/&#43;DiW/UqRcLbRjq"
+              crossorigin="anonymous"><script defer
+                src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.js"
+                integrity="sha384-y23I5Q6l&#43;B6vatafAwxRu/0oK/79VlbSz7Q9aiSZUvyWYIYsd&#43;qj&#43;o24G5ZU2zJz"
+                crossorigin="anonymous"></script><script defer
+                src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/contrib/auto-render.min.js"
+                integrity="sha384-kWPLUVMOks5AQFrykwIup5lo0m3iMkkHrD0uJ4H5cjeGihAutqP0yW0J6dpFiVkI"
+                crossorigin="anonymous"
+                onload="renderMathInElement(document.body);"></script></body>
+
+</html>

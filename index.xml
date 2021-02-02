@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Tobias Larysch: Personal Portfolio</title>
+    <link>/</link>
+    <description>Recent content on Tobias Larysch: Personal Portfolio</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en</language>
+    <lastBuildDate>Thu, 28 Jan 2021 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Generic ML Inference on Heterogeneous Treatment Effects</title>
+      <link>/post/genericmlinference/</link>
+      <pubDate>Thu, 28 Jan 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/post/genericmlinference/</guid>
+      <description>This blog post provides an introduction to and brief explanation of a recently developed method combining Machine Learning algorithms and classical ideas from econometrics to obtain statistically valid inferential statements on heterogeneous treatment effects in Randomized Controlled Trials (RCTs).</description>
+    </item>
+    
+    <item>
+      <title>The beautiful Game - Scraping xG and xGA from understat.com</title>
+      <link>/post/footyscrapes/</link>
+      <pubDate>Tue, 05 Jan 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/post/footyscrapes/</guid>
+      <description>This blogpost contains the code for a Web Scraping project to extract the soccer metrics expected goals (xG) and expected goals against (xGA) from understat.com as well as additional match statistics. The code works for all listed leagues and seasons.</description>
+    </item>
+    
+    <item>
+      <title>Streamlit: Deploying ML Models the easy way</title>
+      <link>/post/genre_streamlit/</link>
+      <pubDate>Tue, 29 Dec 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/post/genre_streamlit/</guid>
+      <description>In this blogpost I describe the process of building a good-looking ML App using Streamlit. The app again implements the genre classification model, however the whole process is much easier and faster.</description>
+    </item>
+    
+    <item>
+      <title>Deploying ML Models using Flask and Heroku</title>
+      <link>/post/genredeploy/</link>
+      <pubDate>Tue, 22 Dec 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/post/genredeploy/</guid>
+      <description>After building and training a ML model, the next step to actually generate business value is to deploy the model so that it can be used in production. In this blog I build a small App and deploy the genre classification model built in the last blogpost on Heroku.</description>
+    </item>
+    
+    <item>
+      <title>Building a Genre Classifier using fastai</title>
+      <link>/post/genreclassifier/</link>
+      <pubDate>Thu, 10 Dec 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/post/genreclassifier/</guid>
+      <description>In this project I build a neural net to classify songs into one of three genres based on their lyrics. The lyrics are obtained via the lyricsgenius package and the model is built with the powerful fastai library.</description>
+    </item>
+    
+    <item>
+      <title>A Forecast a day keeps the Doctor away - Predicting Influenza Rates</title>
+      <link>/post/curaio_clean/</link>
+      <pubDate>Tue, 24 Sep 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/post/curaio_clean/</guid>
+      <description>The aim of the project is to predict disease rates, more precisely influenza-like illnesses rates (ILI rates). On the one hand historical time series data were used, on the other hand the data basis was extended by Google Trends data.</description>
+    </item>
+    
+    <item>
+      <title>Titanic: Machine Learning from Disaster - 2021 Update: Streamlit</title>
+      <link>/post/titanic/</link>
+      <pubDate>Fri, 19 Jul 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/post/titanic/</guid>
+      <description>This blogpost contains code for the &lt;a href=&#34;https://www.kaggle.com/c/titanic&#34;&gt;Kaggle Titanic challenge&lt;/a&gt;. It is a well-known beginner challenge and its goal is to build a binary classification model to predict if passengers would probably have survived the Titanic disaster or not. The focus of this blogpost is on Exploratory Data Analysis and some Feature Engineering. Later on, I built and deployed a small ML app using Streamlit and Streamlit Sharing.</description>
+    </item>
+    
+    <item>
+      <title>Kaggle Challenge: House Prices</title>
+      <link>/post/house_prices/</link>
+      <pubDate>Thu, 13 Jun 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/post/house_prices/</guid>
+      <description>This blogpost contains code to the &lt;a href=&#34;https://www.kaggle.com/c/house-prices-advanced-regression-techniques/overview&#34;&gt;Kaggle House Price Challenge&lt;/a&gt;. The aim of this blogpost is to get familiar to most commonly used Python data science stack - data preprocessing and cleaning with pandas and numpy, model building and evaluation using scikit-learn and different algorithms.</description>
+    </item>
+    
+    <item>
+      <title></title>
+      <link>/archives/</link>
+      <pubDate>Tue, 28 May 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/archives/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Contact</title>
+      <link>/contact/</link>
+      <pubDate>Fri, 08 Mar 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/contact/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title></title>
+      <link>/publications/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>/publications/</guid>
+      <description>Research Publications 
+Frondel, M., Kükenthal, V., Larysch, T., and Osberghaus, D.</description>
+    </item>
+    
+  </channel>
+</rss>

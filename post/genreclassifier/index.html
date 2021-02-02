@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html lang="en" data-theme=""><head>
+    <title> Tobias Larysch | Building a Genre Classifier using fastai </title>
+
+    
+    <meta charset="utf-8"><meta name="generator" content="Hugo 0.74.3" /><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+    <meta name="description" content="Economist, Data Enthusiast, Junior Programmer">
+    
+    <link rel="stylesheet"
+          href="../../css/style.min.9a6700e4461b50dccdddfc4f81dc65d77e7fca22c35665e398a0c36568db59c7.css"
+          integrity="sha256-mmcA5EYbUNzN3fxPgdxl135/yiLDVmXjmKDDZWjbWcc="
+          crossorigin="anonymous"
+          type="text/css">
+    
+    <link rel="stylesheet"
+        href="../../css/markupHighlight.min.9755453ffb7bc4cd220f86ebb5922107b49f193cc62fc17e9785d27b33a8bf5b.css"
+        integrity="sha256-l1VFP/t7xM0iD4brtZIhB7SfGTzGL8F&#43;l4XSezOov1s="
+        crossorigin="anonymous"
+        type="text/css">
+    
+        
+        
+        <link rel="stylesheet"
+        href="../../css/custom4.min.d4488bb11e5106d48d742a8228e00c24c3590a77d3e5456654f6001033217a70.css"
+        integrity="sha256-1EiLsR5RBtSNdCqCKOAMJMNZCnfT5UVmVPYAEDMhenA="
+        crossorigin="anonymous"
+        media="screen" />
+    
+        
+        
+        <link rel="stylesheet"
+        href="../../css/friend.min.d0809843e4028aaa20decda8dda26d1a3bae5e47e87311da5a10b607f015390a.css"
+        integrity="sha256-0ICYQ&#43;QCiqog3s2o3aJtGjuuXkfocxHaWhC2B/AVOQo="
+        crossorigin="anonymous"
+        media="screen" />
+    
+    <link rel="stylesheet" 
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css" 
+    integrity="sha512-+4zCK9k+qNFUR5X+cKL9EIR+ZOhtIloNl9GIKS57V1MyNsYpYcUrUeQc9vNfzsWfV28IaLL3i96P9sdNyeRssA==" 
+    crossorigin="anonymous" />
+
+    
+    <link rel="shortcut icon" href="../../favicons/favicon.ico" type="image/x-icon">
+    <link rel="apple-touch-icon" sizes="180x180" href="../../favicons/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="../../favicons/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="../../favicons/favicon-16x16.png">
+
+    <link rel="canonical" href="../../post/genreclassifier/">
+
+    
+    
+    
+    
+    <script type="text/javascript"
+            src="../../js/anatole-header.min.d8599ee07b7d3f11bafbac30657ccc591e8d7fd36a9f580cd4c09e24e0e4a971.js"
+            integrity="sha256-2Fme4Ht9PxG6&#43;6wwZXzMWR6Nf9Nqn1gM1MCeJODkqXE="
+            crossorigin="anonymous"></script>
+
+
+    <script type="text/javascript"
+            src="../../js/custom.min.adead2e63eefe548b5ce0aa68303df62a2e2e975242f58d58c080fb3a61e11d7.js"
+            integrity="sha256-rerS5j7v5Ui1zgqmgwPfYqLi6XUkL1jVjAgPs6YeEdc="
+            crossorigin="anonymous"></script>
+    <meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Building a Genre Classifier using fastai"/>
+<meta name="twitter:description" content="In this project I build a neural net to classify songs into one of three genres based on their lyrics. The lyrics are obtained via the lyricsgenius package and the model is built with the powerful fastai library."/>
+
+</head>
+<body><div class="sidebar . ">
+    <div class="logo-title">
+        <div class="title">
+            <img src="../../images/foto_neu.jpg" alt="profile picture">
+            <h3 title=""><a href="../../">Tobias Larysch - Portfolio Website</a></h3>
+            <div class="description">
+                <p>Economist, Data Enthusiast, Junior Programmer</p>
+            </div>
+        </div>
+    </div>
+    <ul class="social-links">
+        
+            <li>
+                <a href="https://www.linkedin.com/in/tobias-larysch-97981519b/" rel="me" aria-label="Linkedin">
+                    <i class="fab fa-linkedin fa-2x" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            <li>
+                <a href="https://github.com/tlary" rel="me" aria-label="GitHub">
+                    <i class="fab fa-github fa-2x" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            <li>
+                <a href="mailto:tobias-larysch@gmx.net" rel="me" aria-label="e-mail">
+                    <i class="fas fa-envelope fa-2x" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            <li>
+                <a href="https://www.xing.com/profile/Tobias_Larysch/cv" rel="me" aria-label="Xing">
+                    <i class="fab fa-xing fa-2x" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+    </ul>
+    <div class="footer">
+        <div class="by_farbox">&copy; Tobias Larysch  2021 </div>
+    </div>
+</div>
+<div class="main">
+    <div class="page-top  . ">
+    <a role="button" class="navbar-burger" data-target="navMenu" aria-label="menu" aria-expanded="false">
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+    </a>
+    <ul class="nav" id="navMenu">
+        
+        
+            
+            <li><a 
+                   href="../../"
+                        
+                   title="">Projects </a></li>
+        
+            
+            <li><a 
+                   href="../../publications/"
+                        
+                   title="">Publications</a></li>
+        
+            
+            <li><a 
+                   href="../../contact/"
+                        
+                   title="">Contact</a></li>
+        
+        
+        
+    </ul>
+</div>
+
+    <div class="autopagerize_page_element">
+        <div class="content">
+
+    <div class="post  . ">
+    	
+    	
+    		<nav id="TableOfContents">
+  <ul>
+    <li><a href="#1-getting-the-lyrics-data">1. Getting the Lyrics Data</a></li>
+    <li><a href="#2-training-the-language-model">2. Training the Language Model</a></li>
+    <li><a href="#3-train-the-genre-classifier">3. Train the Genre Classifier</a></li>
+    <li><a href="#4-exporting--saving-the-model">4. Exporting / Saving the Model</a></li>
+  </ul>
+</nav>
+        
+    	
+        <div class="post-content">
+            
+            <div class="post-title">
+                <h2>Building a Genre Classifier using fastai</h3>
+                
+                    <div class="info">
+                        <em class="fas fa-calendar-day"></em>
+                        <span class="date"> 
+                                                Thu, Dec 10, 2020
+                                           </span>
+                        <em class="fas fa-stopwatch"></em>
+                        <span class="reading-time">10-minute read</span>
+                    </div>
+                    <div>
+                    	<hr style="height:1px;border-width:0;background-color:rgba(0,0,0,0.15)">
+                    </div>
+                
+            </div>
+            
+            
+	    <div class="post-content-text">
+    	        <p>Natural Language Processing (NLP) is very useful for many use cases - Chatbots, Speech Recognition, or Sentiment Analysis to determine customers&rsquo; satisfaction from social media comments. In this project, I explore NLP using the fastai library.</p>
+<p><a href="https://github.com/fastai/fastai">fastai</a> is a python deep learning library developed by Jeremy Howard and Sylvain Gugger (their paper on the library can be found <a href="https://www.mdpi.com/2078-2489/11/2/108/htm">here</a>. In an <a href="https://www.fast.ai/2020/08/21/fastai2-launch/">introductory blogpost</a> the authors describe it as follows:</p>
+<blockquote>
+<p>&ldquo;fastai is a deep learning library which provides practitioners with high-level components that can quickly and easily provide state-of-the-art results in standard deep learning domains, and provides researchers with low-level components that can be mixed and matched to build new approaches. It aims to do both things without substantial compromises in ease of use, flexibility, or performance. (&hellip;) These abstractions can be expressed concisely and clearly by leveraging the dynamism of the underlying Python language and the flexibility of the PyTorch library.</p>
+</blockquote>
+<p>I will use fastai to train a model which outputs a song&rsquo;s genre based on its lyrics. To facilitate training I use the so-called &ldquo;ULMFiT approach&rdquo;. The ULMFit approach works as follows:</p>
+<ol>
+<li>At first, a so-called language model is trained on a large text corpus. The language model&rsquo;s task is to guess the next word in a sequence of words.</li>
+<li>This general language model is fine-tuned on the text corpus used for the classification task, i.e. in this case on the song lyrics. This is done to learn and adapt to the specific characteristics of the corpus.</li>
+<li>The fine-tuned language model is eventually used to train the classifier.</li>
+</ol>
+<p><img src="https://docs.fast.ai/images/ulmfit.png" alt="ULMFit approach. Source: fastai docs"></p>
+<center>Source: <a href="https://docs.fast.ai/tutorial.text.html#The-ULMFiT-approach">fastai docs</a></center>
+<h2 id="1-getting-the-lyrics-data">1. Getting the Lyrics Data</h2>
+<p>The first step in this project is to collect some data. Since the goal is to train a classifier based on lyrics we need a corpus of song texts. <a href="https://docs.genius.com/">Genius</a> provides a free application programming interface (API) which can be used to extract various information for songs, albums and artists. While the API cannot be used to directly get lyrics, there is a package called lyricsgenius that does just that. <a href="https://lyricsgenius.readthedocs.io/en/master/">lyricsgenius</a> utilizes the API to extract information and uses this information to actually scrape the song lyrics using the <a href="https://pypi.org/project/beautifulsoup4/">Beautiful Soup</a> package.</p>
+<p>In order to use lyricsgenius, one needs to sign up for the genius api using a and create a <a href="https://genius.com/api-clients">client access token</a>. After the token is created, it can be stored in a .env file. This way the token does not need to be hard coded in the script. Hence, a .env file is created containing</p>
+<blockquote>
+<p>CLIENT_ACCESS_TOKEN=XXXXX</p>
+</blockquote>
+<p>where XXXXX is the personalized token. After this is done, we load the packages and load the client token into our environment.</p>
+<div class="highlight"><pre class="chroma"><code class="language-python" data-lang="python"><span class="kn">from</span> <span class="nn">dotenv</span> <span class="kn">import</span> <span class="n">load_dotenv</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">lyricsgenius</span> <span class="kn">as</span> <span class="nn">lg</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="kn">as</span> <span class="nn">pd</span>
+<span class="kn">from</span> <span class="nn">pandas.io.json</span> <span class="kn">import</span> <span class="n">json_normalize</span>
+<span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">import</span> <span class="nn">fastbook</span>
+<span class="kn">from</span> <span class="nn">fastai.text.all</span> <span class="kn">import</span> <span class="o">*</span>
+
+<span class="c1"># load environment variables</span>
+<span class="c1"># requires CLIENT_ACCESS_TOKEN from genius API</span>
+<span class="n">load_dotenv</span><span class="p">()</span>
+</code></pre></div><p>In the next step, the genius class is initiated using our access token:</p>
+<div class="highlight"><pre class="chroma"><code class="language-python" data-lang="python"><span class="c1"># initiate genius</span>
+<span class="n">token</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&#34;CLIENT_ACCESS_TOKEN&#34;</span><span class="p">)</span>
+<span class="n">genius</span> <span class="o">=</span> <span class="n">lg</span><span class="o">.</span><span class="n">Genius</span><span class="p">(</span><span class="n">token</span><span class="p">,</span> <span class="n">remove_section_headers</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">skip_non_songs</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+</code></pre></div><p>From the documentation, we learn that getting and saving the lyrics for all songs from an artist can be done using only two lines of code. To avoid repetitive code, we write a small function, which iterates through a list of artists, collects all the lyrics and saves them as single JSON files named after the artists.</p>
+<div class="highlight"><pre class="chroma"><code class="language-python" data-lang="python"><span class="k">def</span> <span class="nf">get_lyrics</span><span class="p">(</span><span class="n">token</span><span class="p">,</span> <span class="n">artists</span><span class="p">,</span> <span class="n">filepath</span><span class="o">=</span><span class="s2">&#34;.&#34;</span><span class="p">):</span>
+    <span class="n">genius</span> <span class="o">=</span> <span class="n">lg</span><span class="o">.</span><span class="n">Genius</span><span class="p">(</span><span class="n">token</span><span class="p">,</span> <span class="n">remove_section_headers</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">skip_non_songs</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">artist</span> <span class="ow">in</span> <span class="n">artists</span><span class="p">:</span>
+        <span class="n">lyrics</span> <span class="o">=</span> <span class="n">genius</span><span class="o">.</span><span class="n">search_artist</span><span class="p">(</span><span class="n">artist</span><span class="p">,</span> <span class="n">get_full_info</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+        <span class="n">lyrics</span><span class="o">.</span><span class="n">save_lyrics</span><span class="p">()</span>
+</code></pre></div><p>The goal for our model is to classify German songs into one of three genres: Hip-Hop, German Pop, or Schlager. For this project, we choose three artists for every genre with large discographies:</p>
+<ul>
+<li><strong>Hip-Hop:</strong> Kool Savas, Samy Deluxe, Capital Bra</li>
+<li><strong>Pop:</strong> Herbert Grönemeyer, Silbermond, Mark Forster</li>
+<li><strong>Schlager:</strong> Helene Fischer, Wolfgang Petry, Matthias Reim</li>
+</ul>
+<div class="highlight"><pre class="chroma"><code class="language-python" data-lang="python"><span class="n">artists</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&#34;Kool Savas&#34;</span><span class="p">,</span> <span class="s2">&#34;Samy Deluxe&#34;</span><span class="p">,</span> <span class="s2">&#34;Capital Bra&#34;</span><span class="p">,</span>
+           <span class="s2">&#34;Herbert Grönemeyer&#34;</span><span class="p">,</span> <span class="s2">&#34;Silbermond&#34;</span><span class="p">,</span> <span class="s2">&#34;Mark Forster&#34;</span><span class="p">,</span>
+           <span class="s2">&#34;Helene Fischer&#34;</span><span class="p">,</span> <span class="s2">&#34;Wolfgang Petry&#34;</span><span class="p">,</span> <span class="s2">&#34;Matthias Reim&#34;</span><span class="p">]</span>
+<span class="n">get_lyrics</span><span class="p">(</span><span class="n">token</span><span class="o">=</span><span class="n">token</span><span class="p">,</span> <span class="n">artists</span><span class="o">=</span><span class="n">artists</span><span class="p">)</span>
+</code></pre></div><p>In a last step, we load all the lyrics into a single pandas DataFrame and create the target variable used for the genre classification later on, i.e. the genre, and save the data as a csv file.</p>
+<div class="highlight"><pre class="chroma"><code class="language-python" data-lang="python"><span class="n">dfList</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span> <span class="c1"># create empty list to store the DataFrames</span>
+<span class="k">for</span> <span class="nb">file</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">():</span>
+    <span class="k">if</span> <span class="nb">file</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">&#34;.json&#34;</span><span class="p">):</span> <span class="c1"># iterate over all .json files, i.e. the lyrics files</span>
+        <span class="n">artist</span> <span class="o">=</span> <span class="nb">file</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&#34;Lyrics_&#34;</span><span class="p">,</span> <span class="s2">&#34;&#34;</span><span class="p">)</span> <span class="c1"># extract artist name from file name </span>
+        <span class="n">artist</span> <span class="o">=</span> <span class="n">artist</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&#34;.json&#34;</span><span class="p">,</span> <span class="s2">&#34;&#34;</span><span class="p">)</span> <span class="c1"># extract artist name from file name</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="nb">file</span><span class="p">)</span> <span class="k">as</span> <span class="n">json_data</span><span class="p">:</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">json_data</span><span class="p">)</span>
+        <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s2">&#34;songs&#34;</span><span class="p">])</span> <span class="c1"># extract lyrics</span>
+        <span class="k">if</span> <span class="n">artist</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&#34;KoolSavas&#34;</span><span class="p">,</span> <span class="s2">&#34;SamyDeluxe&#34;</span><span class="p">,</span> <span class="s2">&#34;CapitalBra&#34;</span><span class="p">]:</span>
+            <span class="n">genre</span> <span class="o">=</span> <span class="s2">&#34;hiphop&#34;</span>
+        <span class="k">elif</span> <span class="n">artist</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&#34;HeleneFischer&#34;</span><span class="p">,</span> <span class="s2">&#34;WolfgangPetry&#34;</span><span class="p">,</span> <span class="s2">&#34;MatthiasReim&#34;</span><span class="p">]:</span>
+            <span class="n">genre</span> <span class="o">=</span> <span class="s2">&#34;schlager&#34;</span>
+        <span class="k">elif</span> <span class="n">artist</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&#34;Silbermond&#34;</span><span class="p">,</span> <span class="s2">&#34;HerbertGrönemeyer&#34;</span><span class="p">,</span> <span class="s2">&#34;MarkForster&#34;</span><span class="p">]:</span>
+            <span class="n">genre</span> <span class="o">=</span> <span class="s2">&#34;pop&#34;</span>
+        <span class="n">df</span><span class="p">[</span><span class="s2">&#34;genre&#34;</span><span class="p">]</span> <span class="o">=</span> <span class="n">genre</span> <span class="c1"># add genre column</span>
+        <span class="n">dfList</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">df</span><span class="p">)</span> <span class="c1"># add to DataFrames to list</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">continue</span>
+        
+<span class="c1"># combine list to single pandas DataFrame</span>
+<span class="n">finalDF</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">dfList</span><span class="p">)</span>
+<span class="n">lyrics</span> <span class="o">=</span> <span class="n">finalDF</span><span class="p">[[</span><span class="s2">&#34;lyrics&#34;</span><span class="p">,</span> <span class="s2">&#34;genre&#34;</span><span class="p">]]</span>
+<span class="c1"># remove all entries without lyrics</span>
+<span class="n">notNone</span> <span class="o">=</span> <span class="n">lyrics</span><span class="o">.</span><span class="n">notnull</span><span class="p">()</span>
+<span class="n">lyrics</span> <span class="o">=</span> <span class="n">lyrics</span><span class="p">[</span><span class="n">notNone</span><span class="p">]</span>
+<span class="c1"># save lyrics as csv</span>
+<span class="n">lyrics</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="s2">&#34;./lyrics.csv&#34;</span><span class="p">)</span>
+</code></pre></div><h2 id="2-training-the-language-model">2. Training the Language Model</h2>
+<p>The fastai library provides a built-in language model which is pretrained on  Wikipedia. However, it is trained on English articles, while the lyrics used in this project are German. Hence, we will use another pretrained language model built and provided by <a href="https://github.com/floleuerer/fastai_ulmfit_german">Florian Leuerer</a>. It is trained on the German Wikipedia with a vocab size of 30,000 words. We download the model and the vocab:</p>
+<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash"><span class="c1"># download the pretrained german language model from floleuerer</span>
+<span class="c1"># https://github.com/floleuerer/fastai_ulmfit_german</span>
+!wget http://meansqua.red/files/de_ulmfit/30k/de_wikitext.pth -P models
+!wget http://meansqua.red/files/de_ulmfit/30k/de_wikitext_vocab.pkl -P models
+</code></pre></div><div class="highlight"><pre class="chroma"><code class="language-python" data-lang="python"><span class="c1"># specifying paths</span>
+<span class="n">path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)</span>
+<span class="n">model_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">f</span><span class="s1">&#39;{path.absolute()}/models&#39;</span><span class="p">)</span>
+<span class="n">spm_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">path</span><span class="o">/</span><span class="s1">&#39;models/spm_de_ft&#39;</span><span class="p">)</span>
+</code></pre></div><p>We can now load the data from the csv file into a pandas DataFrame again.</p>
+<div class="highlight"><pre class="chroma"><code class="language-python" data-lang="python"><span class="n">lyrics</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&#34;lyrics.csv&#34;</span><span class="p">)</span> <span class="c1"># load the lyrics into DF</span>
+<span class="n">lyrics</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="s2">&#34;Unnamed: 0&#34;</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span> <span class="c1"># drop first column</span>
+</code></pre></div><p>The DataFrame has got 2 columns: the &ldquo;lyrics&rdquo; column contains all the lyrics for a single song, while the &ldquo;genre&rdquo; column indicates the genre, i.e. Hip-Hop, Pop, or Schlager.</p>
+<div class="highlight"><pre class="chroma"><code class="language-python" data-lang="python"><span class="n">lyrics</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+</code></pre></div><div>
+<table border="0" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>lyrics</th>
+      <th>genre</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>Ich habe einen Schatz gefunden\nUnd er trägt deinen Namen\nSo wunderschön und wertvoll\nMit keinem Geld der Welt zu bezahlen\nDu schläfst neben mir ein\nIch könnt dich die ganze Nacht betrachten\nSeh'n wie du schläfst\nHör'n wie du atmest\nBis wir am Morgen erwachen\nDu hast es wieder mal geschafft\nMir den Atem zu rauben\nWenn du neben mir liegst\nDann kann ich es kaum glauben\nDass jemand wie ich\nSo was Schönes wie dich verdient hat\n\nDu bist das Beste was mir je passiert ist\nEs tut so gut wie du mich liebst\nVergess' den Rest der Welt\nWenn du bei mir bist\nDu bist das Beste was mir ...</td>
+      <td>pop</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>Ich bin verloren in deiner Mitte\nMachst mich zum Kämpfer ohne Visier\nAlles gedreht, Sinne wie benebelt\nIch bin so heillos betrunken von Dir\nDu wärmst mich auf mich deinem Wesen\nUnd lässt nicht einen Zentimeter unverschont\nDu flutest alle meine Decks mit Hoffnung\nAuf ein echtes Leben vor dem Tod\nUnd Ja ich atme Dich\nJa ich brenn für Dich\nUnd ja ich leb für Dich\nJeden Tag\nUnd ja du spiegelst mich\nUnd ja ich schwör auf Dich in jeder meiner Fasern\nSagt Ja\nEs ist noch immer so schwer zu glauben\nWie Du die meisten meine Fehler übersiehst\nDu erdest jeden meiner Gedanken\nVerleihs...</td>
+      <td>pop</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>Auf einmal steh ich hier allein\nHier im März 2003\nUnd es war viel zu zeitig\nEs war viel zu zeitig\nUnd ich hab noch zu dir gesagt\nWie immer, "Bis zum nächsten Mal"\nUnd es war viel zu zeitig\nEs war viel zu zeitig\nIch hör sie sagen: "Jetzt hast du es geschafft\nBist jetzt an einem besseren Platz"\nMeine Ohren verstehen das\nDoch das Herz sagt, es fehlt was\n\nMit jedem Tag der vergeht, lebst du weiter\nIn meiner Erinnerung\nHab all die Bilder mit dir gespeichert\nIn meiner Erinnerung\nAlles endlich, alles verglüht\nGeht so schnell eh du dich versiehst\nIch hab dich hier, ich trag dich...</td>
+      <td>pop</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+<p>In the next step, we need to provide the data in a format that the fastai API can use. To do this, we use the <a href="https://docs.fast.ai/data.block.html">DataBlock API</a> to load text from a DataFrame. Since the pretrained model used the SentencePieceTokenizer, we have to use it here as well. After calling the <code>DataBlock()</code> function, the data is loaded using fastai&rsquo;s <code>dataloaders()</code> function with a batch size of 64.</p>
+<div class="highlight"><pre class="chroma"><code class="language-python" data-lang="python"><span class="c1"># load tokenizer</span>
+<span class="n">tok</span> <span class="o">=</span> <span class="n">SentencePieceTokenizer</span><span class="p">(</span><span class="n">lang</span><span class="o">=</span><span class="s2">&#34;de&#34;</span><span class="p">,</span> <span class="n">cache_dir</span><span class="o">=</span><span class="n">spm_path</span><span class="p">)</span>
+<span class="c1"># load data using fastai&#39;s DataBlock API</span>
+<span class="n">lyrics_lm</span> <span class="o">=</span> <span class="n">DataBlock</span><span class="p">(</span><span class="n">blocks</span><span class="o">=</span><span class="n">TextBlock</span><span class="o">.</span><span class="n">from_df</span><span class="p">(</span><span class="s1">&#39;lyrics&#39;</span><span class="p">,</span> <span class="n">is_lm</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">tok</span><span class="o">=</span><span class="n">tok</span><span class="p">),</span>
+                      <span class="n">get_x</span><span class="o">=</span><span class="n">ColReader</span><span class="p">(</span><span class="s1">&#39;text&#39;</span><span class="p">),</span>
+                      <span class="n">splitter</span><span class="o">=</span><span class="n">RandomSplitter</span><span class="p">(</span><span class="mf">0.1</span><span class="p">))</span>
+
+<span class="c1"># create dataloaders</span>
+<span class="n">dlsLyrics</span> <span class="o">=</span> <span class="n">lyrics_lm</span><span class="o">.</span><span class="n">dataloaders</span><span class="p">(</span><span class="n">lyrics</span><span class="p">,</span> <span class="n">bs</span><span class="o">=</span><span class="mi">64</span><span class="p">)</span>
+</code></pre></div><p>We can now initialize the language model:</p>
+<div class="highlight"><pre class="chroma"><code class="language-python" data-lang="python"><span class="c1"># initialize the model</span>
+<span class="n">pretrained_fnames</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&#34;./de_wikitext&#34;</span><span class="p">,</span> <span class="s2">&#34;./de_wikitext_vocab&#34;</span><span class="p">]</span>
+<span class="n">learn_lm</span> <span class="o">=</span> <span class="n">language_model_learner</span><span class="p">(</span><span class="n">dlsLyrics</span><span class="p">,</span> <span class="n">AWD_LSTM</span><span class="p">,</span> <span class="n">drop_mult</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">pretrained</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> 
+                                  <span class="n">pretrained_fnames</span><span class="o">=</span><span class="n">pretrained_fnames</span><span class="p">,</span> 
+                                  <span class="n">metrics</span><span class="o">=</span><span class="p">[</span><span class="n">accuracy</span><span class="p">,</span> <span class="n">Perplexity</span><span class="p">()])</span><span class="o">.</span><span class="n">to_fp16</span><span class="p">()</span>
+</code></pre></div><p>fastai provides a helpful function to find the optimal learning rate for model training: <code>lr_find()</code>. This function uses an idea developed by <a href="https://arxiv.org/abs/1803.09820">Leslie N. Smith</a> plots the loss against various learning rates. In order to accellerate learning, we want to choose a learning rate, at which the loss declines the fastest. This is at the steepest decline in the plot, here at a learning rate of around 0.05. Hence, we choose this as the learning rate for one epoch of training.</p>
+<div class="highlight"><pre class="chroma"><code class="language-python" data-lang="python"><span class="n">learn_lm</span><span class="o">.</span><span class="n">lr_find</span><span class="p">()</span>
+</code></pre></div><p><img src="static/genreClassifier_30_2.png" alt="png"></p>
+<div class="highlight"><pre class="chroma"><code class="language-python" data-lang="python"><span class="n">lr</span> <span class="o">=</span> <span class="mf">0.05</span>
+<span class="n">learn_lm</span><span class="o">.</span><span class="n">fit_one_cycle</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">lr</span><span class="p">)</span>
+</code></pre></div><table border="0" class="dataframe">
+  <thead>
+    <tr>
+      <th>epoch</th>
+      <th>train_loss</th>
+      <th>valid_loss</th>
+      <th>accuracy</th>
+      <th>perplexity</th>
+      <th>time</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0</td>
+      <td>4.452115</td>
+      <td>4.318273</td>
+      <td>0.279766</td>
+      <td>75.058861</td>
+      <td>02:27</td>
+    </tr>
+  </tbody>
+</table>
+<p>We then unfreeze the last layers and do some more fine tuning:</p>
+<div class="highlight"><pre class="chroma"><code class="language-python" data-lang="python"><span class="n">learn_lm</span><span class="o">.</span><span class="n">unfreeze</span><span class="p">()</span>
+<span class="n">learn_lm</span><span class="o">.</span><span class="n">lr_find</span><span class="p">()</span> <span class="c1"># find optimal learning rate</span>
+</code></pre></div><p><img src="genreClassifier_files/genreClassifier_33_2.png" alt="png"></p>
+<div class="highlight"><pre class="chroma"><code class="language-python" data-lang="python"><span class="n">lr</span> <span class="o">=</span> <span class="mf">0.001</span>
+<span class="n">learn_lm</span><span class="o">.</span><span class="n">fit_one_cycle</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="nb">slice</span><span class="p">(</span><span class="n">lr</span><span class="o">/</span><span class="mi">10</span><span class="p">,</span><span class="n">lr</span><span class="p">))</span>
+</code></pre></div><table border="0" class="dataframe">
+  <thead>
+    <tr>
+      <th>epoch</th>
+      <th>train_loss</th>
+      <th>valid_loss</th>
+      <th>accuracy</th>
+      <th>perplexity</th>
+      <th>time</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0</td>
+      <td>3.980742</td>
+      <td>4.296264</td>
+      <td>0.283326</td>
+      <td>73.424942</td>
+      <td>02:53</td>
+    </tr>
+    <tr>
+      <td>1</td>
+      <td>3.923265</td>
+      <td>4.228052</td>
+      <td>0.291951</td>
+      <td>68.583511</td>
+      <td>02:53</td>
+    </tr>
+    <tr>
+      <td>2</td>
+      <td>3.830324</td>
+      <td>4.170166</td>
+      <td>0.298066</td>
+      <td>64.726166</td>
+      <td>02:53</td>
+    </tr>
+    <tr>
+      <td>3</td>
+      <td>3.742310</td>
+      <td>4.128229</td>
+      <td>0.303512</td>
+      <td>62.067913</td>
+      <td>02:53</td>
+    </tr>
+    <tr>
+      <td>4</td>
+      <td>3.642176</td>
+      <td>4.106679</td>
+      <td>0.306674</td>
+      <td>60.744648</td>
+      <td>02:53</td>
+    </tr>
+    <tr>
+      <td>5</td>
+      <td>3.587293</td>
+      <td>4.087434</td>
+      <td>0.308790</td>
+      <td>59.586815</td>
+      <td>02:53</td>
+    </tr>
+    <tr>
+      <td>6</td>
+      <td>3.489287</td>
+      <td>4.082561</td>
+      <td>0.309944</td>
+      <td>59.297165</td>
+      <td>02:53</td>
+    </tr>
+    <tr>
+      <td>7</td>
+      <td>3.457309</td>
+      <td>4.077933</td>
+      <td>0.311229</td>
+      <td>59.023361</td>
+      <td>02:53</td>
+    </tr>
+    <tr>
+      <td>8</td>
+      <td>3.437356</td>
+      <td>4.076725</td>
+      <td>0.311844</td>
+      <td>58.952057</td>
+      <td>02:53</td>
+    </tr>
+    <tr>
+      <td>9</td>
+      <td>3.455793</td>
+      <td>4.077275</td>
+      <td>0.311932</td>
+      <td>58.984505</td>
+      <td>02:53</td>
+    </tr>
+  </tbody>
+</table>
+<p>Lastly, we save the fine-tuned language model to be able to use this again later on without the need to repeat the fine-tuning.</p>
+<div class="highlight"><pre class="chroma"><code class="language-python" data-lang="python"><span class="n">learn_lm</span><span class="o">.</span><span class="n">path</span> <span class="o">=</span> <span class="n">model_path</span>
+<span class="c1"># save the fine-tuned language model</span>
+<span class="n">lm_ft_fns</span> <span class="o">=</span> <span class="p">[</span><span class="n">model_path</span><span class="o">/</span><span class="s2">&#34;de_ft&#34;</span><span class="p">,</span> <span class="n">model_path</span><span class="o">/</span><span class="s2">&#34;de_ft_vocab.pkl&#34;</span><span class="p">]</span>
+<span class="n">learn_lm</span><span class="o">.</span><span class="n">to_fp32</span><span class="p">()</span>
+<span class="n">learn_lm</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">lm_ft_fns</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">with_opt</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+<span class="n">learn_lm</span><span class="o">.</span><span class="n">save_encoder</span><span class="p">(</span><span class="n">f</span><span class="s1">&#39;{lm_ft_fns[0]}_encoder&#39;</span><span class="p">)</span>
+<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">lm_ft_fns</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="s1">&#39;wb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+      <span class="n">pickle</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">learn_lm</span><span class="o">.</span><span class="n">dls</span><span class="o">.</span><span class="n">vocab</span><span class="p">,</span> <span class="n">f</span><span class="p">)</span>
+</code></pre></div><h2 id="3-train-the-genre-classifier">3. Train the Genre Classifier</h2>
+<p>Since we have the data prepared as well as the fine-tuned language model, we can now build the genre classifier by combining both. We first need to load the Tokenizer and the vocab used for the language model:</p>
+<div class="highlight"><pre class="chroma"><code class="language-python" data-lang="python"><span class="c1"># load tokenizer and vocab</span>
+<span class="n">tok</span> <span class="o">=</span> <span class="n">SentencePieceTokenizer</span><span class="p">(</span><span class="n">lang</span><span class="o">=</span><span class="s2">&#34;de&#34;</span><span class="p">,</span> <span class="n">sp_model</span><span class="o">=</span><span class="n">spm_path</span><span class="o">/</span><span class="s1">&#39;spm.model&#39;</span><span class="p">)</span>
+<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">f</span><span class="s1">&#39;{lm_ft_fns[1]}&#39;</span><span class="p">,</span> <span class="s1">&#39;rb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+      <span class="n">vocab</span> <span class="o">=</span> <span class="n">pickle</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+</code></pre></div><p>In the same way as before, <code>DataBlock()</code> is used to get the lyrics data into the model again. However, since we now want to train a classifier on the outcome labels attached to the songs, the genre column is provided as the outcome column.</p>
+<div class="highlight"><pre class="chroma"><code class="language-python" data-lang="python"><span class="c1"># prepare the data</span>
+<span class="n">dblocksClass</span> <span class="o">=</span> <span class="n">DataBlock</span><span class="p">(</span><span class="n">blocks</span><span class="o">=</span><span class="p">(</span><span class="n">TextBlock</span><span class="o">.</span><span class="n">from_df</span><span class="p">(</span><span class="s1">&#39;lyrics&#39;</span><span class="p">,</span> <span class="n">tok</span><span class="o">=</span><span class="n">tok</span><span class="p">,</span> <span class="n">vocab</span><span class="o">=</span><span class="n">vocab</span><span class="p">),</span> 
+                                 <span class="n">CategoryBlock</span><span class="p">),</span>
+                         <span class="n">get_x</span><span class="o">=</span><span class="n">ColReader</span><span class="p">(</span><span class="s1">&#39;text&#39;</span><span class="p">),</span>
+                         <span class="n">get_y</span><span class="o">=</span><span class="n">ColReader</span><span class="p">(</span><span class="s1">&#39;genre&#39;</span><span class="p">),</span> 
+                         <span class="n">splitter</span><span class="o">=</span><span class="n">RandomSplitter</span><span class="p">(</span><span class="mf">0.2</span><span class="p">))</span>
+<span class="n">dls_class</span> <span class="o">=</span> <span class="n">dblocksClass</span><span class="o">.</span><span class="n">dataloaders</span><span class="p">(</span><span class="n">lyrics</span><span class="p">,</span> <span class="n">bs</span><span class="o">=</span><span class="mi">64</span><span class="p">)</span>
+</code></pre></div><p>In a similar way to above, the model is initialized, the learning rate is chosen, and the classifier is being trained.</p>
+<div class="highlight"><pre class="chroma"><code class="language-python" data-lang="python"><span class="c1"># initialize classifier</span>
+<span class="n">learn</span> <span class="o">=</span> <span class="n">text_classifier_learner</span><span class="p">(</span><span class="n">dls_class</span><span class="p">,</span> <span class="n">AWD_LSTM</span><span class="p">,</span> <span class="n">drop_mult</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">pretrained</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> 
+                                <span class="n">metrics</span><span class="o">=</span><span class="p">[</span><span class="n">accuracy</span><span class="p">])</span><span class="o">.</span><span class="n">to_fp16</span><span class="p">()</span>
+<span class="n">learn</span><span class="o">.</span><span class="n">path</span> <span class="o">=</span> <span class="n">model_path</span>
+<span class="c1"># load encoder</span>
+<span class="n">learn</span><span class="o">.</span><span class="n">load_encoder</span><span class="p">(</span><span class="n">model_path</span><span class="o">/</span><span class="s1">&#39;de_ft_encoder&#39;</span><span class="p">)</span>
+<span class="c1"># find the learning rate</span>
+<span class="n">learn</span><span class="o">.</span><span class="n">lr_find</span><span class="p">()</span>
+</code></pre></div><p><img src="genreClassifier_files/genreClassifier_44_2.png" alt="png"></p>
+<div class="highlight"><pre class="chroma"><code class="language-python" data-lang="python"><span class="n">lr</span> <span class="o">=</span> <span class="mf">0.05</span>
+<span class="n">learn</span><span class="o">.</span><span class="n">fit_one_cycle</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">lr</span><span class="p">)</span>
+</code></pre></div><table border="0" class="dataframe">
+  <thead>
+    <tr>
+      <th>epoch</th>
+      <th>train_loss</th>
+      <th>valid_loss</th>
+      <th>accuracy</th>
+      <th>time</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0</td>
+      <td>0.981085</td>
+      <td>0.872590</td>
+      <td>0.707692</td>
+      <td>00:43</td>
+    </tr>
+  </tbody>
+</table>
+<div class="highlight"><pre class="chroma"><code class="language-python" data-lang="python"><span class="n">learn</span><span class="o">.</span><span class="n">unfreeze</span><span class="p">()</span>
+<span class="n">learn</span><span class="o">.</span><span class="n">lr_find</span><span class="p">()</span>
+</code></pre></div><p><img src="genreClassifier_files/genreClassifier_46_2.png" alt="png"></p>
+<div class="highlight"><pre class="chroma"><code class="language-python" data-lang="python"><span class="n">lr</span> <span class="o">=</span> <span class="mf">0.001</span>
+<span class="n">learn</span><span class="o">.</span><span class="n">fit_one_cycle</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="nb">slice</span><span class="p">(</span><span class="n">lr</span><span class="o">/</span><span class="mi">10</span><span class="p">,</span><span class="n">lr</span><span class="p">))</span>
+</code></pre></div><table border="0" class="dataframe">
+  <thead>
+    <tr>
+      <th>epoch</th>
+      <th>train_loss</th>
+      <th>valid_loss</th>
+      <th>accuracy</th>
+      <th>time</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0</td>
+      <td>0.791861</td>
+      <td>0.657475</td>
+      <td>0.805128</td>
+      <td>01:56</td>
+    </tr>
+    <tr>
+      <td>1</td>
+      <td>0.782813</td>
+      <td>0.505342</td>
+      <td>0.815385</td>
+      <td>01:55</td>
+    </tr>
+    <tr>
+      <td>2</td>
+      <td>0.749134</td>
+      <td>0.427751</td>
+      <td>0.848718</td>
+      <td>01:55</td>
+    </tr>
+    <tr>
+      <td>3</td>
+      <td>0.704013</td>
+      <td>0.412686</td>
+      <td>0.861538</td>
+      <td>01:55</td>
+    </tr>
+    <tr>
+      <td>4</td>
+      <td>0.657263</td>
+      <td>0.386712</td>
+      <td>0.874359</td>
+      <td>01:55</td>
+    </tr>
+    <tr>
+      <td>5</td>
+      <td>0.610100</td>
+      <td>0.361737</td>
+      <td>0.894872</td>
+      <td>01:55</td>
+    </tr>
+    <tr>
+      <td>6</td>
+      <td>0.568985</td>
+      <td>0.360022</td>
+      <td>0.876923</td>
+      <td>01:55</td>
+    </tr>
+    <tr>
+      <td>7</td>
+      <td>0.540369</td>
+      <td>0.355766</td>
+      <td>0.884615</td>
+      <td>01:55</td>
+    </tr>
+    <tr>
+      <td>8</td>
+      <td>0.521280</td>
+      <td>0.348930</td>
+      <td>0.892308</td>
+      <td>01:55</td>
+    </tr>
+    <tr>
+      <td>9</td>
+      <td>0.501589</td>
+      <td>0.347173</td>
+      <td>0.889744</td>
+      <td>01:55</td>
+    </tr>
+  </tbody>
+</table>
+<p>Using this approach, we achieve an accuracy of 89% on the holdout test set. This is pretty good, especially considering that genres are to a large extent characterized by the audio, maybe even more than by the lyrics, and that Pop music and Schlager often share many similarities in their texts.</p>
+<h2 id="4-exporting--saving-the-model">4. Exporting / Saving the Model</h2>
+<p>The last step now is to save the model, so that it can be loaded and used in other applications without to be trained again.</p>
+<div class="highlight"><pre class="chroma"><code class="language-python" data-lang="python"><span class="n">learn</span><span class="o">.</span><span class="n">export</span><span class="p">()</span>
+</code></pre></div>
+            </div></div>
+        
+        
+
+        
+    </div>
+    
+
+
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript"
+        src="../../js/jquery.min.86b1e8f819ee2d9099a783e50b49dff24282545fc40773861f9126b921532e4c.js"
+        integrity="sha256-hrHo&#43;BnuLZCZp4PlC0nf8kKCVF/EB3OGH5EmuSFTLkw="
+        crossorigin="anonymous"></script>
+
+
+
+
+<script type="text/javascript"
+        src="../../js/bundle.min.0f9c74cb78f13d1f15f33daff4037c70354f98acfbb97a6f61708966675c3cae.js"
+        integrity="sha256-D5x0y3jxPR8V8z2v9AN8cDVPmKz7uXpvYXCJZmdcPK4="
+        crossorigin="anonymous"></script>
+
+<script type="text/javascript"
+        src="../../js/medium-zoom.min.92f21c856129f84aeb719459b3e6ac621a3032fd7b180a18c04e1d12083f8aba.js"
+        integrity="sha256-kvIchWEp&#43;ErrcZRZs&#43;asYhowMv17GAoYwE4dEgg/iro="
+        crossorigin="anonymous"></script>
+<link rel="stylesheet"
+              href="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.css"
+              integrity="sha384-zB1R0rpPzHqg7Kpt0Aljp8JPLqbXI3bhnPWROx27a9N0Ll6ZP/&#43;DiW/UqRcLbRjq"
+              crossorigin="anonymous"><script defer
+                src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.js"
+                integrity="sha384-y23I5Q6l&#43;B6vatafAwxRu/0oK/79VlbSz7Q9aiSZUvyWYIYsd&#43;qj&#43;o24G5ZU2zJz"
+                crossorigin="anonymous"></script><script defer
+                src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/contrib/auto-render.min.js"
+                integrity="sha384-kWPLUVMOks5AQFrykwIup5lo0m3iMkkHrD0uJ4H5cjeGihAutqP0yW0J6dpFiVkI"
+                crossorigin="anonymous"
+                onload="renderMathInElement(document.body);"></script></body>
+
+</html>

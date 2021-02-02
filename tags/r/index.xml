@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>R on Tobias Larysch: Personal Portfolio</title>
+    <link>/tags/r/</link>
+    <description>Recent content in R on Tobias Larysch: Personal Portfolio</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en</language>
+    <lastBuildDate>Thu, 28 Jan 2021 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="/tags/r/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Generic ML Inference on Heterogeneous Treatment Effects</title>
+      <link>/post/genericmlinference/</link>
+      <pubDate>Thu, 28 Jan 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/post/genericmlinference/</guid>
+      <description>This blog post provides an introduction to and brief explanation of a recently developed method combining Machine Learning algorithms and classical ideas from econometrics to obtain statistically valid inferential statements on heterogeneous treatment effects in Randomized Controlled Trials (RCTs).</description>
+    </item>
+    
+  </channel>
+</rss>

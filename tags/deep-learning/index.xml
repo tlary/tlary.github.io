@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Deep Learning on Tobias Larysch: Personal Portfolio</title>
+    <link>/tags/deep-learning/</link>
+    <description>Recent content in Deep Learning on Tobias Larysch: Personal Portfolio</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en</language>
+    <lastBuildDate>Thu, 10 Dec 2020 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="/tags/deep-learning/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Building a Genre Classifier using fastai</title>
+      <link>/post/genreclassifier/</link>
+      <pubDate>Thu, 10 Dec 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/post/genreclassifier/</guid>
+      <description>In this project I build a neural net to classify songs into one of three genres based on their lyrics. The lyrics are obtained via the lyricsgenius package and the model is built with the powerful fastai library.</description>
+    </item>
+    
+  </channel>
+</rss>

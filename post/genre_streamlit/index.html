@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en" data-theme=""><head>
+    <title> Tobias Larysch | Streamlit: Deploying ML Models the easy way </title>
+
+    
+    <meta charset="utf-8"><meta name="generator" content="Hugo 0.74.3" /><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+    <meta name="description" content="Economist, Data Enthusiast, Junior Programmer">
+    
+    <link rel="stylesheet"
+          href="../../css/style.min.9a6700e4461b50dccdddfc4f81dc65d77e7fca22c35665e398a0c36568db59c7.css"
+          integrity="sha256-mmcA5EYbUNzN3fxPgdxl135/yiLDVmXjmKDDZWjbWcc="
+          crossorigin="anonymous"
+          type="text/css">
+    
+    <link rel="stylesheet"
+        href="../../css/markupHighlight.min.9755453ffb7bc4cd220f86ebb5922107b49f193cc62fc17e9785d27b33a8bf5b.css"
+        integrity="sha256-l1VFP/t7xM0iD4brtZIhB7SfGTzGL8F&#43;l4XSezOov1s="
+        crossorigin="anonymous"
+        type="text/css">
+    
+        
+        
+        <link rel="stylesheet"
+        href="../../css/custom4.min.d4488bb11e5106d48d742a8228e00c24c3590a77d3e5456654f6001033217a70.css"
+        integrity="sha256-1EiLsR5RBtSNdCqCKOAMJMNZCnfT5UVmVPYAEDMhenA="
+        crossorigin="anonymous"
+        media="screen" />
+    
+        
+        
+        <link rel="stylesheet"
+        href="../../css/friend.min.d0809843e4028aaa20decda8dda26d1a3bae5e47e87311da5a10b607f015390a.css"
+        integrity="sha256-0ICYQ&#43;QCiqog3s2o3aJtGjuuXkfocxHaWhC2B/AVOQo="
+        crossorigin="anonymous"
+        media="screen" />
+    
+    <link rel="stylesheet" 
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css" 
+    integrity="sha512-+4zCK9k+qNFUR5X+cKL9EIR+ZOhtIloNl9GIKS57V1MyNsYpYcUrUeQc9vNfzsWfV28IaLL3i96P9sdNyeRssA==" 
+    crossorigin="anonymous" />
+
+    
+    <link rel="shortcut icon" href="../../favicons/favicon.ico" type="image/x-icon">
+    <link rel="apple-touch-icon" sizes="180x180" href="../../favicons/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="../../favicons/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="../../favicons/favicon-16x16.png">
+
+    <link rel="canonical" href="../../post/genre_streamlit/">
+
+    
+    
+    
+    
+    <script type="text/javascript"
+            src="../../js/anatole-header.min.d8599ee07b7d3f11bafbac30657ccc591e8d7fd36a9f580cd4c09e24e0e4a971.js"
+            integrity="sha256-2Fme4Ht9PxG6&#43;6wwZXzMWR6Nf9Nqn1gM1MCeJODkqXE="
+            crossorigin="anonymous"></script>
+
+
+    <script type="text/javascript"
+            src="../../js/custom.min.adead2e63eefe548b5ce0aa68303df62a2e2e975242f58d58c080fb3a61e11d7.js"
+            integrity="sha256-rerS5j7v5Ui1zgqmgwPfYqLi6XUkL1jVjAgPs6YeEdc="
+            crossorigin="anonymous"></script>
+    <meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Streamlit: Deploying ML Models the easy way"/>
+<meta name="twitter:description" content="In this blogpost I describe the process of building a good-looking ML App using Streamlit. The app again implements the genre classification model, however the whole process is much easier and faster."/>
+
+</head>
+<body><div class="sidebar . ">
+    <div class="logo-title">
+        <div class="title">
+            <img src="../../images/foto_neu.jpg" alt="profile picture">
+            <h3 title=""><a href="../../">Tobias Larysch - Portfolio Website</a></h3>
+            <div class="description">
+                <p>Economist, Data Enthusiast, Junior Programmer</p>
+            </div>
+        </div>
+    </div>
+    <ul class="social-links">
+        
+            <li>
+                <a href="https://www.linkedin.com/in/tobias-larysch-97981519b/" rel="me" aria-label="Linkedin">
+                    <i class="fab fa-linkedin fa-2x" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            <li>
+                <a href="https://github.com/tlary" rel="me" aria-label="GitHub">
+                    <i class="fab fa-github fa-2x" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            <li>
+                <a href="mailto:tobias-larysch@gmx.net" rel="me" aria-label="e-mail">
+                    <i class="fas fa-envelope fa-2x" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            <li>
+                <a href="https://www.xing.com/profile/Tobias_Larysch/cv" rel="me" aria-label="Xing">
+                    <i class="fab fa-xing fa-2x" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+    </ul>
+    <div class="footer">
+        <div class="by_farbox">&copy; Tobias Larysch  2021 </div>
+    </div>
+</div>
+<div class="main">
+    <div class="page-top  . ">
+    <a role="button" class="navbar-burger" data-target="navMenu" aria-label="menu" aria-expanded="false">
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+    </a>
+    <ul class="nav" id="navMenu">
+        
+        
+            
+            <li><a 
+                   href="../../"
+                        
+                   title="">Projects </a></li>
+        
+            
+            <li><a 
+                   href="../../publications/"
+                        
+                   title="">Publications</a></li>
+        
+            
+            <li><a 
+                   href="../../contact/"
+                        
+                   title="">Contact</a></li>
+        
+        
+        
+    </ul>
+</div>
+
+    <div class="autopagerize_page_element">
+        <div class="content">
+
+    <div class="post  . ">
+    	
+    	
+    		<nav id="TableOfContents">
+  <ul>
+    <li><a href="#1-building-the-app">1. Building the App</a></li>
+    <li><a href="#2-putting-it-all-together">2. Putting it all together</a></li>
+    <li><a href="#3-deploying-to-streamlit-sharing">3. Deploying to Streamlit Sharing</a></li>
+  </ul>
+</nav>
+        
+    	
+        <div class="post-content">
+            
+            <div class="post-title">
+                <h2>Streamlit: Deploying ML Models the easy way</h3>
+                
+                    <div class="info">
+                        <em class="fas fa-calendar-day"></em>
+                        <span class="date"> 
+                                                Tue, Dec 29, 2020
+                                           </span>
+                        <em class="fas fa-stopwatch"></em>
+                        <span class="reading-time">4-minute read</span>
+                    </div>
+                    <div>
+                    	<hr style="height:1px;border-width:0;background-color:rgba(0,0,0,0.15)">
+                    </div>
+                
+            </div>
+            
+            
+	    <div class="post-content-text">
+    	        <p>In the <a href="../../post/genredeploy/">previous post</a> I described the process and steps required to deploy a Machine Learning model such that it can be used in production and actually generate value. The app was built using the web framework Flask and the project was deployed using Heroku.</p>
+<p>As a reminder: to create the App we had to know some HTML and web development basics -  things most Data Scientist neither have nor are really interested in. The App also lacked any kind of styling and looks &hellip; well .. at least it gets the job done.</p>
+<p>In this post, I&rsquo;ll introduce an alternative to this approach, for which no web development knowledge is needed at all. The package I&rsquo;m going to use is called <a href="https://www.streamlit.io/">Streamlit</a> and is especially useful for programmers who quickly want to get their models into production or simply to showcase their work. It comes with pretty and consistent styling and takes care of all the design and front end for you.</p>
+<h2 id="1-building-the-app">1. Building the App</h2>
+<!---
+```python
+import streamlit as st
+import numpy as np
+import pandas as pd
+import pickle
+from fastai.text.all import *
+import sentencepiece
+```
+-->
+<p>We start off by giving our app a title using the <code>st.title()</code> function. Streamlit titles and texts are also able to handle emojis in markdown form, we also make use of it.</p>
+<div class="highlight"><pre class="chroma"><code class="language-python" data-lang="python"><span class="n">st</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&#34;Classify your (German) lyrics! 🎉🎤🎶&#34;</span><span class="p">)</span>
+</code></pre></div><p>Streamlit comes with a <a href="https://share.streamlit.io/daniellewisdl/streamlit-cheat-sheet/app.py">variety of widgets</a> that can be used as user input, for example, text input, slider, or predefined selections. These widgets can furthermore be organized in different sections: on the main page, in a sidebar or in containes, which can hold multiple elements.</p>
+<p>The only input we need for the genre classification are the song&rsquo;s lyrics. A text area is included on the page in which the lyrics can be pasted. Since lyrics are usually rather long with many line breaks, we organize the text area in a container that can be expanded and collapsed. The container will be collapsed by default when initializing the page. We further add a clickable button reading &ldquo;Classify Lyrics&rdquo; which will start the classification.</p>
+<div class="highlight"><pre class="chroma"><code class="language-python" data-lang="python"><span class="n">expander</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">beta_expander</span><span class="p">(</span><span class="s2">&#34;Lyrics&#34;</span><span class="p">)</span>
+<span class="k">with</span> <span class="n">expander</span><span class="p">:</span>
+    <span class="n">lyrics</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">text_area</span><span class="p">(</span><span class="s2">&#34;Paste your lyrics here:&#34;</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
+    <span class="n">clicked</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">button</span><span class="p">(</span><span class="s2">&#34;Classify lyrics!&#34;</span><span class="p">)</span>
+</code></pre></div><p>The next step is to provide the functionality to the streamlit app. Similar to the <a href="https://whichgenreisthis.herokuapp.com/">custom made app</a> the prediction of the genre should be displayed together with some genre-related image. To do this, we organize the pictures and the prediction together in a container. When the &ldquo;Classify Lyrics&rdquo; button is clicked, the lyrics are used as input for the model, the prediction is made, and based on the prediction the corresponding image should be displayed and the prediction under this image. We use the same images as before and store them in a folder called &ldquo;static&rdquo;. The code doing this looks like the following:</p>
+<div class="highlight"><pre class="chroma"><code class="language-python" data-lang="python"><span class="k">if</span> <span class="n">clicked</span><span class="p">:</span>
+    <span class="n">st</span><span class="o">.</span><span class="n">spinner</span><span class="p">(</span><span class="s2">&#34;Predicting the song&#39;s genre...&#34;</span><span class="p">)</span>
+<span class="k">with</span> <span class="n">st</span><span class="o">.</span><span class="n">beta_container</span><span class="p">():</span>
+    <span class="c1"># make prediction and edit output format</span>
+    <span class="k">if</span> <span class="n">clicked</span><span class="p">:</span>
+        <span class="k">with</span> <span class="n">st</span><span class="o">.</span><span class="n">spinner</span><span class="p">(</span><span class="s2">&#34;Predicting the song&#39;s genre...&#34;</span><span class="p">):</span>
+            <span class="n">pred</span> <span class="o">=</span> <span class="n">learn_inf</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">lyrics</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">img</span> <span class="o">=</span> <span class="n">images</span> <span class="o">+</span> <span class="n">pred</span> <span class="o">+</span> <span class="s2">&#34;.jpg&#34;</span>
+            <span class="c1"># edit string output</span>
+            <span class="k">if</span> <span class="n">pred</span> <span class="o">==</span> <span class="s2">&#34;hiphop&#34;</span><span class="p">:</span>
+                <span class="n">pred</span> <span class="o">=</span> <span class="s2">&#34;Hip-Hop&#34;</span>
+            <span class="k">if</span> <span class="n">pred</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&#34;pop&#34;</span><span class="p">,</span> <span class="s2">&#34;schlager&#34;</span><span class="p">]:</span>
+                <span class="n">pred</span> <span class="o">=</span> <span class="n">pred</span><span class="o">.</span><span class="n">capitalize</span><span class="p">()</span>
+            <span class="n">st</span><span class="o">.</span><span class="n">image</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">use_column_width</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+            <span class="n">st</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&#34;The song&#39;s genre is &#34;</span> <span class="o">+</span> <span class="n">pred</span><span class="p">)</span>
+</code></pre></div><p>Lastly, since we are going to use <a href="https://blog.streamlit.io/introducing-streamlit-sharing/">Streamlit Sharing</a> to deploy the app, and since it does not yet support Git Lfs files, we have to manually download the model file from Dropbox. To avoid repeating the download everytime the app starts, we use Streamlit&rsquo;s built-in caching for this purpose. Loading the model into the app then looks as follows:</p>
+<div class="highlight"><pre class="chroma"><code class="language-python" data-lang="python"><span class="nd">@st.cache</span><span class="p">(</span><span class="n">allow_output_mutation</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">load_model</span><span class="p">(</span><span class="n">url</span><span class="p">):</span>
+    <span class="n">modelLink</span> <span class="o">=</span> <span class="n">url</span>
+    <span class="n">model</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">modelLink</span><span class="p">)</span><span class="o">.</span><span class="n">content</span>
+    <span class="k">return</span> <span class="n">model</span>
+<span class="n">modelFile</span> <span class="o">=</span> <span class="n">load_model</span><span class="p">(</span><span class="s2">&#34;https://bit.ly/2MiwpnP&#34;</span><span class="p">)</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">BytesIO</span><span class="p">(</span><span class="n">modelFile</span><span class="p">)</span>
+<span class="n">learn_inf</span> <span class="o">=</span> <span class="n">load_learner</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+</code></pre></div><h2 id="2-putting-it-all-together">2. Putting it all together</h2>
+<p>Now simply copy and paste all the above code snippets in a single app.py file:</p>
+<div class="highlight"><pre class="chroma"><code class="language-python" data-lang="python"><span class="kn">import</span> <span class="nn">streamlit</span> <span class="kn">as</span> <span class="nn">st</span>
+<span class="kn">import</span> <span class="nn">pickle</span>
+<span class="kn">from</span> <span class="nn">fastai.text.all</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">import</span> <span class="nn">sentencepiece</span>
+<span class="kn">import</span> <span class="nn">requests</span>
+<span class="kn">from</span> <span class="nn">io</span> <span class="kn">import</span> <span class="n">BytesIO</span>
+
+<span class="n">st</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&#34;Classify your (German) lyrics! 🎉🎤🎶&#34;</span><span class="p">)</span>
+
+<span class="c1"># download model from Dropbox, cache it and load the model into the app</span>
+<span class="nd">@st.cache</span><span class="p">(</span><span class="n">allow_output_mutation</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">load_model</span><span class="p">(</span><span class="n">url</span><span class="p">):</span>
+    <span class="n">modelLink</span> <span class="o">=</span> <span class="n">url</span>
+    <span class="n">model</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">modelLink</span><span class="p">)</span><span class="o">.</span><span class="n">content</span>
+    <span class="k">return</span> <span class="n">model</span>
+<span class="n">modelFile</span> <span class="o">=</span> <span class="n">load_model</span><span class="p">(</span><span class="s2">&#34;https://bit.ly/2MiwpnP&#34;</span><span class="p">)</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">BytesIO</span><span class="p">(</span><span class="n">modelFile</span><span class="p">)</span>
+<span class="n">learn_inf</span> <span class="o">=</span> <span class="n">load_learner</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+
+<span class="c1"># point to the images</span>
+<span class="n">images</span> <span class="o">=</span> <span class="s2">&#34;./static/&#34;</span>
+
+<span class="n">expander</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">beta_expander</span><span class="p">(</span><span class="s2">&#34;Lyrics&#34;</span><span class="p">)</span>
+<span class="k">with</span> <span class="n">expander</span><span class="p">:</span>
+    <span class="n">lyrics</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">text_area</span><span class="p">(</span><span class="s2">&#34;Paste your lyrics here:&#34;</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
+    <span class="n">clicked</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">button</span><span class="p">(</span><span class="s2">&#34;Classify lyrics!&#34;</span><span class="p">)</span>
+
+<span class="k">if</span> <span class="n">clicked</span><span class="p">:</span>
+    <span class="n">st</span><span class="o">.</span><span class="n">spinner</span><span class="p">(</span><span class="s2">&#34;Predicting the song&#39;s genre...&#34;</span><span class="p">)</span>
+<span class="k">with</span> <span class="n">st</span><span class="o">.</span><span class="n">beta_container</span><span class="p">():</span>
+    <span class="c1"># make prediction and edit output format</span>
+    <span class="k">if</span> <span class="n">clicked</span><span class="p">:</span>
+        <span class="k">with</span> <span class="n">st</span><span class="o">.</span><span class="n">spinner</span><span class="p">(</span><span class="s2">&#34;Predicting the song&#39;s genre...&#34;</span><span class="p">):</span>
+            <span class="n">pred</span> <span class="o">=</span> <span class="n">learn_inf</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">lyrics</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">img</span> <span class="o">=</span> <span class="n">images</span> <span class="o">+</span> <span class="n">pred</span> <span class="o">+</span> <span class="s2">&#34;.jpg&#34;</span>
+            <span class="c1"># edit string output</span>
+            <span class="k">if</span> <span class="n">pred</span> <span class="o">==</span> <span class="s2">&#34;hiphop&#34;</span><span class="p">:</span>
+                <span class="n">pred</span> <span class="o">=</span> <span class="s2">&#34;Hip-Hop&#34;</span>
+            <span class="k">if</span> <span class="n">pred</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&#34;pop&#34;</span><span class="p">,</span> <span class="s2">&#34;schlager&#34;</span><span class="p">]:</span>
+                <span class="n">pred</span> <span class="o">=</span> <span class="n">pred</span><span class="o">.</span><span class="n">capitalize</span><span class="p">()</span>
+            <span class="n">st</span><span class="o">.</span><span class="n">image</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">use_column_width</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+            <span class="n">st</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&#34;The song&#39;s genre is &#34;</span> <span class="o">+</span> <span class="n">pred</span><span class="p">)</span>
+</code></pre></div><p>And that&rsquo;s it. The app can be run locally by typing <code>streamlit run app.py</code> into the terminal in the app&rsquo;s directory or the virtual environment.</p>
+<h2 id="3-deploying-to-streamlit-sharing">3. Deploying to Streamlit Sharing</h2>
+<p>To deploy the app, one needs to sign-up for a free <a href="https://www.streamlit.io/sharing">Streamlit Sharing account</a> and can then easily deploy the app from GitHub with only a few clicks. Make sure to include a requirements.txt file in the repository like <a href="https://github.com/tlary/genre-streamlit">here</a> and simply follow the instructions on the Streamlit Sharing page. The final app can be accessed <a href="https://share.streamlit.io/tlary/genre-streamlit/main/app.py">here</a> or by clicking on the &ldquo;Open in Streamlit&rdquo; badge below.</p>
+<p><a href="https://share.streamlit.io/tlary/genre-streamlit/main/app.py"><img src="https://static.streamlit.io/badges/streamlit_badge_black_white.svg" alt="Open in Streamlit"></a></p>
+
+            </div></div>
+        
+        
+
+        
+    </div>
+    
+
+
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript"
+        src="../../js/jquery.min.86b1e8f819ee2d9099a783e50b49dff24282545fc40773861f9126b921532e4c.js"
+        integrity="sha256-hrHo&#43;BnuLZCZp4PlC0nf8kKCVF/EB3OGH5EmuSFTLkw="
+        crossorigin="anonymous"></script>
+
+
+
+
+<script type="text/javascript"
+        src="../../js/bundle.min.0f9c74cb78f13d1f15f33daff4037c70354f98acfbb97a6f61708966675c3cae.js"
+        integrity="sha256-D5x0y3jxPR8V8z2v9AN8cDVPmKz7uXpvYXCJZmdcPK4="
+        crossorigin="anonymous"></script>
+
+<script type="text/javascript"
+        src="../../js/medium-zoom.min.92f21c856129f84aeb719459b3e6ac621a3032fd7b180a18c04e1d12083f8aba.js"
+        integrity="sha256-kvIchWEp&#43;ErrcZRZs&#43;asYhowMv17GAoYwE4dEgg/iro="
+        crossorigin="anonymous"></script>
+<link rel="stylesheet"
+              href="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.css"
+              integrity="sha384-zB1R0rpPzHqg7Kpt0Aljp8JPLqbXI3bhnPWROx27a9N0Ll6ZP/&#43;DiW/UqRcLbRjq"
+              crossorigin="anonymous"><script defer
+                src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.js"
+                integrity="sha384-y23I5Q6l&#43;B6vatafAwxRu/0oK/79VlbSz7Q9aiSZUvyWYIYsd&#43;qj&#43;o24G5ZU2zJz"
+                crossorigin="anonymous"></script><script defer
+                src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/contrib/auto-render.min.js"
+                integrity="sha384-kWPLUVMOks5AQFrykwIup5lo0m3iMkkHrD0uJ4H5cjeGihAutqP0yW0J6dpFiVkI"
+                crossorigin="anonymous"
+                onload="renderMathInElement(document.body);"></script></body>
+
+</html>

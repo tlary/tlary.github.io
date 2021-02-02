@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Flask on Tobias Larysch: Personal Portfolio</title>
+    <link>/tags/flask/</link>
+    <description>Recent content in Flask on Tobias Larysch: Personal Portfolio</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en</language>
+    <lastBuildDate>Tue, 22 Dec 2020 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="/tags/flask/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Deploying ML Models using Flask and Heroku</title>
+      <link>/post/genredeploy/</link>
+      <pubDate>Tue, 22 Dec 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/post/genredeploy/</guid>
+      <description>After building and training a ML model, the next step to actually generate business value is to deploy the model so that it can be used in production. In this blog I build a small App and deploy the genre classification model built in the last blogpost on Heroku.</description>
+    </item>
+    
+  </channel>
+</rss>

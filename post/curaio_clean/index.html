@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="en" data-theme=""><head>
+    <title> Tobias Larysch | A Forecast a day keeps the Doctor away - Predicting Influenza Rates </title>
+
+    
+    <meta charset="utf-8"><meta name="generator" content="Hugo 0.74.3" /><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+    <meta name="description" content="Economist, Data Enthusiast, Junior Programmer">
+    
+    <link rel="stylesheet"
+          href="../../css/style.min.9a6700e4461b50dccdddfc4f81dc65d77e7fca22c35665e398a0c36568db59c7.css"
+          integrity="sha256-mmcA5EYbUNzN3fxPgdxl135/yiLDVmXjmKDDZWjbWcc="
+          crossorigin="anonymous"
+          type="text/css">
+    
+    <link rel="stylesheet"
+        href="../../css/markupHighlight.min.9755453ffb7bc4cd220f86ebb5922107b49f193cc62fc17e9785d27b33a8bf5b.css"
+        integrity="sha256-l1VFP/t7xM0iD4brtZIhB7SfGTzGL8F&#43;l4XSezOov1s="
+        crossorigin="anonymous"
+        type="text/css">
+    
+        
+        
+        <link rel="stylesheet"
+        href="../../css/custom4.min.d4488bb11e5106d48d742a8228e00c24c3590a77d3e5456654f6001033217a70.css"
+        integrity="sha256-1EiLsR5RBtSNdCqCKOAMJMNZCnfT5UVmVPYAEDMhenA="
+        crossorigin="anonymous"
+        media="screen" />
+    
+        
+        
+        <link rel="stylesheet"
+        href="../../css/friend.min.d0809843e4028aaa20decda8dda26d1a3bae5e47e87311da5a10b607f015390a.css"
+        integrity="sha256-0ICYQ&#43;QCiqog3s2o3aJtGjuuXkfocxHaWhC2B/AVOQo="
+        crossorigin="anonymous"
+        media="screen" />
+    
+    <link rel="stylesheet" 
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css" 
+    integrity="sha512-+4zCK9k+qNFUR5X+cKL9EIR+ZOhtIloNl9GIKS57V1MyNsYpYcUrUeQc9vNfzsWfV28IaLL3i96P9sdNyeRssA==" 
+    crossorigin="anonymous" />
+
+    
+    <link rel="shortcut icon" href="../../favicons/favicon.ico" type="image/x-icon">
+    <link rel="apple-touch-icon" sizes="180x180" href="../../favicons/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="../../favicons/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="../../favicons/favicon-16x16.png">
+
+    <link rel="canonical" href="../../post/curaio_clean/">
+
+    
+    
+    
+    
+    <script type="text/javascript"
+            src="../../js/anatole-header.min.d8599ee07b7d3f11bafbac30657ccc591e8d7fd36a9f580cd4c09e24e0e4a971.js"
+            integrity="sha256-2Fme4Ht9PxG6&#43;6wwZXzMWR6Nf9Nqn1gM1MCeJODkqXE="
+            crossorigin="anonymous"></script>
+
+
+    <script type="text/javascript"
+            src="../../js/custom.min.adead2e63eefe548b5ce0aa68303df62a2e2e975242f58d58c080fb3a61e11d7.js"
+            integrity="sha256-rerS5j7v5Ui1zgqmgwPfYqLi6XUkL1jVjAgPs6YeEdc="
+            crossorigin="anonymous"></script>
+    <meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="A Forecast a day keeps the Doctor away - Predicting Influenza Rates"/>
+<meta name="twitter:description" content="The aim of the project is to predict disease rates, more precisely influenza-like illnesses rates (ILI rates). On the one hand historical time series data were used, on the other hand the data basis was extended by Google Trends data."/>
+
+</head>
+<body><div class="sidebar . ">
+    <div class="logo-title">
+        <div class="title">
+            <img src="../../images/foto_neu.jpg" alt="profile picture">
+            <h3 title=""><a href="../../">Tobias Larysch - Portfolio Website</a></h3>
+            <div class="description">
+                <p>Economist, Data Enthusiast, Junior Programmer</p>
+            </div>
+        </div>
+    </div>
+    <ul class="social-links">
+        
+            <li>
+                <a href="https://www.linkedin.com/in/tobias-larysch-97981519b/" rel="me" aria-label="Linkedin">
+                    <i class="fab fa-linkedin fa-2x" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            <li>
+                <a href="https://github.com/tlary" rel="me" aria-label="GitHub">
+                    <i class="fab fa-github fa-2x" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            <li>
+                <a href="mailto:tobias-larysch@gmx.net" rel="me" aria-label="e-mail">
+                    <i class="fas fa-envelope fa-2x" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            <li>
+                <a href="https://www.xing.com/profile/Tobias_Larysch/cv" rel="me" aria-label="Xing">
+                    <i class="fab fa-xing fa-2x" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+    </ul>
+    <div class="footer">
+        <div class="by_farbox">&copy; Tobias Larysch  2021 </div>
+    </div>
+</div>
+<div class="main">
+    <div class="page-top  . ">
+    <a role="button" class="navbar-burger" data-target="navMenu" aria-label="menu" aria-expanded="false">
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+    </a>
+    <ul class="nav" id="navMenu">
+        
+        
+            
+            <li><a 
+                   href="../../"
+                        
+                   title="">Projects </a></li>
+        
+            
+            <li><a 
+                   href="../../publications/"
+                        
+                   title="">Publications</a></li>
+        
+            
+            <li><a 
+                   href="../../contact/"
+                        
+                   title="">Contact</a></li>
+        
+        
+        
+    </ul>
+</div>
+
+    <div class="autopagerize_page_element">
+        <div class="content">
+
+    <div class="post  . ">
+    	
+    	
+    		<nav id="TableOfContents">
+  <ul>
+    <li><a href="#21-ili-rates">2.1 ILI Rates</a></li>
+    <li><a href="#22-google-trends">2.2 Google Trends</a></li>
+    <li><a href="#23-both-ili-rates-and-google-trends">2.3 Both: ILI Rates and Google Trends</a></li>
+  </ul>
+
+  <ul>
+    <li><a href="#31-univariate-forecasting">3.1 Univariate Forecasting</a>
+      <ul>
+        <li><a href="#311-autoarima">3.1.1 auto.arima</a></li>
+        <li><a href="#312-holt-winters-seasonal-method">3.1.2 Holt-Winters&rsquo; seasonal method</a></li>
+      </ul>
+    </li>
+    <li><a href="#32-multivariate-forecasting-xgboost">3.2 Multivariate Forecasting: XGBoost</a></li>
+  </ul>
+</nav>
+        
+    	
+        <div class="post-content">
+            
+            <div class="post-title">
+                <h2>A Forecast a day keeps the Doctor away - Predicting Influenza Rates</h3>
+                
+                    <div class="info">
+                        <em class="fas fa-calendar-day"></em>
+                        <span class="date"> 
+                                                Tue, Sep 24, 2019
+                                           </span>
+                        <em class="fas fa-stopwatch"></em>
+                        <span class="reading-time">13-minute read</span>
+                    </div>
+                    <div>
+                    	<hr style="height:1px;border-width:0;background-color:rgba(0,0,0,0.15)">
+                    </div>
+                
+            </div>
+            
+            
+	    <div class="post-content-text">
+    	        <p>The aim of the project is to predict disease rates, more precisely influenza-like illnesses rates (ILI rates). On the one hand historical time series data were used, on the other hand the data basis was extended by Google Trends data. According to <a href="https://medium.com/google-news-lab/what-is-google-trends-data-and-what-does-it-mean-b48f07342ee8">Google News Lab</a> these data are</p>
+<blockquote>
+<p>&ldquo;normalized Trends data. This means that when we look at search interest over time for a topic, we’re looking at that interest as a proportion of all searches on all topics on Google at that time and location&rdquo;.</p>
+</blockquote>
+<p>The data is indexed to 100, where 100 is the maximum search interest for the time and location selected. The idea was that people may google typical flu symptoms at the onset of a cold or flu even before the disease fully manifests itself. The explanatory variables for the ILI rates were therefore defined as a combination of keywords containing such typical symptoms of influenza.</p>
+<h1 id="1-data-acquisition-and-engineering">1. Data acquisition and engineering</h1>
+<p>Initially, it was planned to carry out the project on the basis of data for Germany. However, due to the lack of freely accessible influenza data, we decided to do the project for the USA. The ILI rates could be obtained using the R Package <a href="https://rdrr.io/cran/cdcfluview/">cdcfluview</a> and its ilinet function. This function retrieves data from the CDC FluView Portal containing, inter alia, in-season and past seasons&rsquo; national, regional, and state-level outpatient illness surveillance data from ILINet (Influenza-like Illness Surveillance Network). <br><br>
+The Google Trends data were obtained using Python&rsquo;s <a href="https://github.com/GeneralMills/pytrends">pytrends</a>, an unofficial pseudo API for extracting Google Trends data. As a combination of keywords, the following typical symptoms were identified:</p>
+<ul>
+<li>fever</li>
+<li>flu</li>
+<li>cough</li>
+<li>sore throat</li>
+<li>headache</li>
+</ul>
+<p>For this project data was used ranging from the beginning of 2015 until July 2019, so over approximately four and a half years. Since ILI rates are reported on a weekly basis, also Google Trends data on a weekly basis were used. Therefore the data amounts to around 230 data points.</p>
+<div class="highlight"><pre class="chroma"><code class="language-python" data-lang="python"><span class="k">def</span> <span class="nf">get_usdata</span><span class="p">(</span><span class="n">kw_list</span><span class="p">):</span>
+    <span class="s2">&#34;&#34;&#34;takes keyword list as input and returns DataFrame
+</span><span class="s2">    containing ili rates for the state and Google Trends 
+</span><span class="s2">    data for the keywords&#34;&#34;&#34;</span>
+    
+    <span class="c1"># ili data</span>
+    <span class="n">us_ili</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&#34;ili_national_level.csv&#34;</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">us_ili</span><span class="p">[</span><span class="s2">&#34;date&#34;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">us_ili</span><span class="o">.</span><span class="n">week</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span> <span class="o">+</span> \
+                                    <span class="n">us_ili</span><span class="o">.</span><span class="n">year</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="s2">&#34;-0&#34;</span><span class="p">),</span> 
+                                    <span class="n">format</span><span class="o">=</span><span class="s2">&#34;%W%Y-%w&#34;</span><span class="p">)</span>
+    <span class="n">us_ili</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s2">&#34;date&#34;</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+    <span class="n">ili</span> <span class="o">=</span> <span class="n">us_ili</span><span class="o">.</span><span class="n">shift</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">freq</span><span class="o">=</span><span class="s1">&#39;W&#39;</span><span class="p">)</span>
+       
+    
+    <span class="c1"># Google Trends</span>
+    <span class="n">pytrends</span> <span class="o">=</span> <span class="n">TrendReq</span><span class="p">(</span><span class="n">hl</span><span class="o">=</span><span class="s1">&#39;en-US&#39;</span><span class="p">,</span> <span class="n">tz</span><span class="o">=</span><span class="mi">360</span><span class="p">)</span>
+    <span class="n">pytrends</span><span class="o">.</span><span class="n">build_payload</span><span class="p">(</span><span class="n">kw_list</span><span class="p">,</span> <span class="n">cat</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">timeframe</span><span class="o">=</span><span class="s2">&#34;2015-01-11 2019-07-07&#34;</span><span class="p">,</span> 
+                           <span class="n">geo</span><span class="o">=</span><span class="s2">&#34;US&#34;</span><span class="p">)</span>
+    <span class="n">trends</span> <span class="o">=</span> <span class="n">pytrends</span><span class="o">.</span><span class="n">interest_over_time</span><span class="p">()</span>
+    <span class="n">trends</span> <span class="o">=</span> <span class="n">trends</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="s2">&#34;isPartial&#34;</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    
+    <span class="c1"># merge the dataframes on the Datetimeindex</span>
+    <span class="n">merged</span> <span class="o">=</span> <span class="n">trends</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">ili</span><span class="p">)</span>
+    <span class="n">merged</span><span class="p">[</span><span class="s2">&#34;unweighted_ili&#34;</span><span class="p">]</span> <span class="o">=</span> <span class="n">merged</span><span class="p">[</span><span class="s2">&#34;unweighted_ili&#34;</span><span class="p">]</span><span class="o">.</span><span class="n">interpolate</span><span class="p">(</span><span class="n">method</span><span class="o">=</span><span class="s2">&#34;linear&#34;</span><span class="p">)</span>
+    <span class="n">merged</span> <span class="o">=</span> <span class="n">merged</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">merged</span><span class="o">.</span><span class="n">tail</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span><span class="o">.</span><span class="n">index</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+    <span class="n">merged</span> <span class="o">=</span> <span class="n">merged</span><span class="o">.</span><span class="n">asfreq</span><span class="p">(</span><span class="s2">&#34;W&#34;</span><span class="p">)</span>
+    <span class="n">merged</span> <span class="o">=</span> <span class="n">merged</span><span class="o">.</span><span class="n">drop</span><span class="p">([</span><span class="s1">&#39;Unnamed: 0&#39;</span><span class="p">,</span> <span class="s1">&#39;region_type&#39;</span><span class="p">,</span> <span class="s1">&#39;region&#39;</span><span class="p">,</span> <span class="s1">&#39;year&#39;</span><span class="p">,</span> <span class="s1">&#39;week&#39;</span><span class="p">,</span> 
+                          <span class="s1">&#39;weighted_ili&#39;</span><span class="p">,</span><span class="s1">&#39;age_0_4&#39;</span><span class="p">,</span> <span class="s1">&#39;age_25_49&#39;</span><span class="p">,</span> <span class="s1">&#39;age_25_64&#39;</span><span class="p">,</span> 
+                          <span class="s1">&#39;age_5_24&#39;</span><span class="p">,</span> <span class="s1">&#39;age_50_64&#39;</span><span class="p">,</span> <span class="s1">&#39;age_65&#39;</span><span class="p">,</span> <span class="s1">&#39;ilitotal&#39;</span><span class="p">,</span> 
+                          <span class="s1">&#39;num_of_providers&#39;</span><span class="p">,</span> <span class="s1">&#39;total_patients&#39;</span><span class="p">,</span> <span class="s1">&#39;week_start&#39;</span><span class="p">],</span> 
+                          <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    
+    <span class="k">return</span> <span class="n">merged</span>
+</code></pre></div><h1 id="2-exploratory-data-analysis">2. Exploratory data analysis</h1>
+<h2 id="21-ili-rates">2.1 ILI Rates</h2>
+<p>Before starting the modeling process and forecasting, there was a brief exploratory data analysis of our target variable, the ILI rates, as a first step. Therefore, the first step was to load the data into a Pandas dataframe and to construct a datetime index using the week number and year variables, on which later on the ili rates dataframe and the dataframe containing the google Trends data were merged. <br>
+Then the ILI rate time series were plotted to get a first intuition and feeling for the data.</p>
+<p><img src="curaio_clean/static/curaio_clean_11_0.png" alt="png"></p>
+<p>From the above plot one can see that the rates are the lowest in the middle of each year in the summer months. From the late summer months on they start to rise. During the autumn this rise is pretty modest, however, as winter comes closer the increase in ILI rates becomes much more drastically at the end of a year and in the beginning of the following year. The rates typically peak in late January or February each year, before they start to decrease again until the middle of the year. <br>
+Although the level of ILI rates changes during the observed period, the plot displays qualitatively a very similar picture for each year with the typical characteristics described before. Therefore, there is strong (yearly) seasonality in our data which has to be considered when modeling and forecasting. This seasonality can also be seen quite well when plotting the ILI rates against the calendar weeks (see plot below): the rates are almost identical in the middle of the year from around the 15th to the 50th week in all years. Only in the weeks during which the influenza rates peak there are differences in the level of the rates, but the typical course is constant over all years.</p>
+<p><img src="curaio_clean/static/curaio_clean_13_0.png" alt="png"></p>
+<h2 id="22-google-trends">2.2 Google Trends</h2>
+<p>In the next step the Google Trends data was analyzed. As explained in the introduction of this notebook, the keywords used for this project are a combination of typical symptoms of a flu or influenza. The identified keywords used in this project are:</p>
+<ul>
+<li>fever</li>
+<li>flu</li>
+<li>cough</li>
+<li>sore throat</li>
+<li>headache</li>
+</ul>
+<p>The data was aquired using the Python package Pytrends. Firstly, the data was loaded into a pandas dataframe and then plotted just as before with the ILI rates data.</p>
+<p><img src="curaio_clean/static/curaio_clean_17_0.png" alt="png"></p>
+<p><img src="curaio_clean/static/curaio_clean_17_1.png" alt="png"></p>
+<p>Although a bit messy due to the many curves, the first of the plots shown above pictures qualitatively a very similar picture to the plot showing the course of ILI rates over the years. The search volume for the chosen keywords is the lowest during summer months and the middle of each year. From then on it rises until it reaches its peak around February. This is most evident for the keywords fever, flu and cough as can be seen in the second plot above.</p>
+<p>Using the same way of displaying the relationship between calendar weeks and the respective Google Trends index as for the relationship between ILI rates and calendar weeks before, a very similar picture emerges, though not as clear as before: the search volume for typical flu and influenza symptoms is lowest during the summer months, increases slowly during autumn, more rapidly during winter months and peaks around February.</p>
+<p><img src="curaio_clean/static/curaio_clean_20_0.png" alt="png"></p>
+<p><img src="curaio_clean/static/curaio_clean_20_1.png" alt="png"></p>
+<h2 id="23-both-ili-rates-and-google-trends">2.3 Both: ILI Rates and Google Trends</h2>
+<p>Plotting both ILI rates and Google Trends data together in a single graph shows that the two curves seem to run pretty much together and follow the same course.</p>
+<p><img src="curaio_clean/static/curaio_clean_23_0.png" alt="png"></p>
+<p>This first graphical intuition of the time series more or less running together can also be tested more rigorously using the correlation coefficient between the search volume of each keyword and the ILI rates. Displaying the correlation matrix between all variables confirms our first intuition. There is a high correlation between the Google Trends data and the ILI rates for most of the keywords. Especially for the keywords fever, flu and cough there is a very high correlation coefficient of around 0.912, 0.840 and 0.848, respectively, showing that these time series are highly correlated. The correlation coefficient for sore throat is still pretty high (0.730), for headache substantially lower (0.458). There is also high correlation between some of the keywords, e.g. between cough and sore throat (0.875). However, we are still going to keep all of the keywords as explanatory variables.</p>
+<div>
+<table border="0" class="dataframe">
+  <thead>
+    <tr>
+      <th></th>
+      <th>fever</th>
+      <th>flu</th>
+      <th>cough</th>
+      <th>sore throat</th>
+      <th>headache</th>
+      <th>unweighted_ili</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>fever</th>
+      <td>1.000000</td>
+      <td>0.763863</td>
+      <td>0.817337</td>
+      <td>0.760097</td>
+      <td>0.526859</td>
+      <td>0.919887</td>
+    </tr>
+    <tr>
+      <th>flu</th>
+      <td>0.763863</td>
+      <td>1.000000</td>
+      <td>0.698055</td>
+      <td>0.529569</td>
+      <td>0.499043</td>
+      <td>0.841872</td>
+    </tr>
+    <tr>
+      <th>cough</th>
+      <td>0.817337</td>
+      <td>0.698055</td>
+      <td>1.000000</td>
+      <td>0.869852</td>
+      <td>0.527671</td>
+      <td>0.855295</td>
+    </tr>
+    <tr>
+      <th>sore throat</th>
+      <td>0.760097</td>
+      <td>0.529569</td>
+      <td>0.869852</td>
+      <td>1.000000</td>
+      <td>0.504152</td>
+      <td>0.729051</td>
+    </tr>
+    <tr>
+      <th>headache</th>
+      <td>0.526859</td>
+      <td>0.499043</td>
+      <td>0.527671</td>
+      <td>0.504152</td>
+      <td>1.000000</td>
+      <td>0.448145</td>
+    </tr>
+    <tr>
+      <th>unweighted_ili</th>
+      <td>0.919887</td>
+      <td>0.841872</td>
+      <td>0.855295</td>
+      <td>0.729051</td>
+      <td>0.448145</td>
+      <td>1.000000</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+<p>Since our goal is to predict future ILI rates using the Google Trends data, a high correlation between Google Trends and ILI rates from the same period is not what we are really interested in. The more interesting question for this application is if there is a substantially high relationship between Google Trends data and future ILI rates. To test this, the Google Trends data are shifted one period into the future, such that these data correspond to the one-week-ahead ILI rates in the DataFrame. <br>
+Looking at the correlation coefficients of the lagged Google Trends data and the ILI Rates it can be seen that the correlation is almost as high as for the non-lagged data. The correlation coefficient between ILI Rates (and lagged) Fever is a bit lower (0.885 vs. 0.913), the ones between ILI Rates and (lagged) Flu (0.840 vs. 0.840), (lagged) sore throat (0.732 vs. 0.731) and (lagged) headache (0.461 vs. 0.458) remain mostly unchanged and the correlation between ILI Rates and lagged search volume for cough even increased slightly (0.867 vs. 0.848). This high correlation between ILI rates and the lagged Google Trends data suggests that it may be well possible to predict ILI rates using the given index data.</p>
+<div>
+<table border="0" class="dataframe">
+  <thead>
+    <tr>
+      <th></th>
+      <th>fever</th>
+      <th>flu</th>
+      <th>cough</th>
+      <th>sore throat</th>
+      <th>headache</th>
+      <th>unweighted_ili</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>fever</th>
+      <td>1.000000</td>
+      <td>0.763863</td>
+      <td>0.817337</td>
+      <td>0.760097</td>
+      <td>0.526859</td>
+      <td>0.894615</td>
+    </tr>
+    <tr>
+      <th>flu</th>
+      <td>0.763863</td>
+      <td>1.000000</td>
+      <td>0.698055</td>
+      <td>0.529569</td>
+      <td>0.499043</td>
+      <td>0.840828</td>
+    </tr>
+    <tr>
+      <th>cough</th>
+      <td>0.817337</td>
+      <td>0.698055</td>
+      <td>1.000000</td>
+      <td>0.869852</td>
+      <td>0.527671</td>
+      <td>0.873549</td>
+    </tr>
+    <tr>
+      <th>sore throat</th>
+      <td>0.760097</td>
+      <td>0.529569</td>
+      <td>0.869852</td>
+      <td>1.000000</td>
+      <td>0.504152</td>
+      <td>0.719603</td>
+    </tr>
+    <tr>
+      <th>headache</th>
+      <td>0.526859</td>
+      <td>0.499043</td>
+      <td>0.527671</td>
+      <td>0.504152</td>
+      <td>1.000000</td>
+      <td>0.448614</td>
+    </tr>
+    <tr>
+      <th>unweighted_ili</th>
+      <td>0.894615</td>
+      <td>0.840828</td>
+      <td>0.873549</td>
+      <td>0.719603</td>
+      <td>0.448614</td>
+      <td>1.000000</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+<h1 id="3-forecasting-and-model-evaluation">3. Forecasting and model evaluation</h1>
+<p>After cleaning the data, getting it into the right format, i.e. a single dataframe containing both ILI rates and Google Trends index data merged on a datetime index, the models to forecast the data were created and compared on their prediction accuracy. For comparison and evaluation the Root Mean Squared Error (RMSE) metric was used. This metric takes the difference between the forecasted datapoint and the actual value (i.e. the residual) and squares it, does this for each single datapoint, averages the squared residuals and takes the square root of this average. Thus, the RMSE can be written as:<br>
+$$\text{RMSE} = \sqrt{\frac{1}{n} \sum_{i=1}^{n} (y_i - \hat{y_i})^2}$$</p>
+<p>In comparison to other common evaluation metrics which can be used for regression or forecasting tasks, as for example the Absolute Mean Error (MAE), the RMSE gives relatively high weight to large errors since the errors are squared before they are averaged and thus these  are penalized more. However, in contrast to the MAE, the RMSE cannot be interpreted as nicely. <br>
+<br>
+Before using the Google Trends data to forecast ILI rates two classical univariate forecasting methods were used: a model of the ARMA model class and Holt-Winter&rsquo;s Triple Exponential Smoothing method.</p>
+<div class="highlight"><pre class="chroma"><code class="language-python" data-lang="python"><span class="k">def</span> <span class="nf">rmse</span><span class="p">(</span><span class="n">testdf</span><span class="p">,</span> <span class="n">preddf</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">mean_squared_error</span><span class="p">(</span><span class="n">testdf</span><span class="p">,</span> <span class="n">preddf</span><span class="p">))</span>
+</code></pre></div><h2 id="31-univariate-forecasting">3.1 Univariate Forecasting</h2>
+<h3 id="311-autoarima">3.1.1 auto.arima</h3>
+<p>The first class of models fit to the data and used to make predictions is the class of Auto Regressive Moving Average (ARMA) models. Such a model has got many different parameters that have to be chosen before fitting the model to get decent results. To avoid choosing all of those parameters in advance, the Python package pmdarima and its auto_arima() function were used. This function grid searches through a combination of parameters and chooses the model which minimizes some information criteria (the Akaike Information Criterion (AIC) and the Bayesian Information Criterion (BIC)). <br>
+The only parameter that has to be known and set before running the function is the order of seasonality $m$. As we saw earlier in Chapter 3.1 of this Notebook, the data exhibits very strong and clear seasonality, which repeats on a yearly cycle. Since the data is on a weekly basis, one seasonal cycles corresponds to 52 weeks, and therefore $m=52$ was chosen before running auto_arima().</p>
+<div class="highlight"><pre class="chroma"><code class="language-python" data-lang="python"><span class="c1"># fitting the model</span>
+<span class="n">arima</span> <span class="o">=</span> <span class="n">pm</span><span class="o">.</span><span class="n">auto_arima</span><span class="p">(</span><span class="n">train</span><span class="p">,</span> <span class="n">start_p</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">start_q</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">m</span><span class="o">=</span><span class="mi">52</span><span class="p">,</span> <span class="n">seasonal</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>
+                      <span class="n">trace</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">error_action</span><span class="o">=</span><span class="s2">&#34;ignore&#34;</span><span class="p">,</span> <span class="n">suppress_warnings</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+</code></pre></div><p>Running the auto_arima() function, the model chosen corresponds to a seasonal ARMA model without differencing (which can be done to ensure stationarity of a time series), i.e. a SARMA model. In the next step, we initialized an empty list, in which the predictions are stored. We first make a one-period-ahead forecast, save the forecast in the forecasts list, update our model using the actual value of the just forecasted period and then use the updated model to predict the next period. This is done for all timepoints in our test dataset.</p>
+<div class="highlight"><pre class="chroma"><code class="language-python" data-lang="python"><span class="c1"># one-period-ahead forecast and updating model parameters after each prediction</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">arima</span> 
+<span class="n">arima_pred</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">new_ob</span> <span class="ow">in</span> <span class="n">test</span><span class="p">:</span>
+    <span class="n">fc</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">n_periods</span><span class="o">=</span><span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">arima_pred</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">fc</span><span class="p">)</span>
+  
+    <span class="c1"># updates existing model with a small number of MLE steps</span>
+    <span class="n">model</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">new_ob</span><span class="p">,</span> <span class="n">suppress_warnings</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+</code></pre></div><p>In the graph below the actual and the predicted ILI Rates are plotted against the timepoints. This graph can be used to evaluate the performance of our prediction. At a first glance, the prediction looks very close to the actual values. This first graphical intuition is also confirmed using the RMSE criterion. Our forecast yields a RMSE of 0.251 as can also be seen from the plot.</p>
+<p><img src="curaio_clean/static/curaio_clean_39_0.png" alt="png"></p>
+<h3 id="312-holt-winters-seasonal-method">3.1.2 Holt-Winters&rsquo; seasonal method</h3>
+<p>After trying the ARMA class models, another univariate model to make the forecasts was used, namely the Triple Exponential Smoothing method, also known as Holt-Winters model. This model can be used for time series data which exhibit seasonalities to make forecasts and is another classical and commonly used model for time series prediction and is thus also used here. In the same manner as before, a one-step-ahead forecast is produced, the model is updated using the actual value for the forecasted period and then the ILI rate for the next period is predicted.</p>
+<div class="highlight"><pre class="chroma"><code class="language-python" data-lang="python"><span class="n">holt</span> <span class="o">=</span> <span class="n">ExponentialSmoothing</span><span class="p">(</span><span class="n">train</span><span class="p">,</span> <span class="n">trend</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">seasonal</span><span class="o">=</span><span class="s2">&#34;add&#34;</span><span class="p">,</span> 
+                            <span class="n">seasonal_periods</span><span class="o">=</span><span class="mi">52</span><span class="p">)</span>
+<span class="n">holt_fit</span> <span class="o">=</span> <span class="n">holt</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">optimized</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+
+<span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="n">holt_pred</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">test</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">new_ob</span> <span class="ow">in</span> <span class="n">test</span><span class="p">:</span>
+    <span class="n">fc</span> <span class="o">=</span> <span class="n">holt_fit</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">start</span><span class="o">=</span><span class="n">test</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">end</span><span class="o">=</span><span class="n">test</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+    <span class="n">holt_pred</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">fc</span>
+    <span class="c1"># add test obs to train df</span>
+    <span class="n">train</span><span class="p">[</span><span class="n">test</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span> <span class="o">=</span> <span class="n">test</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+    <span class="n">holt</span> <span class="o">=</span> <span class="n">ExponentialSmoothing</span><span class="p">(</span><span class="n">train</span><span class="p">,</span> <span class="n">trend</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">seasonal</span><span class="o">=</span><span class="s2">&#34;add&#34;</span><span class="p">,</span> 
+                                <span class="n">seasonal_periods</span><span class="o">=</span><span class="mi">52</span><span class="p">)</span>
+    <span class="n">holt_fit</span> <span class="o">=</span> <span class="n">holt</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">optimized</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+    <span class="c1"># increasing i</span>
+    <span class="n">i</span> <span class="o">=</span> <span class="n">i</span><span class="o">+</span><span class="mi">1</span>
+    
+</code></pre></div><p>The same way of graphical evaluation and quantitative evaluation using the RMSE was used as with the SARMA model. The Holt-Winters prediction seems to be as close to the actual test values as the SARMA model for the first few periods and also for the decline after the rates have peaked. However, the model does not capture the drop on the way to the peak and in addition to that the prediction seems to be too low for the period between the drop and the peak. The RMSE amounts to around 0.420 and therefore confirms that the Holt-Winters model performs worse than the SARMA model used before.</p>
+<p><img src="curaio_clean/static/curaio_clean_45_0.png" alt="png"></p>
+<h2 id="32-multivariate-forecasting-xgboost">3.2 Multivariate Forecasting: XGBoost</h2>
+<p>Since the goal was to forecast ILI rates using Google search volumes for typical influenza and flu symptoms, in addition to the historical time series data of ILI rates themselves the Google Trends index data described in 3.2 were used as well. The algorithm used was the XGBoost regression model. XGBoost is a tree-based machine learning algorithm using boosted trees. It is very efficient, needs relatively low computing time, is able to handle missing values and uses regularization to avoid overfitting (for more details see for example <a href="https://xgboost.readthedocs.io/en/latest/">the XGBoost documentation</a>). <br>
+To get the dataframe into the desired format, at first the Google Trends data were shifted one period into the future, such that this week&rsquo;s Google Trends index data correspond to next week&rsquo;s ILI rates. Before training the XGBoost model, there are some hyperparameters which have to be set in advance. Since XGBoost tends to work very well without much tuning or adjustment, only two hyperparameters were changed: first, it was found that a value of 1 for the learning rate works best for the problem at hand, while typically smaller numbers between 0.01 and 0.3 tend to work well; and second, we increased the maximum depth of a single tree to allow for a higher flexibility. The remaining parameters were kept as set by default.</p>
+<div class="highlight"><pre class="chroma"><code class="language-python" data-lang="python"><span class="c1"># train XGBoost regression model and make predictions</span>
+<span class="n">dtrain</span> <span class="o">=</span> <span class="n">xgb</span><span class="o">.</span><span class="n">DMatrix</span><span class="p">(</span><span class="n">train</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="n">train</span><span class="p">[</span><span class="s2">&#34;unweighted_ili&#34;</span><span class="p">])</span>
+<span class="n">dtest</span> <span class="o">=</span> <span class="n">xgb</span><span class="o">.</span><span class="n">DMatrix</span><span class="p">(</span><span class="n">test</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="n">test</span><span class="p">[</span><span class="s2">&#34;unweighted_ili&#34;</span><span class="p">])</span>
+<span class="n">param</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;max_depth&#39;</span><span class="p">:</span><span class="mi">10</span><span class="p">,</span> <span class="s1">&#39;eta&#39;</span><span class="p">:</span><span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;objective&#39;</span><span class="p">:</span><span class="s1">&#39;reg:squarederror&#39;</span> <span class="p">}</span>
+<span class="n">num_round</span> <span class="o">=</span> <span class="mi">5</span>
+<span class="n">bst</span> <span class="o">=</span> <span class="n">xgb</span><span class="o">.</span><span class="n">train</span><span class="p">(</span><span class="n">param</span><span class="p">,</span> <span class="n">dtrain</span><span class="p">,</span> <span class="n">num_round</span><span class="p">)</span>
+<span class="n">xgb_pred</span> <span class="o">=</span> <span class="n">bst</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">dtest</span><span class="p">)</span>
+</code></pre></div><p><img src="curaio_clean/static/curaio_clean_50_0.png" alt="png"></p>
+<p>The plotted prediction looks very close to the actual test values. Even the two drops are captured well, especially compared to the Holt-Winters model used before. The RMSE is also very low with around only 0.116.</p>
+<h1 id="4-model-comparison-and-conclusion">4. Model comparison and conclusion</h1>
+<p>Using univariate forecasting methods, the SARMA model outperformed the Holt-Winters model, however, both models yielded a pretty precise estimate of one-period-ahead ILI rates forecasts. A more modern Machine Learning approach, using the XGBoost algorithm with Google Trends index data of typical flu and influenza symptoms as explanatory variables instead of historical ILI rates themselves as input to the model, performed even better than the already very precise SARMA model and thus also better than the Holt-Winters method. The graph below plots the actual and predicted ILI rates against the timepoints for all 3 models and their RMSE for a direct comparison.</p>
+<p><img src="curaio_clean/static/curaio_clean_54_0.png" alt="png"></p>
+<p>To sum up, both (classical) univariate and multivariate (machine learning) forecasting methods gave very precise and accurate results for a forecasting horizon of one period. However, the XGBoost [RMSE: 0.116] outperforms the SARMA model [RMSE: 0.251] as well as the Holt-Winters&rsquo; Triple Exponential Smoothing model [RMSE: 0.420]. <br></p>
+
+            </div></div>
+        
+        
+
+        
+    </div>
+    
+
+
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript"
+        src="../../js/jquery.min.86b1e8f819ee2d9099a783e50b49dff24282545fc40773861f9126b921532e4c.js"
+        integrity="sha256-hrHo&#43;BnuLZCZp4PlC0nf8kKCVF/EB3OGH5EmuSFTLkw="
+        crossorigin="anonymous"></script>
+
+
+
+
+<script type="text/javascript"
+        src="../../js/bundle.min.0f9c74cb78f13d1f15f33daff4037c70354f98acfbb97a6f61708966675c3cae.js"
+        integrity="sha256-D5x0y3jxPR8V8z2v9AN8cDVPmKz7uXpvYXCJZmdcPK4="
+        crossorigin="anonymous"></script>
+
+<script type="text/javascript"
+        src="../../js/medium-zoom.min.92f21c856129f84aeb719459b3e6ac621a3032fd7b180a18c04e1d12083f8aba.js"
+        integrity="sha256-kvIchWEp&#43;ErrcZRZs&#43;asYhowMv17GAoYwE4dEgg/iro="
+        crossorigin="anonymous"></script>
+<link rel="stylesheet"
+              href="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.css"
+              integrity="sha384-zB1R0rpPzHqg7Kpt0Aljp8JPLqbXI3bhnPWROx27a9N0Ll6ZP/&#43;DiW/UqRcLbRjq"
+              crossorigin="anonymous"><script defer
+                src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.js"
+                integrity="sha384-y23I5Q6l&#43;B6vatafAwxRu/0oK/79VlbSz7Q9aiSZUvyWYIYsd&#43;qj&#43;o24G5ZU2zJz"
+                crossorigin="anonymous"></script><script defer
+                src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/contrib/auto-render.min.js"
+                integrity="sha384-kWPLUVMOks5AQFrykwIup5lo0m3iMkkHrD0uJ4H5cjeGihAutqP0yW0J6dpFiVkI"
+                crossorigin="anonymous"
+                onload="renderMathInElement(document.body);"></script></body>
+
+</html>
