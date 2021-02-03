@@ -71,8 +71,82 @@ Frondel, M., Kükenthal, V., Larysch, T., and Osberghaus, D."/>
 	<script async src="https://cdn.panelbear.com/analytics.js?site=cIJFGgu2o5"></script>
 	<script>
     	window.panelbear = window.panelbear || function() { (window.panelbear.q = window.panelbear.q || []).push(arguments); };
-    	panelbear('config', { site: 'cIJFGgu2o5' });
+    	panelbear('config', { site: 'cIJFGgu2o5', debug: true });
 	</script>
+
+
+    
+
+    
+    <script>
+    
+    window.onload = function(){
+    document
+        .getElementById("Linkedin")
+        .addEventListener("click", function (e) {
+        e.preventDefault();
+
+        
+        panelbear("track", "LinkedIn");
+        
+        
+        window.open(this.href, "_tab");
+        
+    });
+    
+    
+    document
+        .getElementById("GitHub")
+        .addEventListener("click", function (e) {
+        e.preventDefault();
+
+        
+        panelbear("track", "GitHub");
+        
+        
+        window.open(this.href, "_blank");
+        
+    });
+    
+
+
+    
+
+    
+    document
+        .getElementById("e-mail")
+        .addEventListener("click", function (e) {
+        e.preventDefault();
+
+        
+        panelbear("track", "Mail");
+        
+        
+        window.open(this.href, "_blank");
+        
+    });
+    
+    
+    document
+        .getElementById("Xing")
+        .addEventListener("click", function (e) {
+        e.preventDefault();
+
+        
+        panelbear("track", "Xing");
+        
+        
+        window.open(this.href, "_blank");
+        
+    });
+    }
+    </script>
+
+
+
+
+
+
 </head>
 <body><div class="sidebar . ">
     <div class="logo-title">
@@ -87,25 +161,25 @@ Frondel, M., Kükenthal, V., Larysch, T., and Osberghaus, D."/>
     <ul class="social-links">
         
             <li>
-                <a href="https://www.linkedin.com/in/tobias-larysch-97981519b/" rel="me" aria-label="Linkedin">
+                <a href="https://www.linkedin.com/in/tobias-larysch-97981519b/" rel="me" aria-label="Linkedin" id="Linkedin">
                     <i class="fab fa-linkedin fa-2x" aria-hidden="true"></i>
                 </a>
             </li>
         
             <li>
-                <a href="https://github.com/tlary" rel="me" aria-label="GitHub">
+                <a href="https://github.com/tlary" rel="me" aria-label="GitHub" id="GitHub">
                     <i class="fab fa-github fa-2x" aria-hidden="true"></i>
                 </a>
             </li>
         
             <li>
-                <a href="mailto:tobias-larysch@gmx.net" rel="me" aria-label="e-mail">
+                <a href="mailto:tobias-larysch@gmx.net" rel="me" aria-label="e-mail" id="e-mail">
                     <i class="fas fa-envelope fa-2x" aria-hidden="true"></i>
                 </a>
             </li>
         
             <li>
-                <a href="https://www.xing.com/profile/Tobias_Larysch/cv" rel="me" aria-label="Xing">
+                <a href="https://www.xing.com/profile/Tobias_Larysch/cv" rel="me" aria-label="Xing" id="Xing">
                     <i class="fab fa-xing fa-2x" aria-hidden="true"></i>
                 </a>
             </li>
