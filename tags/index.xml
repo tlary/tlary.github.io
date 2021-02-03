@@ -39,7 +39,7 @@
     </item>
     
     <item>
-      <title>python</title>
+      <title>Python</title>
       <link>/tags/python/</link>
       <pubDate>Tue, 05 Jan 2021 00:00:00 +0000</pubDate>
       
@@ -120,7 +120,7 @@
     </item>
     
     <item>
-      <title>forecasting</title>
+      <title>Forecasting</title>
       <link>/tags/forecasting/</link>
       <pubDate>Tue, 24 Sep 2019 00:00:00 +0000</pubDate>
       
@@ -129,7 +129,7 @@
     </item>
     
     <item>
-      <title>time series</title>
+      <title>Time Series</title>
       <link>/tags/time-series/</link>
       <pubDate>Tue, 24 Sep 2019 00:00:00 +0000</pubDate>
       
@@ -152,6 +152,15 @@
       <pubDate>Fri, 19 Jul 2019 00:00:00 +0000</pubDate>
       
       <guid>/tags/eda/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Regression</title>
+      <link>/tags/regression/</link>
+      <pubDate>Thu, 13 Jun 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/regression/</guid>
       <description></description>
     </item>
     

@@ -17,7 +17,7 @@
       <pubDate>Fri, 19 Jul 2019 00:00:00 +0000</pubDate>
       
       <guid>/post/titanic/</guid>
-      <description>This blogpost contains code for the &lt;a href=&#34;https://www.kaggle.com/c/titanic&#34;&gt;Kaggle Titanic challenge&lt;/a&gt;. It is a well-known beginner challenge and its goal is to build a binary classification model to predict if passengers would probably have survived the Titanic disaster or not. The focus of this blogpost is on Exploratory Data Analysis and some Feature Engineering. Later on, I built and deployed a small ML app using Streamlit and Streamlit Sharing.</description>
+      <description>This blogpost contains code for the &lt;a href=&#34;https://www.kaggle.com/c/titanic&#34;&gt;Kaggle Titanic challenge&lt;/a&gt;. It is a well-known beginner challenge and its goal is to build a binary classification model to predict if passengers would have survived the Titanic disaster or not. The focus of this blogpost is on Exploratory Data Analysis and some Feature Engineering. Later on, I built and deployed a small ML app using Streamlit and Streamlit Sharing.</description>
     </item>
     
   </channel>

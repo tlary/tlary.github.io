@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Regression on Tobias Larysch: Personal Portfolio</title>
+    <link>/tags/regression/</link>
+    <description>Recent content in Regression on Tobias Larysch: Personal Portfolio</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en</language>
+    <lastBuildDate>Thu, 13 Jun 2019 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="/tags/regression/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Kaggle Challenge: House Prices</title>
+      <link>/post/house_prices/</link>
+      <pubDate>Thu, 13 Jun 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/post/house_prices/</guid>
+      <description>This blogpost contains code to the &lt;a href=&#34;https://www.kaggle.com/c/house-prices-advanced-regression-techniques/overview&#34;&gt;Kaggle House Price Challenge&lt;/a&gt;. The aim of this blogpost is to get familiar with the most commonly used Python data science stack - data preprocessing and cleaning with pandas and numpy, model building and evaluation using scikit-learn and different algorithms.</description>
+    </item>
+    
+  </channel>
+</rss>

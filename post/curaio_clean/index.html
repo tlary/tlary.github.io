@@ -149,19 +149,21 @@
     	
     		<nav id="TableOfContents">
   <ul>
-    <li><a href="#21-ili-rates">2.1 ILI Rates</a></li>
-    <li><a href="#22-google-trends">2.2 Google Trends</a></li>
-    <li><a href="#23-both-ili-rates-and-google-trends">2.3 Both: ILI Rates and Google Trends</a></li>
-  </ul>
-
-  <ul>
-    <li><a href="#31-univariate-forecasting">3.1 Univariate Forecasting</a>
+    <li><a href="#1-data-acquisition-and-engineering">1. Data acquisition and engineering</a></li>
+    <li><a href="#2-exploratory-data-analysis">2. Exploratory data analysis</a>
       <ul>
-        <li><a href="#311-autoarima">3.1.1 auto.arima</a></li>
-        <li><a href="#312-holt-winters-seasonal-method">3.1.2 Holt-Winters&rsquo; seasonal method</a></li>
+        <li><a href="#21-ili-rates">2.1 ILI Rates</a></li>
+        <li><a href="#22-google-trends">2.2 Google Trends</a></li>
+        <li><a href="#23-both-ili-rates-and-google-trends">2.3 Both: ILI Rates and Google Trends</a></li>
       </ul>
     </li>
-    <li><a href="#32-multivariate-forecasting-xgboost">3.2 Multivariate Forecasting: XGBoost</a></li>
+    <li><a href="#3-forecasting-and-model-evaluation">3. Forecasting and model evaluation</a>
+      <ul>
+        <li><a href="#31-univariate-forecasting">3.1 Univariate Forecasting</a></li>
+        <li><a href="#32-multivariate-forecasting-xgboost">3.2 Multivariate Forecasting: XGBoost</a></li>
+      </ul>
+    </li>
+    <li><a href="#4-model-comparison-and-conclusion">4. Model comparison and conclusion</a></li>
   </ul>
 </nav>
         
@@ -192,7 +194,7 @@
 <p>&ldquo;normalized Trends data. This means that when we look at search interest over time for a topic, we’re looking at that interest as a proportion of all searches on all topics on Google at that time and location&rdquo;.</p>
 </blockquote>
 <p>The data is indexed to 100, where 100 is the maximum search interest for the time and location selected. The idea was that people may google typical flu symptoms at the onset of a cold or flu even before the disease fully manifests itself. The explanatory variables for the ILI rates were therefore defined as a combination of keywords containing such typical symptoms of influenza.</p>
-<h1 id="1-data-acquisition-and-engineering">1. Data acquisition and engineering</h1>
+<h2 id="1-data-acquisition-and-engineering">1. Data acquisition and engineering</h2>
 <p>Initially, it was planned to carry out the project on the basis of data for Germany. However, due to the lack of freely accessible influenza data, we decided to do the project for the USA. The ILI rates could be obtained using the R Package <a href="https://rdrr.io/cran/cdcfluview/">cdcfluview</a> and its ilinet function. This function retrieves data from the CDC FluView Portal containing, inter alia, in-season and past seasons&rsquo; national, regional, and state-level outpatient illness surveillance data from ILINet (Influenza-like Illness Surveillance Network). <br><br>
 The Google Trends data were obtained using Python&rsquo;s <a href="https://github.com/GeneralMills/pytrends">pytrends</a>, an unofficial pseudo API for extracting Google Trends data. As a combination of keywords, the following typical symptoms were identified:</p>
 <ul>
@@ -236,15 +238,15 @@ The Google Trends data were obtained using Python&rsquo;s <a href="https://githu
                           <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
     
     <span class="k">return</span> <span class="n">merged</span>
-</code></pre></div><h1 id="2-exploratory-data-analysis">2. Exploratory data analysis</h1>
-<h2 id="21-ili-rates">2.1 ILI Rates</h2>
+</code></pre></div><h2 id="2-exploratory-data-analysis">2. Exploratory data analysis</h2>
+<h3 id="21-ili-rates">2.1 ILI Rates</h3>
 <p>Before starting the modeling process and forecasting, there was a brief exploratory data analysis of our target variable, the ILI rates, as a first step. Therefore, the first step was to load the data into a Pandas dataframe and to construct a datetime index using the week number and year variables, on which later on the ili rates dataframe and the dataframe containing the google Trends data were merged. <br>
 Then the ILI rate time series were plotted to get a first intuition and feeling for the data.</p>
 <p><img src="curaio_clean/static/curaio_clean_11_0.png" alt="png"></p>
 <p>From the above plot one can see that the rates are the lowest in the middle of each year in the summer months. From the late summer months on they start to rise. During the autumn this rise is pretty modest, however, as winter comes closer the increase in ILI rates becomes much more drastically at the end of a year and in the beginning of the following year. The rates typically peak in late January or February each year, before they start to decrease again until the middle of the year. <br>
 Although the level of ILI rates changes during the observed period, the plot displays qualitatively a very similar picture for each year with the typical characteristics described before. Therefore, there is strong (yearly) seasonality in our data which has to be considered when modeling and forecasting. This seasonality can also be seen quite well when plotting the ILI rates against the calendar weeks (see plot below): the rates are almost identical in the middle of the year from around the 15th to the 50th week in all years. Only in the weeks during which the influenza rates peak there are differences in the level of the rates, but the typical course is constant over all years.</p>
 <p><img src="curaio_clean/static/curaio_clean_13_0.png" alt="png"></p>
-<h2 id="22-google-trends">2.2 Google Trends</h2>
+<h3 id="22-google-trends">2.2 Google Trends</h3>
 <p>In the next step the Google Trends data was analyzed. As explained in the introduction of this notebook, the keywords used for this project are a combination of typical symptoms of a flu or influenza. The identified keywords used in this project are:</p>
 <ul>
 <li>fever</li>
@@ -260,7 +262,7 @@ Although the level of ILI rates changes during the observed period, the plot dis
 <p>Using the same way of displaying the relationship between calendar weeks and the respective Google Trends index as for the relationship between ILI rates and calendar weeks before, a very similar picture emerges, though not as clear as before: the search volume for typical flu and influenza symptoms is lowest during the summer months, increases slowly during autumn, more rapidly during winter months and peaks around February.</p>
 <p><img src="curaio_clean/static/curaio_clean_20_0.png" alt="png"></p>
 <p><img src="curaio_clean/static/curaio_clean_20_1.png" alt="png"></p>
-<h2 id="23-both-ili-rates-and-google-trends">2.3 Both: ILI Rates and Google Trends</h2>
+<h3 id="23-both-ili-rates-and-google-trends">2.3 Both: ILI Rates and Google Trends</h3>
 <p>Plotting both ILI rates and Google Trends data together in a single graph shows that the two curves seem to run pretty much together and follow the same course.</p>
 <p><img src="curaio_clean/static/curaio_clean_23_0.png" alt="png"></p>
 <p>This first graphical intuition of the time series more or less running together can also be tested more rigorously using the correlation coefficient between the search volume of each keyword and the ILI rates. Displaying the correlation matrix between all variables confirms our first intuition. There is a high correlation between the Google Trends data and the ILI rates for most of the keywords. Especially for the keywords fever, flu and cough there is a very high correlation coefficient of around 0.912, 0.840 and 0.848, respectively, showing that these time series are highly correlated. The correlation coefficient for sore throat is still pretty high (0.730), for headache substantially lower (0.458). There is also high correlation between some of the keywords, e.g. between cough and sore throat (0.875). However, we are still going to keep all of the keywords as explanatory variables.</p>
@@ -408,7 +410,7 @@ Looking at the correlation coefficients of the lagged Google Trends data and the
   </tbody>
 </table>
 </div>
-<h1 id="3-forecasting-and-model-evaluation">3. Forecasting and model evaluation</h1>
+<h2 id="3-forecasting-and-model-evaluation">3. Forecasting and model evaluation</h2>
 <p>After cleaning the data, getting it into the right format, i.e. a single dataframe containing both ILI rates and Google Trends index data merged on a datetime index, the models to forecast the data were created and compared on their prediction accuracy. For comparison and evaluation the Root Mean Squared Error (RMSE) metric was used. This metric takes the difference between the forecasted datapoint and the actual value (i.e. the residual) and squares it, does this for each single datapoint, averages the squared residuals and takes the square root of this average. Thus, the RMSE can be written as:<br>
 $$\text{RMSE} = \sqrt{\frac{1}{n} \sum_{i=1}^{n} (y_i - \hat{y_i})^2}$$</p>
 <p>In comparison to other common evaluation metrics which can be used for regression or forecasting tasks, as for example the Absolute Mean Error (MAE), the RMSE gives relatively high weight to large errors since the errors are squared before they are averaged and thus these  are penalized more. However, in contrast to the MAE, the RMSE cannot be interpreted as nicely. <br>
@@ -416,8 +418,8 @@ $$\text{RMSE} = \sqrt{\frac{1}{n} \sum_{i=1}^{n} (y_i - \hat{y_i})^2}$$</p>
 Before using the Google Trends data to forecast ILI rates two classical univariate forecasting methods were used: a model of the ARMA model class and Holt-Winter&rsquo;s Triple Exponential Smoothing method.</p>
 <div class="highlight"><pre class="chroma"><code class="language-python" data-lang="python"><span class="k">def</span> <span class="nf">rmse</span><span class="p">(</span><span class="n">testdf</span><span class="p">,</span> <span class="n">preddf</span><span class="p">):</span>
     <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">mean_squared_error</span><span class="p">(</span><span class="n">testdf</span><span class="p">,</span> <span class="n">preddf</span><span class="p">))</span>
-</code></pre></div><h2 id="31-univariate-forecasting">3.1 Univariate Forecasting</h2>
-<h3 id="311-autoarima">3.1.1 auto.arima</h3>
+</code></pre></div><h3 id="31-univariate-forecasting">3.1 Univariate Forecasting</h3>
+<h4 id="311-autoarima">3.1.1 auto.arima</h4>
 <p>The first class of models fit to the data and used to make predictions is the class of Auto Regressive Moving Average (ARMA) models. Such a model has got many different parameters that have to be chosen before fitting the model to get decent results. To avoid choosing all of those parameters in advance, the Python package pmdarima and its auto_arima() function were used. This function grid searches through a combination of parameters and chooses the model which minimizes some information criteria (the Akaike Information Criterion (AIC) and the Bayesian Information Criterion (BIC)). <br>
 The only parameter that has to be known and set before running the function is the order of seasonality $m$. As we saw earlier in Chapter 3.1 of this Notebook, the data exhibits very strong and clear seasonality, which repeats on a yearly cycle. Since the data is on a weekly basis, one seasonal cycles corresponds to 52 weeks, and therefore $m=52$ was chosen before running auto_arima().</p>
 <div class="highlight"><pre class="chroma"><code class="language-python" data-lang="python"><span class="c1"># fitting the model</span>
@@ -435,7 +437,7 @@ The only parameter that has to be known and set before running the function is t
     <span class="n">model</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">new_ob</span><span class="p">,</span> <span class="n">suppress_warnings</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
 </code></pre></div><p>In the graph below the actual and the predicted ILI Rates are plotted against the timepoints. This graph can be used to evaluate the performance of our prediction. At a first glance, the prediction looks very close to the actual values. This first graphical intuition is also confirmed using the RMSE criterion. Our forecast yields a RMSE of 0.251 as can also be seen from the plot.</p>
 <p><img src="curaio_clean/static/curaio_clean_39_0.png" alt="png"></p>
-<h3 id="312-holt-winters-seasonal-method">3.1.2 Holt-Winters&rsquo; seasonal method</h3>
+<h4 id="312-holt-winters-seasonal-method">3.1.2 Holt-Winters&rsquo; seasonal method</h4>
 <p>After trying the ARMA class models, another univariate model to make the forecasts was used, namely the Triple Exponential Smoothing method, also known as Holt-Winters model. This model can be used for time series data which exhibit seasonalities to make forecasts and is another classical and commonly used model for time series prediction and is thus also used here. In the same manner as before, a one-step-ahead forecast is produced, the model is updated using the actual value for the forecasted period and then the ILI rate for the next period is predicted.</p>
 <div class="highlight"><pre class="chroma"><code class="language-python" data-lang="python"><span class="n">holt</span> <span class="o">=</span> <span class="n">ExponentialSmoothing</span><span class="p">(</span><span class="n">train</span><span class="p">,</span> <span class="n">trend</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">seasonal</span><span class="o">=</span><span class="s2">&#34;add&#34;</span><span class="p">,</span> 
                             <span class="n">seasonal_periods</span><span class="o">=</span><span class="mi">52</span><span class="p">)</span>
@@ -456,7 +458,7 @@ The only parameter that has to be known and set before running the function is t
     
 </code></pre></div><p>The same way of graphical evaluation and quantitative evaluation using the RMSE was used as with the SARMA model. The Holt-Winters prediction seems to be as close to the actual test values as the SARMA model for the first few periods and also for the decline after the rates have peaked. However, the model does not capture the drop on the way to the peak and in addition to that the prediction seems to be too low for the period between the drop and the peak. The RMSE amounts to around 0.420 and therefore confirms that the Holt-Winters model performs worse than the SARMA model used before.</p>
 <p><img src="curaio_clean/static/curaio_clean_45_0.png" alt="png"></p>
-<h2 id="32-multivariate-forecasting-xgboost">3.2 Multivariate Forecasting: XGBoost</h2>
+<h3 id="32-multivariate-forecasting-xgboost">3.2 Multivariate Forecasting: XGBoost</h3>
 <p>Since the goal was to forecast ILI rates using Google search volumes for typical influenza and flu symptoms, in addition to the historical time series data of ILI rates themselves the Google Trends index data described in 3.2 were used as well. The algorithm used was the XGBoost regression model. XGBoost is a tree-based machine learning algorithm using boosted trees. It is very efficient, needs relatively low computing time, is able to handle missing values and uses regularization to avoid overfitting (for more details see for example <a href="https://xgboost.readthedocs.io/en/latest/">the XGBoost documentation</a>). <br>
 To get the dataframe into the desired format, at first the Google Trends data were shifted one period into the future, such that this week&rsquo;s Google Trends index data correspond to next week&rsquo;s ILI rates. Before training the XGBoost model, there are some hyperparameters which have to be set in advance. Since XGBoost tends to work very well without much tuning or adjustment, only two hyperparameters were changed: first, it was found that a value of 1 for the learning rate works best for the problem at hand, while typically smaller numbers between 0.01 and 0.3 tend to work well; and second, we increased the maximum depth of a single tree to allow for a higher flexibility. The remaining parameters were kept as set by default.</p>
 <div class="highlight"><pre class="chroma"><code class="language-python" data-lang="python"><span class="c1"># train XGBoost regression model and make predictions</span>
@@ -468,7 +470,7 @@ To get the dataframe into the desired format, at first the Google Trends data we
 <span class="n">xgb_pred</span> <span class="o">=</span> <span class="n">bst</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">dtest</span><span class="p">)</span>
 </code></pre></div><p><img src="curaio_clean/static/curaio_clean_50_0.png" alt="png"></p>
 <p>The plotted prediction looks very close to the actual test values. Even the two drops are captured well, especially compared to the Holt-Winters model used before. The RMSE is also very low with around only 0.116.</p>
-<h1 id="4-model-comparison-and-conclusion">4. Model comparison and conclusion</h1>
+<h2 id="4-model-comparison-and-conclusion">4. Model comparison and conclusion</h2>
 <p>Using univariate forecasting methods, the SARMA model outperformed the Holt-Winters model, however, both models yielded a pretty precise estimate of one-period-ahead ILI rates forecasts. A more modern Machine Learning approach, using the XGBoost algorithm with Google Trends index data of typical flu and influenza symptoms as explanatory variables instead of historical ILI rates themselves as input to the model, performed even better than the already very precise SARMA model and thus also better than the Holt-Winters method. The graph below plots the actual and predicted ILI rates against the timepoints for all 3 models and their RMSE for a direct comparison.</p>
 <p><img src="curaio_clean/static/curaio_clean_54_0.png" alt="png"></p>
 <p>To sum up, both (classical) univariate and multivariate (machine learning) forecasting methods gave very precise and accurate results for a forecasting horizon of one period. However, the XGBoost [RMSE: 0.116] outperforms the SARMA model [RMSE: 0.251] as well as the Holt-Winters&rsquo; Triple Exponential Smoothing model [RMSE: 0.420]. <br></p>

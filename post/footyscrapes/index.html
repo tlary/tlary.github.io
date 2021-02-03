@@ -177,8 +177,8 @@
             
             
 	    <div class="post-content-text">
-    	        <p>In recent years, soccer has increasingly become a multi-billion euro industry. In order identify drivers of success and to better analyze the matches, more and more (match) data is collected and new metrics are used to describe the teams&rsquo; performance. Two of such new metrics are the so called expected goals (xG) and expected goals against (xGA). xG try to quantify not only how many shots and chances a team had during a game, but also aims at quantifying the quality of these chances, considering from where the shot was taken, the angle to the goal and how many opponents were still between the ball and the goal. xGA are very similar to xG, but try to quantify the expected goals a team would concede. xG and xGA can also be seen as being the probability of a shot scoring a goal. Hence, xG/xGA are always between 0 and 1 for a single shot.</p>
-<p>Since these metrics are fairly new, they are often not included in post match statistics. One of the few websites which report these is understat.com. In this project, I use python and the selenium package to click through the webpage and extract the reported post match data for all matches and leagues for which there are data given.</p>
+    	        <p>In recent years, soccer has increasingly become a multi-billion-euro industry. In order identify drivers of success and to better analyze the matches, more and more (match) data is collected and new metrics are used to describe the teams&rsquo; performance. Two of such new metrics are the so-called expected goals (xG) and expected goals against (xGA). xG try to quantify not only how many shots and chances a team had during a game, but also aims at quantifying the quality of these chances, considering from where the shot was taken, the angle to the goal and how many opponents were standing between the ball and the goal. xGA are very similar to xG, but try to quantify the expected goals a team would concede. xG and xGA can also be seen as being the probability of a shot scoring a goal. Hence, xG/xGA are always between 0 and 1 for a single shot.</p>
+<p>Since these metrics are fairly new, they are often not included in post-match statistics. One of the few websites which report these is understat.com. In this project, I use python and the selenium package to click through the webpage and extract the reported post-match data for all matches and leagues for which data is available.</p>
 <h2 id="1-investigating-the-website">1. Investigating the website</h2>
 <p>The first step in each web scraping project is to take a look at the webpage and identify the steps needed to get to the desired data. <a href="https://understat.com/">understat</a> provides data for 6 major leagues: Premier League (<em>EPL</em>), La Liga (<em>La_liga</em>), Bundesliga (<em>Bundesliga</em>), Serie A (<em>Serie_A</em>), Ligue 1 (<em>Ligue_1</em>), and the Russian Premier League (<em>RFPL</em>). The landing page for the respective league can be accessed via:</p>
 <blockquote>
@@ -191,7 +191,7 @@
 <p>The first season, for which there is data is 2014/2015.</p>
 <p>In the following I use the Bundesliga season of 2018/2019 as an example to further guide through the code and the data extraction process. When opening the <a href="https://understat.com/league/Bundesliga/2018">link to this season</a>, there are two buttons which can be used to navigate through the season, previous week and next week:</p>
 <p><img src="landingpage.png" alt="landingpage.png"></p>
-<p>However, when navigating through the season, the link does not change at all, and accessing the above stated URL always points to the landing page, i.e. the upcoming matches or the last matchday of the season. Hence, storing the links in a list, going through this list and extract the data using <a href="https://www.crummy.com/software/BeautifulSoup/bs4/doc/">beautifulsoup</a> for example, would not work. We need a solution which independently clicks through the page and extracts then extracts the relevant data.</p>
+<p>However, when navigating through the season, the link does not change at all, and accessing the above stated URL always points to the landing page, i.e. the upcoming matches or the last matchday of the season. Hence, storing the links in a list, going through this list and extract the data using <a href="https://www.crummy.com/software/BeautifulSoup/bs4/doc/">beautifulsoup</a> for example, would not work. We need a solution which independently clicks through the page and extracts the relevant data.</p>
 <h2 id="2-web-scraping-with-selenium">2. Web Scraping with Selenium</h2>
 <p>Here is where <a href="https://selenium-python.readthedocs.io/index.html">Selenium</a> comes into play. The documentation states in the introduction:</p>
 <blockquote>
@@ -220,16 +220,16 @@
 <span class="n">browser</span> <span class="o">=</span> <span class="n">initialize_browser</span><span class="p">()</span>
 </code></pre></div><p>The next step is to point selenium to the buttons which are to be clicked on. To find the elements we are looking for, we open the webpage in chrome, right-click on the page, and select &ldquo;Inspect&rdquo;. In the window on the right we click on &ldquo;Select an element in the page to inspect it&rdquo; and click on the &ldquo;prev week&rdquo; and &ldquo;next week&rdquo; buttons. From the panel on the right we can see the classes of these buttons and use the &ldquo;find_element_by_class_name&rdquo; function to find them. This approach is used for all the elements we find to find throughout this project.</p>
 <p><img src="prevButton.png" alt="prevButton.png"></p>
-<p>We can then use the information we have until this point to access the landing page and click to the first week of the season with the following code:</p>
+<p>We can then use the information we have at this point to access the landing page and click to the first week of the season with the following code:</p>
 <div class="highlight"><pre class="chroma"><code class="language-python" data-lang="python"><span class="n">browser</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&#34;https://understat.com/league/bundesliga/2018&#34;</span><span class="p">)</span>
 <span class="n">prev_week</span> <span class="o">=</span> <span class="n">browser</span><span class="o">.</span><span class="n">find_element_by_class_name</span><span class="p">(</span><span class="s2">&#34;calendar-prev&#34;</span><span class="p">)</span>
 <span class="k">while</span> <span class="n">prev_week</span><span class="o">.</span><span class="n">is_enabled</span><span class="p">():</span>
     <span class="n">prev_week</span><span class="o">.</span><span class="n">click</span><span class="p">()</span>
 </code></pre></div><p>We now need to write the functionality to extract the relevant match data for all the matches for each week. We will let Selenium imitate the following workflow:</p>
 <ol>
-<li>click on a match</li>
-<li>select the &ldquo;Stats&rdquo; tab</li>
-<li>find the classes of all the stats listed and store them in variables</li>
+<li>Click on a match</li>
+<li>Select the &ldquo;Stats&rdquo; tab</li>
+<li>Find the classes of all the stats listed and store them in variables</li>
 </ol>
 <p><img src="stats.png" alt="stats.png"></p>
 <p>In addition to the class names, we also use XPaths to easily find the match data. This can be done in the same way as before using the &ldquo;Inspect&rdquo; tab. In order to extract the data and to keep the code readable, we define some helper functions, which edit the strings into the desired format:</p>

@@ -183,9 +183,9 @@
 <blockquote>
 <p>&ldquo;fastai is a deep learning library which provides practitioners with high-level components that can quickly and easily provide state-of-the-art results in standard deep learning domains, and provides researchers with low-level components that can be mixed and matched to build new approaches. It aims to do both things without substantial compromises in ease of use, flexibility, or performance. (&hellip;) These abstractions can be expressed concisely and clearly by leveraging the dynamism of the underlying Python language and the flexibility of the PyTorch library.</p>
 </blockquote>
-<p>I will use fastai to train a model which outputs a song&rsquo;s genre based on its lyrics. To facilitate training I use the so-called &ldquo;ULMFiT approach&rdquo;. The ULMFit approach works as follows:</p>
+<p>I will use fastai to train a model which outputs a song&rsquo;s genre based on its lyrics. To facilitate training, I use the so-called &ldquo;ULMFiT approach&rdquo;. The ULMFit approach works as follows:</p>
 <ol>
-<li>At first, a so-called language model is trained on a large text corpus. The language model&rsquo;s task is to guess the next word in a sequence of words.</li>
+<li>At first, a so-called language model is trained on a large text corpus. The language model&rsquo;s task is to predict the next word in a sequence of words.</li>
 <li>This general language model is fine-tuned on the text corpus used for the classification task, i.e. in this case on the song lyrics. This is done to learn and adapt to the specific characteristics of the corpus.</li>
 <li>The fine-tuned language model is eventually used to train the classifier.</li>
 </ol>
@@ -193,11 +193,11 @@
 <center>Source: <a href="https://docs.fast.ai/tutorial.text.html#The-ULMFiT-approach">fastai docs</a></center>
 <h2 id="1-getting-the-lyrics-data">1. Getting the Lyrics Data</h2>
 <p>The first step in this project is to collect some data. Since the goal is to train a classifier based on lyrics we need a corpus of song texts. <a href="https://docs.genius.com/">Genius</a> provides a free application programming interface (API) which can be used to extract various information for songs, albums and artists. While the API cannot be used to directly get lyrics, there is a package called lyricsgenius that does just that. <a href="https://lyricsgenius.readthedocs.io/en/master/">lyricsgenius</a> utilizes the API to extract information and uses this information to actually scrape the song lyrics using the <a href="https://pypi.org/project/beautifulsoup4/">Beautiful Soup</a> package.</p>
-<p>In order to use lyricsgenius, one needs to sign up for the genius api using a and create a <a href="https://genius.com/api-clients">client access token</a>. After the token is created, it can be stored in a .env file. This way the token does not need to be hard coded in the script. Hence, a .env file is created containing</p>
+<p>In order to use lyricsgenius, one needs to sign up for the genius api and create a <a href="https://genius.com/api-clients">client access token</a>. After the token is created, it can be stored in a .env file. This way the token does not need to be hard coded in the script. Hence, a .env file is created containing</p>
 <blockquote>
 <p>CLIENT_ACCESS_TOKEN=XXXXX</p>
 </blockquote>
-<p>where XXXXX is the personalized token. After this is done, we load the packages and load the client token into our environment.</p>
+<p>where XXXXX is the personalized token. After this is done, we load the packages and the client access token into our environment.</p>
 <div class="highlight"><pre class="chroma"><code class="language-python" data-lang="python"><span class="kn">from</span> <span class="nn">dotenv</span> <span class="kn">import</span> <span class="n">load_dotenv</span>
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">lyricsgenius</span> <span class="kn">as</span> <span class="nn">lg</span>
@@ -317,7 +317,7 @@
 <span class="n">learn_lm</span> <span class="o">=</span> <span class="n">language_model_learner</span><span class="p">(</span><span class="n">dlsLyrics</span><span class="p">,</span> <span class="n">AWD_LSTM</span><span class="p">,</span> <span class="n">drop_mult</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">pretrained</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> 
                                   <span class="n">pretrained_fnames</span><span class="o">=</span><span class="n">pretrained_fnames</span><span class="p">,</span> 
                                   <span class="n">metrics</span><span class="o">=</span><span class="p">[</span><span class="n">accuracy</span><span class="p">,</span> <span class="n">Perplexity</span><span class="p">()])</span><span class="o">.</span><span class="n">to_fp16</span><span class="p">()</span>
-</code></pre></div><p>fastai provides a helpful function to find the optimal learning rate for model training: <code>lr_find()</code>. This function uses an idea developed by <a href="https://arxiv.org/abs/1803.09820">Leslie N. Smith</a> plots the loss against various learning rates. In order to accellerate learning, we want to choose a learning rate, at which the loss declines the fastest. This is at the steepest decline in the plot, here at a learning rate of around 0.05. Hence, we choose this as the learning rate for one epoch of training.</p>
+</code></pre></div><p>fastai provides a helpful function to find the optimal learning rate for model training: <code>lr_find()</code>. This function uses an idea developed by <a href="https://arxiv.org/abs/1803.09820">Leslie N. Smith</a> and plots the loss against various learning rates. In order to accelerate learning, we want to choose a learning rate, at which the loss declines the fastest. This is at the steepest decline in the plot, here at a learning rate of around 0.05. Hence, we choose this as the learning rate for one epoch of training.</p>
 <div class="highlight"><pre class="chroma"><code class="language-python" data-lang="python"><span class="n">learn_lm</span><span class="o">.</span><span class="n">lr_find</span><span class="p">()</span>
 </code></pre></div><p><img src="static/genreClassifier_30_2.png" alt="png"></p>
 <div class="highlight"><pre class="chroma"><code class="language-python" data-lang="python"><span class="n">lr</span> <span class="o">=</span> <span class="mf">0.05</span>
