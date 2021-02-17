@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="en" data-theme=""><head>
+    <title> Tobias Larysch | Tracking ML Experiments, Model Performance, and Models using MLflow </title>
+
+    
+    <meta charset="utf-8"><meta name="generator" content="Hugo 0.74.3" /><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+    <meta name="description" content="Economist and Data Enthusiast">
+    
+    <link rel="stylesheet"
+          href="../../css/style.min.9a6700e4461b50dccdddfc4f81dc65d77e7fca22c35665e398a0c36568db59c7.css"
+          integrity="sha256-mmcA5EYbUNzN3fxPgdxl135/yiLDVmXjmKDDZWjbWcc="
+          crossorigin="anonymous"
+          type="text/css">
+    
+    <link rel="stylesheet"
+        href="../../css/markupHighlight.min.9755453ffb7bc4cd220f86ebb5922107b49f193cc62fc17e9785d27b33a8bf5b.css"
+        integrity="sha256-l1VFP/t7xM0iD4brtZIhB7SfGTzGL8F&#43;l4XSezOov1s="
+        crossorigin="anonymous"
+        type="text/css">
+    
+        
+        
+        <link rel="stylesheet"
+        href="../../css/custom4.min.a1a446954690774d4bd6407d0ffb438fa71d4d6f82b3164369ec40f2e4c9fb5b.css"
+        integrity="sha256-oaRGlUaQd01L1kB9D/tDj6cdTW&#43;CsxZDaexA8uTJ&#43;1s="
+        crossorigin="anonymous"
+        media="screen" />
+    
+        
+        
+        <link rel="stylesheet"
+        href="../../css/friend.min.d0809843e4028aaa20decda8dda26d1a3bae5e47e87311da5a10b607f015390a.css"
+        integrity="sha256-0ICYQ&#43;QCiqog3s2o3aJtGjuuXkfocxHaWhC2B/AVOQo="
+        crossorigin="anonymous"
+        media="screen" />
+    
+    <link rel="stylesheet" 
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css" 
+    integrity="sha512-+4zCK9k+qNFUR5X+cKL9EIR+ZOhtIloNl9GIKS57V1MyNsYpYcUrUeQc9vNfzsWfV28IaLL3i96P9sdNyeRssA==" 
+    crossorigin="anonymous" />
+
+    
+    <link rel="shortcut icon" href="../../favicons/favicon.ico" type="image/x-icon">
+    <link rel="apple-touch-icon" sizes="180x180" href="../../favicons/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="../../favicons/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="../../favicons/favicon-16x16.png">
+
+    <link rel="canonical" href="../../post/mlflow/">
+
+    
+    
+    
+    
+    <script type="text/javascript"
+            src="../../js/anatole-header.min.d8599ee07b7d3f11bafbac30657ccc591e8d7fd36a9f580cd4c09e24e0e4a971.js"
+            integrity="sha256-2Fme4Ht9PxG6&#43;6wwZXzMWR6Nf9Nqn1gM1MCeJODkqXE="
+            crossorigin="anonymous"></script>
+
+
+    <script type="text/javascript"
+            src="../../js/custom.min.adead2e63eefe548b5ce0aa68303df62a2e2e975242f58d58c080fb3a61e11d7.js"
+            integrity="sha256-rerS5j7v5Ui1zgqmgwPfYqLi6XUkL1jVjAgPs6YeEdc="
+            crossorigin="anonymous"></script>
+    <meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Tracking ML Experiments, Model Performance, and Models using MLflow"/>
+<meta name="twitter:description" content="In the course of data science projects, often a large number of different combinations of algorithms, preprocessing steps, and featuers are evaluated to find the best performing model. In this blogpost I introduce a simple and automated way of keeping track of different models&rsquo; performances using the MLflow framework."/>
+
+
+    
+	<script async src="https://cdn.panelbear.com/analytics.js?site=cIJFGgu2o5"></script>
+	<script>
+    	window.panelbear = window.panelbear || function() { (window.panelbear.q = window.panelbear.q || []).push(arguments); };
+    	panelbear('config', { site: 'cIJFGgu2o5'});
+	</script>
+
+
+    
+
+    
+    <script>
+    
+    window.onload = function(){
+    document
+        .getElementById("Linkedin")
+        .addEventListener("click", function (e) {
+        e.preventDefault();
+
+        
+        panelbear("track", "LinkedIn");
+        
+        
+        window.open(this.href, "_tab");
+        
+    });
+    
+    
+    document
+        .getElementById("GitHub")
+        .addEventListener("click", function (e) {
+        e.preventDefault();
+
+        
+        panelbear("track", "GitHub");
+        
+        
+        window.open(this.href, "_blank");
+        
+    });
+    
+
+
+    
+
+    
+    document
+        .getElementById("e-mail")
+        .addEventListener("click", function (e) {
+        e.preventDefault();
+
+        
+        panelbear("track", "Mail");
+        
+        
+        window.open(this.href, "_blank");
+        
+    });
+    
+    
+    document
+        .getElementById("Xing")
+        .addEventListener("click", function (e) {
+        e.preventDefault();
+
+        
+        panelbear("track", "Xing");
+        
+        
+        window.open(this.href, "_blank");
+        
+    });
+    }
+    </script>
+
+
+
+
+
+
+</head>
+<body><div class="sidebar . ">
+    <div class="logo-title">
+        <div class="title">
+            <img src="../../images/foto_cropped_small.jpg" alt="profile picture">
+            <h3 title=""><a href="../../">Tobias Larysch - Portfolio</a></h3>
+            <div class="description">
+                <p>Economist and Data Enthusiast</p>
+            </div>
+        </div>
+    </div>
+    <ul class="social-links">
+        
+            <li>
+                <a href="https://www.linkedin.com/in/tobias-larysch-97981519b/" rel="me" aria-label="Linkedin" id="Linkedin">
+                    <i class="fab fa-linkedin fa-2x" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            <li>
+                <a href="https://github.com/tlary" rel="me" aria-label="GitHub" id="GitHub">
+                    <i class="fab fa-github fa-2x" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            <li>
+                <a href="mailto:tobias-larysch@gmx.net" rel="me" aria-label="e-mail" id="e-mail">
+                    <i class="fas fa-envelope fa-2x" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            <li>
+                <a href="https://www.xing.com/profile/Tobias_Larysch/cv" rel="me" aria-label="Xing" id="Xing">
+                    <i class="fab fa-xing fa-2x" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+    </ul>
+    <div class="footer">
+        <div class="by_farbox">&copy; Tobias Larysch  2021 </div>
+    </div>
+</div>
+<div class="main">
+    <div class="page-top  . ">
+    <a role="button" class="navbar-burger" data-target="navMenu" aria-label="menu" aria-expanded="false">
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+    </a>
+    <ul class="nav" id="navMenu">
+        
+        
+            
+            <li><a 
+                   href="../../"
+                        
+                   title="">Projects </a></li>
+        
+            
+            <li><a 
+                   href="../../publications/"
+                        
+                   title="">Publications</a></li>
+        
+        
+        
+    </ul>
+</div>
+
+    <div class="autopagerize_page_element">
+        <div class="content">
+
+    <div class="post  . ">
+    	
+    	
+    		<nav id="TableOfContents">
+  <ul>
+    <li><a href="#1-load-data-and-create-models-to-log">1. Load Data and create Models to log</a></li>
+    <li><a href="#2-make-predictions-calculate-error-metrics-and-log-results">2. Make Predictions, calculate Error Metrics and log Results</a></li>
+    <li><a href="#3-evaluate-model-performance-and-log-results">3. Evaluate Model Performance and log Results</a></li>
+  </ul>
+</nav>
+        
+    	
+        <div class="post-content">
+            
+            <div class="post-title">
+                <h2>Tracking ML Experiments, Model Performance, and Models using MLflow</h3>
+                
+                    <div class="info">
+                        <em class="fas fa-calendar-day"></em>
+                        <span class="date"> 
+                                                Tue, Feb 16, 2021
+                                           </span>
+                        <em class="fas fa-stopwatch"></em>
+                        <span class="reading-time">5-minute read</span>
+                    </div>
+                    <div>
+                    	<hr style="height:1px;border-width:0;background-color:rgba(0,0,0,0.15)">
+                    </div>
+                
+            </div>
+            
+            
+	    <div class="post-content-text">
+    	        <p>During Data Science projects, one of the main objectives is to eventually deliver a well-performing predictive model. On the way to achieve this, Data Scientists usually test a large number of different algorithms with different hyperparameters, change the way the data is preprocessed (e.g. normalized, scaled, transformed to get the distribution more towards a normal distribution, etc.), or different combinations of features as input variables.</p>
+<p>In order not to lose track of the models, and especially their performance, it is advisable to track them in some way. A common option is to manually record the models and performance metrics, e.g. in an Excel sheet. However, this is not only cumbersome but also error-prone, especially when working on the same task with multiple people in a team. In this blog post I will present another, easier way to keep track of ML models and model training: using the <a href="https://www.mlflow.org/">MLflow</a> framework it is possible to incorporate logging the models and their performance with only very little lines of additional code.</p>
+<p>Besides tracking ML experiments, MLflow can actually be used to do a lot of other things as well. To cite their website:</p>
+<blockquote>
+<p>MLflow is an open source platform to manage the ML lifecycle, including experimentation, reproducibility, deployment, and a central model registry. MLflow currently offers four components:</p>
+<ul>
+<li><strong>MLflow Tracking:</strong> Record and query experiments: code, data, config, and results</li>
+<li><strong>MLflow Projects:</strong> Package data science code in a format to reproduce runs on any platform</li>
+<li><strong>MLflow Models:</strong> Deploy machine learning models in diverse serving environments</li>
+<li><strong>MLflow Model Registry:</strong> Store, annotate, discover, and manage models in a central repository</li>
+</ul>
+</blockquote>
+<p>In this post however, I will use the Tracking component only.</p>
+<h2 id="1-load-data-and-create-models-to-log">1. Load Data and create Models to log</h2>
+<p>To demonstrate MLflow&rsquo;s logging capabilities, we first need models that can be logged. In this example, we will use a generated dataset from scikit-learn&rsquo;s datasets module. <a href="https://scikit-learn.org/stable/modules/generated/sklearn.datasets.make_regression.html#sklearn.datasets.make_regression"><code>make_regression()</code></a> creates random input data and a corresponding numeric output, which is generated from a linear combination of the input variables. As usual, we divide the dataset into a training and a testing dataset.</p>
+<div class="highlight"><pre class="chroma"><code class="language-python" data-lang="python"><span class="kn">import</span> <span class="nn">pandas</span> <span class="kn">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">mlflow</span>
+<span class="kn">from</span> <span class="nn">sklearn</span> <span class="kn">import</span> <span class="n">datasets</span>
+<span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <span class="n">train_test_split</span><span class="p">,</span> <span class="n">RandomizedSearchCV</span>
+</code></pre></div><div class="highlight"><pre class="chroma"><code class="language-python" data-lang="python"><span class="n">X</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">datasets</span><span class="o">.</span><span class="n">make_regression</span><span class="p">(</span><span class="n">n_samples</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">n_features</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">noise</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">X</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
+<span class="n">X_train</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">test_size</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">123</span><span class="p">)</span>
+</code></pre></div><p>For demonstration purposes, we will use four different algorithms and log their performance as well as save the fitted models. We are going to use simple linear regression, elastic net, random forest, and XGBoost. The algorithms&rsquo; hyperparameters are tuned using <a href="https://www.jmlr.org/papers/volume13/bergstra12a/bergstra12a">Random Search</a> over a prespecified hyperparameter space evaluating 10 combinations of hyperparameters for elastic net, and 30 for random forest and XGBoost. Since the focus is not on the modeling part, I will skip any preprocessing steps here.</p>
+<div class="highlight"><pre class="chroma"><code class="language-python" data-lang="python"><span class="kn">from</span> <span class="nn">sklearn.linear_model</span> <span class="kn">import</span> <span class="n">LinearRegression</span><span class="p">,</span> <span class="n">ElasticNet</span>
+<span class="kn">from</span> <span class="nn">xgboost.sklearn</span> <span class="kn">import</span> <span class="n">XGBRegressor</span>
+<span class="kn">from</span> <span class="nn">sklearn.ensemble</span> <span class="kn">import</span> <span class="n">RandomForestRegressor</span>
+
+<span class="c1">### INITIALIZE MODELS</span>
+<span class="n">linReg</span> <span class="o">=</span> <span class="n">LinearRegression</span><span class="p">()</span>
+<span class="n">enet</span> <span class="o">=</span> <span class="n">ElasticNet</span><span class="p">()</span>
+<span class="n">rf</span> <span class="o">=</span> <span class="n">RandomForestRegressor</span><span class="p">()</span>
+<span class="n">xgb</span> <span class="o">=</span> <span class="n">XGBRegressor</span><span class="p">()</span>
+
+<span class="c1">### DEFINE HYPERPARAMETER SPACES</span>
+<span class="c1"># Parameter Grid: Elastic Net</span>
+<span class="n">hp_enet</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&#34;alpha&#34;</span><span class="p">:</span> <span class="p">[</span><span class="mf">1e-5</span><span class="p">,</span> <span class="mf">1e-4</span><span class="p">,</span> <span class="mf">1e-3</span><span class="p">,</span> <span class="mf">1e-2</span><span class="p">,</span> <span class="mf">1e-1</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">10.0</span><span class="p">,</span> <span class="mf">100.0</span><span class="p">],</span>
+           <span class="s2">&#34;l1_ratio&#34;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mf">0.01</span><span class="p">)}</span>
+
+<span class="c1"># Parameter Grid: Random Forest</span>
+<span class="n">hp_rf</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&#34;n_estimators&#34;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mi">1001</span><span class="p">,</span> <span class="mi">200</span><span class="p">),</span>
+         <span class="s2">&#34;max_features&#34;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&#34;auto&#34;</span><span class="p">,</span> <span class="s2">&#34;sqrt&#34;</span><span class="p">,</span> <span class="s2">&#34;log2&#34;</span><span class="p">],</span>
+         <span class="s2">&#34;max_depth&#34;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">51</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span>
+         <span class="s2">&#34;min_samples_split&#34;</span><span class="p">:</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">10</span><span class="p">],</span>
+         <span class="s2">&#34;min_samples_leaf&#34;</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">8</span><span class="p">],</span>
+         <span class="s2">&#34;bootstrap&#34;</span><span class="p">:</span> <span class="p">[</span><span class="bp">True</span><span class="p">,</span> <span class="bp">False</span><span class="p">]}</span>
+
+<span class="c1"># Parameter Grid: XGBoost</span>
+<span class="n">hp_xgb</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&#34;learning_rate&#34;</span><span class="p">:</span> <span class="nb">list</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mf">0.01</span><span class="p">,</span> <span class="mf">0.311</span><span class="p">,</span> <span class="mf">0.01</span><span class="p">)),</span>
+          <span class="s2">&#34;max_depth&#34;</span><span class="p">:</span> <span class="nb">list</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span><span class="mi">51</span><span class="p">,</span><span class="mi">5</span><span class="p">)),</span>
+          <span class="s2">&#34;min_child_weight&#34;</span><span class="p">:</span> <span class="nb">list</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">11</span><span class="p">,</span><span class="mi">2</span><span class="p">)),</span>
+          <span class="s2">&#34;colsample_bytree&#34;</span><span class="p">:</span> <span class="nb">list</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.91</span><span class="p">,</span> <span class="mf">0.05</span><span class="p">)),</span>
+          <span class="s2">&#34;gamma&#34;</span><span class="p">:</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">],</span>
+          <span class="s2">&#34;n_estimators&#34;</span><span class="p">:</span> <span class="nb">list</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">50</span><span class="p">,</span><span class="mi">501</span><span class="p">,</span><span class="mi">50</span><span class="p">))}</span>
+
+<span class="c1">### INITIALIZE RANDOMIZED SEARCH OBJECTS</span>
+<span class="n">enetModel</span> <span class="o">=</span> <span class="n">RandomizedSearchCV</span><span class="p">(</span><span class="n">enet</span><span class="p">,</span> <span class="n">hp_enet</span><span class="p">,</span> <span class="n">n_iter</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">n_jobs</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">rfModel</span> <span class="o">=</span> <span class="n">RandomizedSearchCV</span><span class="p">(</span><span class="n">rf</span><span class="p">,</span> <span class="n">hp_rf</span><span class="p">,</span> <span class="n">n_iter</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span> <span class="n">n_jobs</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">xgbModel</span> <span class="o">=</span> <span class="n">RandomizedSearchCV</span><span class="p">(</span><span class="n">xgb</span><span class="p">,</span> <span class="n">hp_xgb</span><span class="p">,</span> <span class="n">n_iter</span><span class="o">=</span><span class="mi">30</span><span class="p">)</span>
+
+<span class="c1">### FIT LINEAR REGRESSION MODEL AND RUN RANDOM SEARCH</span>
+<span class="n">lrModel</span> <span class="o">=</span> <span class="n">linReg</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+<span class="n">enetModel</span> <span class="o">=</span> <span class="n">enetModel</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+<span class="n">rfModel</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+<span class="n">xgbModel</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+</code></pre></div><h2 id="2-make-predictions-calculate-error-metrics-and-log-results">2. Make Predictions, calculate Error Metrics and log Results</h2>
+<p>After tuning and training the models, I write a small function that is used to evaluate how good each of these performs, and to log the corresponding performance metrics. Since this is a regression task, I will log the commonly used metrics RMSE, MAE, and R-squared. The function takes a fitted model and a test set as input, with the inputs and targets as separate objects (X and y). Furthermore, the name under which the model and performance metrics are to be logged can be specified. Inside the function, predictions for the test set are made, the performance metrics are calculated, and eventually logged with MLflow&rsquo;s <code>log_metric()</code> function. Moreover, the model is stored as a .pkl file by calling <code>log_model()</code>, and can be loaded back into scikit-learn and used to make predictions.</p>
+<div class="highlight"><pre class="chroma"><code class="language-python" data-lang="python"><span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="kn">import</span> <span class="n">mean_squared_error</span><span class="p">,</span> <span class="n">mean_absolute_error</span><span class="p">,</span> <span class="n">r2_score</span>
+
+<span class="c1"># define evaluation metrics to be logged</span>
+<span class="k">def</span> <span class="nf">metrics</span><span class="p">(</span><span class="n">actual</span><span class="p">,</span> <span class="n">pred</span><span class="p">):</span>
+    <span class="n">rmse</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">mean_squared_error</span><span class="p">(</span><span class="n">actual</span><span class="p">,</span> <span class="n">pred</span><span class="p">))</span>
+    <span class="n">mae</span> <span class="o">=</span> <span class="n">mean_absolute_error</span><span class="p">(</span><span class="n">actual</span><span class="p">,</span> <span class="n">pred</span><span class="p">)</span>
+    <span class="n">r2</span> <span class="o">=</span> <span class="n">r2_score</span><span class="p">(</span><span class="n">actual</span><span class="p">,</span> <span class="n">pred</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">rmse</span><span class="p">,</span> <span class="n">mae</span><span class="p">,</span> <span class="n">r2</span>
+
+<span class="c1"># logging functino</span>
+<span class="k">def</span> <span class="nf">log_metrics</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">experiment_id</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    
+    <span class="k">with</span> <span class="n">mlflow</span><span class="o">.</span><span class="n">start_run</span><span class="p">(</span><span class="n">run_name</span> <span class="o">=</span> <span class="n">name</span><span class="p">,</span> <span class="n">experiment_id</span><span class="o">=</span><span class="n">experiment_id</span><span class="p">):</span>
+         
+        <span class="c1"># make predictions        </span>
+        <span class="n">pred</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+    
+        <span class="c1"># generate performance metrics</span>
+        <span class="p">(</span><span class="n">rmse</span><span class="p">,</span> <span class="n">mae</span><span class="p">,</span> <span class="n">r2</span><span class="p">)</span> <span class="o">=</span> <span class="n">metrics</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">pred</span><span class="p">)</span>
+    
+        <span class="n">mlflow</span><span class="o">.</span><span class="n">log_metric</span><span class="p">(</span><span class="s2">&#34;RMSE&#34;</span><span class="p">,</span> <span class="n">rmse</span><span class="p">)</span>
+        <span class="n">mlflow</span><span class="o">.</span><span class="n">log_metric</span><span class="p">(</span><span class="s2">&#34;MAE&#34;</span><span class="p">,</span> <span class="n">mae</span><span class="p">)</span>
+        <span class="n">mlflow</span><span class="o">.</span><span class="n">log_metric</span><span class="p">(</span><span class="s2">&#34;R2&#34;</span><span class="p">,</span> <span class="n">r2</span><span class="p">)</span>
+        <span class="n">mlflow</span><span class="o">.</span><span class="n">sklearn</span><span class="o">.</span><span class="n">log_model</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+        
+        <span class="n">mlflow</span><span class="o">.</span><span class="n">end_run</span><span class="p">()</span>
+</code></pre></div><p>Calling this function with all four models then stores the performance metrics to disk. MLflow creates a directory called &ldquo;mlruns&rdquo; under which the results are saved.</p>
+<div class="highlight"><pre class="chroma"><code class="language-python" data-lang="python"><span class="n">log_metrics</span><span class="p">(</span><span class="n">lrModel</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_test</span><span class="p">,</span> <span class="s2">&#34;Linear Regression&#34;</span><span class="p">)</span>
+<span class="n">log_metrics</span><span class="p">(</span><span class="n">enetModel</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_test</span><span class="p">,</span> <span class="s2">&#34;Elastic Net&#34;</span><span class="p">)</span>
+<span class="n">log_metrics</span><span class="p">(</span><span class="n">rfModel</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_test</span><span class="p">,</span> <span class="s2">&#34;Random Forest&#34;</span><span class="p">)</span>
+<span class="n">log_metrics</span><span class="p">(</span><span class="n">xgbModel</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_test</span><span class="p">,</span> <span class="s2">&#34;XGBoost&#34;</span><span class="p">)</span>
+</code></pre></div><h2 id="3-evaluate-model-performance-and-log-results">3. Evaluate Model Performance and log Results</h2>
+<p>Another cool thing about MLflow besides its ease of use is the fact that it comes with a UI to evaluate the runs and performance. To take a look at the results, simply type <code>mlflow ui</code> into a terminal in the root directory and navigate to http://127.0.0.1:5000 in your browser. You will see a UI that looks like this:</p>
+<p><img src="ui.png" alt="image.png"></p>
+<p>It is also possible to organize the single runs into experiments, for example, if a project requires multiple models. Simply create a new experiment and provide the experiment_id as an argument to the above-stated function:</p>
+<div class="highlight"><pre class="chroma"><code class="language-python" data-lang="python"><span class="n">mlflow</span><span class="o">.</span><span class="n">create_experiment</span><span class="p">(</span><span class="s2">&#34;ML Model Training: Regression&#34;</span><span class="p">)</span>
+<span class="n">log_metrics</span><span class="p">(</span><span class="n">lrModel</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_test</span><span class="p">,</span> <span class="s2">&#34;Linear Regression&#34;</span><span class="p">,</span> <span class="n">experiment_id</span><span class="o">=</span><span class="s2">&#34;1&#34;</span><span class="p">)</span>
+<span class="n">log_metrics</span><span class="p">(</span><span class="n">enetModel</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_test</span><span class="p">,</span> <span class="s2">&#34;Elastic Net&#34;</span><span class="p">,</span> <span class="n">experiment_id</span><span class="o">=</span><span class="s2">&#34;1&#34;</span><span class="p">)</span>
+<span class="n">log_metrics</span><span class="p">(</span><span class="n">rfModel</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_test</span><span class="p">,</span> <span class="s2">&#34;Random Forest&#34;</span><span class="p">,</span> <span class="n">experiment_id</span><span class="o">=</span><span class="s2">&#34;1&#34;</span><span class="p">)</span>
+<span class="n">log_metrics</span><span class="p">(</span><span class="n">xgbModel</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_test</span><span class="p">,</span> <span class="s2">&#34;XGBoost&#34;</span><span class="p">,</span> <span class="n">experiment_id</span><span class="o">=</span><span class="s2">&#34;1&#34;</span><span class="p">)</span>
+</code></pre></div><p><img src="Auswahl_004.png" alt="Auswahl_004.png"></p>
+
+            </div></div>
+        
+        
+
+        
+    </div>
+    
+
+
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript"
+        src="../../js/jquery.min.86b1e8f819ee2d9099a783e50b49dff24282545fc40773861f9126b921532e4c.js"
+        integrity="sha256-hrHo&#43;BnuLZCZp4PlC0nf8kKCVF/EB3OGH5EmuSFTLkw="
+        crossorigin="anonymous"></script>
+
+
+
+
+<script type="text/javascript"
+        src="../../js/bundle.min.0f9c74cb78f13d1f15f33daff4037c70354f98acfbb97a6f61708966675c3cae.js"
+        integrity="sha256-D5x0y3jxPR8V8z2v9AN8cDVPmKz7uXpvYXCJZmdcPK4="
+        crossorigin="anonymous"></script>
+
+<script type="text/javascript"
+        src="../../js/medium-zoom.min.92f21c856129f84aeb719459b3e6ac621a3032fd7b180a18c04e1d12083f8aba.js"
+        integrity="sha256-kvIchWEp&#43;ErrcZRZs&#43;asYhowMv17GAoYwE4dEgg/iro="
+        crossorigin="anonymous"></script>
+<link rel="stylesheet"
+              href="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.css"
+              integrity="sha384-zB1R0rpPzHqg7Kpt0Aljp8JPLqbXI3bhnPWROx27a9N0Ll6ZP/&#43;DiW/UqRcLbRjq"
+              crossorigin="anonymous"><script defer
+                src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.js"
+                integrity="sha384-y23I5Q6l&#43;B6vatafAwxRu/0oK/79VlbSz7Q9aiSZUvyWYIYsd&#43;qj&#43;o24G5ZU2zJz"
+                crossorigin="anonymous"></script><script defer
+                src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/contrib/auto-render.min.js"
+                integrity="sha384-kWPLUVMOks5AQFrykwIup5lo0m3iMkkHrD0uJ4H5cjeGihAutqP0yW0J6dpFiVkI"
+                crossorigin="anonymous"
+                onload="renderMathInElement(document.body);"></script></body>
+
+</html>
