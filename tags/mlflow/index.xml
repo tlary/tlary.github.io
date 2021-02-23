@@ -17,7 +17,7 @@
       <pubDate>Tue, 16 Feb 2021 00:00:00 +0000</pubDate>
       
       <guid>/post/mlflow/</guid>
-      <description>In the course of data science projects, often a large number of different combinations of algorithms, preprocessing steps, and featuers are evaluated to find the best performing model. In this blogpost I introduce a simple and automated way of keeping track of different models&amp;rsquo; performances using the MLflow framework.</description>
+      <description>In the course of data science projects, often a large number of different combinations of algorithms, preprocessing steps, and featuers is evaluated to find the best performing model. In this blogpost I introduce a simple and automated way of keeping track of different models&amp;rsquo; performances using the MLflow framework.</description>
     </item>
     
   </channel>
