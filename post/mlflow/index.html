@@ -251,7 +251,7 @@
             
             
 	    <div class="post-content-text">
-    	        <p>During Data Science projects, one of the main objectives is to eventually deliver a well-performing predictive model. On the way to achieve this, Data Scientists usually test a large number of different algorithms with different hyperparameters, change the way the data is preprocessed (e.g. normalized, scaled, transformed to get the distribution more towards a normal distribution, etc.), or different combinations of features as input variables.</p>
+    	        <p>During Data Science projects, one of the main objectives is to eventually deliver a well-performing predictive model. To achieve this, Data Scientists usually test a large number of different algorithms with different hyperparameters, change the way the data is preprocessed (e.g. normalized, scaled, transformed to get the distribution more towards a normal distribution, etc.), or different combinations of features as input variables.</p>
 <p>In order not to lose track of the models, and especially their performance, it is advisable to track them in some way. A common option is to manually record the models and performance metrics, e.g. in an Excel sheet. However, this is not only cumbersome but also error-prone, especially when working on the same task with multiple people in a team. In this blog post I will present another, easier way to keep track of ML models and model training: using the <a href="https://www.mlflow.org/">MLflow</a> framework it is possible to incorporate logging the models and their performance with only very little lines of additional code.</p>
 <p>Besides tracking ML experiments, MLflow can actually be used to do a lot of other things as well. To cite their website:</p>
 <blockquote>
@@ -263,7 +263,7 @@
 <li><strong>MLflow Model Registry:</strong> Store, annotate, discover, and manage models in a central repository</li>
 </ul>
 </blockquote>
-<p>In this post however, I will use the Tracking component only.</p>
+<p>In this post however, I will use the tracking component only.</p>
 <h2 id="1-load-data-and-create-models-to-log">1. Load Data and create Models to log</h2>
 <p>To demonstrate MLflow&rsquo;s logging capabilities, we first need models that can be logged. In this example, we will use a generated dataset from scikit-learn&rsquo;s datasets module. <a href="https://scikit-learn.org/stable/modules/generated/sklearn.datasets.make_regression.html#sklearn.datasets.make_regression"><code>make_regression()</code></a> creates random input data and a corresponding numeric output, which is generated from a linear combination of the input variables. As usual, we divide the dataset into a training and a testing dataset.</p>
 <div class="highlight"><pre class="chroma"><code class="language-python" data-lang="python"><span class="kn">import</span> <span class="nn">pandas</span> <span class="kn">as</span> <span class="nn">pd</span>

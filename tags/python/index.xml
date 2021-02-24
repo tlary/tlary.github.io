@@ -44,7 +44,7 @@
       <pubDate>Tue, 22 Dec 2020 00:00:00 +0000</pubDate>
       
       <guid>/post/genredeploy/</guid>
-      <description>After building and training a ML model, the next step to actually generate business value is to deploy the model so that it can be used in production. In this blog I build a small App and deploy the genre classification model built in the last blogpost on Heroku.</description>
+      <description>After building and training a ML model, the next step to actually generate business value is to deploy the model so that it can be used in production. In this blog I build a webapp and deploy the genre classification model built in the last blogpost on Heroku.</description>
     </item>
     
     <item>
