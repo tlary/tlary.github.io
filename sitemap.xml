@@ -4,26 +4,51 @@
   
   <url>
     <loc>/</loc>
-    <lastmod>2021-02-16T00:00:00+00:00</lastmod>
+    <lastmod>2021-03-02T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>/tags/mlflow/</loc>
-    <lastmod>2021-02-16T00:00:00+00:00</lastmod>
+    <loc>/post/coviddashboard/</loc>
+    <lastmod>2021-03-02T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/dashboard/</loc>
+    <lastmod>2021-03-02T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/etl/</loc>
+    <lastmod>2021-03-02T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/github-actions/</loc>
+    <lastmod>2021-03-02T00:00:00+00:00</lastmod>
   </url>
   
   <url>
     <loc>/post/</loc>
-    <lastmod>2021-02-16T00:00:00+00:00</lastmod>
+    <lastmod>2021-03-02T00:00:00+00:00</lastmod>
   </url>
   
   <url>
     <loc>/tags/python/</loc>
-    <lastmod>2021-02-16T00:00:00+00:00</lastmod>
+    <lastmod>2021-03-02T00:00:00+00:00</lastmod>
   </url>
   
   <url>
     <loc>/tags/</loc>
+    <lastmod>2021-03-02T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/visualization/</loc>
+    <lastmod>2021-03-02T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/mlflow/</loc>
     <lastmod>2021-02-16T00:00:00+00:00</lastmod>
   </url>
   

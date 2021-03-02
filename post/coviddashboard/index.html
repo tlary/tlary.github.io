@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="en" data-theme=""><head>
+    <title> Tobias Larysch | Building an interactive Covid-19 Dashboard with Streamlit, Plotly, and GitHub Actions </title>
+
+    
+    <meta charset="utf-8"><meta name="generator" content="Hugo 0.74.3" /><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+    <meta name="description" content="Economist and Data Enthusiast">
+    
+    <link rel="stylesheet"
+          href="../../css/style.min.9a6700e4461b50dccdddfc4f81dc65d77e7fca22c35665e398a0c36568db59c7.css"
+          integrity="sha256-mmcA5EYbUNzN3fxPgdxl135/yiLDVmXjmKDDZWjbWcc="
+          crossorigin="anonymous"
+          type="text/css">
+    
+    <link rel="stylesheet"
+        href="../../css/markupHighlight.min.9755453ffb7bc4cd220f86ebb5922107b49f193cc62fc17e9785d27b33a8bf5b.css"
+        integrity="sha256-l1VFP/t7xM0iD4brtZIhB7SfGTzGL8F&#43;l4XSezOov1s="
+        crossorigin="anonymous"
+        type="text/css">
+    
+        
+        
+        <link rel="stylesheet"
+        href="../../css/custom4.min.a1a446954690774d4bd6407d0ffb438fa71d4d6f82b3164369ec40f2e4c9fb5b.css"
+        integrity="sha256-oaRGlUaQd01L1kB9D/tDj6cdTW&#43;CsxZDaexA8uTJ&#43;1s="
+        crossorigin="anonymous"
+        media="screen" />
+    
+        
+        
+        <link rel="stylesheet"
+        href="../../css/friend.min.d0809843e4028aaa20decda8dda26d1a3bae5e47e87311da5a10b607f015390a.css"
+        integrity="sha256-0ICYQ&#43;QCiqog3s2o3aJtGjuuXkfocxHaWhC2B/AVOQo="
+        crossorigin="anonymous"
+        media="screen" />
+    
+    <link rel="stylesheet" 
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css" 
+    integrity="sha512-+4zCK9k+qNFUR5X+cKL9EIR+ZOhtIloNl9GIKS57V1MyNsYpYcUrUeQc9vNfzsWfV28IaLL3i96P9sdNyeRssA==" 
+    crossorigin="anonymous" />
+
+    
+    <link rel="shortcut icon" href="../../favicons/favicon.ico" type="image/x-icon">
+    <link rel="apple-touch-icon" sizes="180x180" href="../../favicons/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="../../favicons/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="../../favicons/favicon-16x16.png">
+
+    <link rel="canonical" href="../../post/coviddashboard/">
+
+    
+    
+    
+    
+    <script type="text/javascript"
+            src="../../js/anatole-header.min.d8599ee07b7d3f11bafbac30657ccc591e8d7fd36a9f580cd4c09e24e0e4a971.js"
+            integrity="sha256-2Fme4Ht9PxG6&#43;6wwZXzMWR6Nf9Nqn1gM1MCeJODkqXE="
+            crossorigin="anonymous"></script>
+
+
+    <script type="text/javascript"
+            src="../../js/custom.min.adead2e63eefe548b5ce0aa68303df62a2e2e975242f58d58c080fb3a61e11d7.js"
+            integrity="sha256-rerS5j7v5Ui1zgqmgwPfYqLi6XUkL1jVjAgPs6YeEdc="
+            crossorigin="anonymous"></script>
+    <meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Building an interactive Covid-19 Dashboard with Streamlit, Plotly, and GitHub Actions"/>
+<meta name="twitter:description" content="One important task for data scientists is visualizing data in a form that it can be accessed and used by stakeholders. A common way to achieve this, is by using dashboards that display relevant data clearly and in a compact form. In this blogpost I build a dashboard on the current Covid-19 situation in Germany. The dashboard provides information on the most relevant figures, is interactive, and is automatically updated with the newest data on a daily basis using GitHub Actions."/>
+
+
+    
+	<script async src="https://cdn.panelbear.com/analytics.js?site=cIJFGgu2o5"></script>
+	<script>
+    	window.panelbear = window.panelbear || function() { (window.panelbear.q = window.panelbear.q || []).push(arguments); };
+    	panelbear('config', { site: 'cIJFGgu2o5'});
+	</script>
+
+
+    
+
+    
+    <script>
+    
+    window.onload = function(){
+    document
+        .getElementById("Linkedin")
+        .addEventListener("click", function (e) {
+        e.preventDefault();
+
+        
+        panelbear("track", "LinkedIn");
+        
+        
+        window.open(this.href, "_tab");
+        
+    });
+    
+    
+    document
+        .getElementById("GitHub")
+        .addEventListener("click", function (e) {
+        e.preventDefault();
+
+        
+        panelbear("track", "GitHub");
+        
+        
+        window.open(this.href, "_blank");
+        
+    });
+    
+
+
+    
+
+    
+    document
+        .getElementById("e-mail")
+        .addEventListener("click", function (e) {
+        e.preventDefault();
+
+        
+        panelbear("track", "Mail");
+        
+        
+        window.open(this.href, "_blank");
+        
+    });
+    
+    
+    document
+        .getElementById("Xing")
+        .addEventListener("click", function (e) {
+        e.preventDefault();
+
+        
+        panelbear("track", "Xing");
+        
+        
+        window.open(this.href, "_blank");
+        
+    });
+    }
+    </script>
+
+
+
+
+
+
+</head>
+<body><div class="sidebar . ">
+    <div class="logo-title">
+        <div class="title">
+            <img src="../../images/foto_cropped_small.jpg" alt="profile picture">
+            <h3 title=""><a href="../../">Tobias Larysch - Portfolio</a></h3>
+            <div class="description">
+                <p>Economist and Data Enthusiast</p>
+            </div>
+        </div>
+    </div>
+    <ul class="social-links">
+        
+            <li>
+                <a href="https://www.linkedin.com/in/tobias-larysch-97981519b/" rel="me" aria-label="Linkedin" id="Linkedin">
+                    <i class="fab fa-linkedin fa-2x" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            <li>
+                <a href="https://github.com/tlary" rel="me" aria-label="GitHub" id="GitHub">
+                    <i class="fab fa-github fa-2x" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            <li>
+                <a href="mailto:tobias-larysch@gmx.net" rel="me" aria-label="e-mail" id="e-mail">
+                    <i class="fas fa-envelope fa-2x" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            <li>
+                <a href="https://www.xing.com/profile/Tobias_Larysch/cv" rel="me" aria-label="Xing" id="Xing">
+                    <i class="fab fa-xing fa-2x" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+    </ul>
+    <div class="footer">
+        <div class="by_farbox">&copy; Tobias Larysch  2021 </div>
+    </div>
+</div>
+<div class="main">
+    <div class="page-top  . ">
+    <a role="button" class="navbar-burger" data-target="navMenu" aria-label="menu" aria-expanded="false">
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+    </a>
+    <ul class="nav" id="navMenu">
+        
+        
+            
+            <li><a 
+                   href="../../"
+                        
+                   title="">Projects </a></li>
+        
+            
+            <li><a 
+                   href="../../publications/"
+                        
+                   title="">Publications</a></li>
+        
+        
+        
+    </ul>
+</div>
+
+    <div class="autopagerize_page_element">
+        <div class="content">
+
+    <div class="post  . ">
+    	
+    	
+    		<nav id="TableOfContents">
+  <ul>
+    <li><a href="#1-writing-an-etl-pipeline">1. Writing an ETL pipeline</a></li>
+    <li><a href="#2-creating-an-interactive-map-using-plotly">2. Creating an interactive Map using Plotly</a></li>
+    <li><a href="#3-creating-the-webapp-using-streamlit">3. Creating the webapp using Streamlit</a>
+      <ul>
+        <li><a href="#31-layout-and-functionality">3.1 Layout and Functionality</a></li>
+        <li><a href="#32-app-performance-and-caching">3.2 App Performance and Caching</a></li>
+        <li><a href="#33-putting-it-all-together">3.3 Putting it all together</a></li>
+      </ul>
+    </li>
+    <li><a href="#4-daily-update-the-data-using-github-actions">4. Daily update the data using GitHub Actions</a></li>
+    <li><a href="#5-deploying-the-app-to-streamlit-sharing">5. Deploying the app to Streamlit Sharing</a></li>
+  </ul>
+</nav>
+        
+    	
+        <div class="post-content">
+            
+            <div class="post-title">
+                <h2>Building an interactive Covid-19 Dashboard with Streamlit, Plotly, and GitHub Actions</h3>
+                
+                    <div class="info">
+                        <em class="fas fa-calendar-day"></em>
+                        <span class="date"> 
+                                                Tue, Mar 2, 2021
+                                           </span>
+                        <em class="fas fa-stopwatch"></em>
+                        <span class="reading-time">11-minute read</span>
+                    </div>
+                    <div>
+                    	<hr style="height:1px;border-width:0;background-color:rgba(0,0,0,0.15)">
+                    </div>
+                
+            </div>
+            
+            
+	    <div class="post-content-text">
+    	        <p>(The code for the project can also be seen in my <a href="https://github.com/tlary">GitHub Account</a> in <a href="https://github.com/tlary/covid_dashboard">this repo</a>.)</p>
+<p>When people hear data science, they think of cutting-edge algorithms, computer vision using deep learning, hyperparameter optimization, or model training and evaluation. Another large part of a Data Scientist&rsquo;s work, however, is data visualization, reporting, or descriptive data analysis. In fact, these tasks are often just as important, or even more important, because they can quickly and easily reveal important information, and thus aid in informed decision-making. A relatively simple way to make the results of one&rsquo;s data analyses usable is by creating dashboards that show relevant metrics and KPIs, and by making the dashboard accessible to stakeholders.</p>
+<p>In this blogpost, I describe how I built such a dashboard with information on Covid-19 for Germany. The dashboard is interactive and the data is automatically updated on a daily basis. It is built in Python using the Streamlit package and deployed on Streamlit sharing:</p>
+<p><a href="https://share.streamlit.io/tlary/covid_dashboard/main/app.py"><img src="https://static.streamlit.io/badges/streamlit_badge_black_white.svg" alt="Open in Streamlit"></a></p>
+<p>I created the dashboard in 5 main steps:</p>
+<ol>
+<li>Writing an ETL pipeline</li>
+<li>Creating the visualizations</li>
+<li>Creating the app</li>
+<li>Automatically update the data</li>
+<li>Deploy the dashboard</li>
+</ol>
+<h2 id="1-writing-an-etl-pipeline">1. Writing an ETL pipeline</h2>
+<p>The first step in every data science, analysis, or visualization project is collecting the data. Fortunately, the Robert Koch Institute (RKI), which is officially and continuously monitoring the Covid-19 situation in Germany, provides an application programming interface (API) from which the official data regarding new cases, deaths, 7-day incidence, etc., can be retrieved. This <a href="https://npgeo-corona-npgeo-de.hub.arcgis.com/datasets/c2f3c3b935a242169c6bec82e1fa573e_0">API</a> provides key data for the respective day and is updated daily. To extract the data, I use the requests library to make a get request to the link stated on the RKI webpage. I use the GeoJSON endpoint to also retrieve geospatial information, which is used for plotting later on.</p>
+<p><img src="geojsonapi.png" alt="geojsonapi"></p>
+<p>The get-request returns a status code of 200 when it was successful together with the data in JSON format. The actual data is stored under the key &ldquo;features&rdquo;. To get it in a more accessible format, I use Pandas&rsquo; <code>json_normalize()</code> function. Combining this into a small function then looks as follows:</p>
+<div class="highlight"><pre class="chroma"><code class="language-python" data-lang="python"><span class="k">def</span> <span class="nf">get_data_from_api</span><span class="p">(</span><span class="n">url</span><span class="p">):</span>
+    <span class="n">request</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">status_code</span> <span class="o">==</span> <span class="mi">200</span><span class="p">:</span>
+        <span class="c1"># transform to pandas DataFrame</span>
+        <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">json_normalize</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">json</span><span class="p">()[</span><span class="s2">&#34;features&#34;</span><span class="p">])</span>
+        <span class="k">return</span> <span class="n">df</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">print</span><span class="p">(</span><span class="s2">&#34;The data could not be updated.&#34;</span><span class="p">)</span>
+</code></pre></div><p>The data contains information on different aggregation levels, with the district level being the lowest level. Besides district-level data, the numbers are also aggregated to federal state level as well as for whole Germany. The data however only comes with an identifier; to get human-readable names of the districts and federal states, I therefore use another <a href="https://www.arcgis.com/home/item.html?id=c093fe0ef8fd4707beeb3dc0c02c3381">endpoint</a> which provides a list that can be used to map the IDs to the official names. Using the just defined function, the data is then pulled from the API and the labels are merged to the Covid-19 data. The rest of the script is mostly renaming of the columns and deleting some unused columns from the data. In a last step, the extracted and cleaned dataset is then stored as a .csv file, and the data is additionally appended to another .csv file, which contains the history of the data:</p>
+<div class="highlight"><pre class="chroma"><code class="language-python" data-lang="python"><span class="c1"># save data as .csv file</span>
+<span class="n">df</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="s2">&#34;covid_data.csv&#34;</span><span class="p">)</span>
+
+<span class="c1"># append to history csv file</span>
+<span class="n">df</span><span class="p">[</span><span class="s2">&#34;date&#34;</span><span class="p">]</span> <span class="o">=</span> <span class="n">date</span><span class="o">.</span><span class="n">today</span><span class="p">()</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&#34;%m-</span><span class="si">%d</span><span class="s2">-%Y&#34;</span><span class="p">)</span>
+<span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="s2">&#34;./history.csv&#34;</span><span class="p">):</span>
+    <span class="n">df</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="s2">&#34;history.csv&#34;</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s2">&#34;a&#34;</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span> <span class="c1"># append to existing file</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="n">df</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="s2">&#34;history.csv&#34;</span><span class="p">)</span> <span class="c1"># create new file</span>
+</code></pre></div><h2 id="2-creating-an-interactive-map-using-plotly">2. Creating an interactive Map using Plotly</h2>
+<p>One component of the dashboard is an interactive choropleth map that displays the 7-day incidence for each county in Germany. I use <a href="https://plotly.com/python/choropleth-maps/">Plotly</a> for this task. It has the advantage that selected data is displayed on the map when one hovers over the counties. I choose to display the county name, 7-day incidence, new cases, and new deaths. The map is created using <a href="https://plotly.com/python/plotly-express/">Plotly Express</a> and the <code>px.choropleth</code> function. It takes a Pandas DataFrame as input, a GeoJSON object containing the coordinates, and some additional arguments, which I do not discuss in detail here. The data is already in a pandas DataFrame or can be loaded into such a DataFrame from the .csv file, however, I still need to create the GeoJSON object from the API. To do so, I create a dictionary containing the county ID to match the data, and the coordinates (see also <a href="https://towardsdatascience.com/how-to-create-outstanding-custom-choropleth-maps-with-plotly-and-dash-49ac918a5f05">this blogpost</a> on choropleth maps with plotly). Lastly, I do some styling and remove the base map. The whole function then looks like the following:</p>
+<div class="highlight"><pre class="chroma"><code class="language-python" data-lang="python"><span class="k">def</span> <span class="nf">create_map</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">api_url</span><span class="p">):</span>
+
+    <span class="c1"># get geometry information for plotting</span>
+    <span class="n">response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">api_url</span><span class="p">)</span>
+    <span class="n">kreis_geo</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">kreis</span> <span class="ow">in</span> <span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()[</span><span class="s2">&#34;features&#34;</span><span class="p">]:</span>
+        <span class="n">AdmUnitId</span> <span class="o">=</span> <span class="n">kreis</span><span class="p">[</span><span class="s2">&#34;properties&#34;</span><span class="p">][</span><span class="s2">&#34;AdmUnitId&#34;</span><span class="p">]</span>
+        <span class="n">geometry</span> <span class="o">=</span> <span class="n">kreis</span><span class="p">[</span><span class="s2">&#34;geometry&#34;</span><span class="p">]</span>
+        <span class="n">kreis_geo</span><span class="o">.</span><span class="n">append</span><span class="p">({</span>
+            <span class="s2">&#34;type&#34;</span><span class="p">:</span> <span class="s2">&#34;Feature&#34;</span><span class="p">,</span>
+            <span class="s2">&#34;geometry&#34;</span><span class="p">:</span> <span class="n">geometry</span><span class="p">,</span>
+            <span class="s2">&#34;id&#34;</span><span class="p">:</span> <span class="n">AdmUnitId</span>
+        <span class="p">})</span>
+    <span class="n">geo</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;FeatureCollection&#39;</span><span class="p">,</span> <span class="s1">&#39;features&#39;</span><span class="p">:</span> <span class="n">kreis_geo</span><span class="p">}</span>
+
+    <span class="c1"># keep counties only, 0-16: whole Germany and federal states</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="o">.</span><span class="n">AdmUnitId</span> <span class="o">&gt;</span> <span class="mi">16</span><span class="p">]</span>
+
+    <span class="c1"># create map</span>
+    <span class="n">fig</span> <span class="o">=</span> <span class="n">px</span><span class="o">.</span><span class="n">choropleth</span><span class="p">(</span><span class="n">df</span><span class="p">,</span>
+                        <span class="n">geojson</span><span class="o">=</span><span class="n">geo</span><span class="p">,</span>
+                        <span class="n">scope</span><span class="o">=</span><span class="s2">&#34;europe&#34;</span><span class="p">,</span>
+                        <span class="n">color_continuous_scale</span><span class="o">=</span><span class="s2">&#34;Burgyl&#34;</span><span class="p">,</span>
+                        <span class="n">locations</span><span class="o">=</span><span class="s2">&#34;AdmUnitId&#34;</span><span class="p">,</span>
+                        <span class="n">color</span><span class="o">=</span><span class="s2">&#34;inzidenz7Tage&#34;</span><span class="p">,</span>
+                        <span class="n">template</span><span class="o">=</span><span class="s2">&#34;simple_white&#34;</span><span class="p">,</span>
+                        <span class="n">hover_name</span><span class="o">=</span><span class="s2">&#34;verwaltungseinheit&#34;</span><span class="p">,</span>
+                        <span class="n">hover_data</span><span class="o">=</span><span class="p">(</span><span class="s2">&#34;inzidenz7Tage&#34;</span><span class="p">,</span> <span class="s2">&#34;infektionenNeu&#34;</span><span class="p">,</span> <span class="s2">&#34;todeNeu&#34;</span><span class="p">),</span>
+                        <span class="n">labels</span><span class="o">=</span><span class="p">{</span><span class="s2">&#34;AdmUnitId&#34;</span><span class="p">:</span> <span class="s2">&#34;Landkreis&#34;</span><span class="p">,</span>
+                                <span class="s2">&#34;verwarltungseinheit&#34;</span><span class="p">:</span> <span class="s2">&#34;Landkreis&#34;</span><span class="p">,</span>
+                                <span class="s2">&#34;inzidenz7Tage&#34;</span><span class="p">:</span> <span class="s2">&#34;7-Tage Inzidenz&#34;</span><span class="p">,</span>
+                                <span class="s2">&#34;todeNeu&#34;</span><span class="p">:</span> <span class="s2">&#34;Todesfälle&#34;</span><span class="p">,</span>
+                                <span class="s2">&#34;infektionenNeu&#34;</span><span class="p">:</span> <span class="s2">&#34;Neuinfektionen&#34;</span><span class="p">}</span>
+                        <span class="p">)</span>
+    <span class="n">fig</span><span class="o">.</span><span class="n">update_geos</span><span class="p">(</span><span class="n">fitbounds</span><span class="o">=</span><span class="s2">&#34;locations&#34;</span><span class="p">,</span> <span class="n">visible</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+    <span class="n">fig</span><span class="o">.</span><span class="n">update_layout</span><span class="p">(</span><span class="n">margin</span><span class="o">=</span><span class="p">{</span><span class="s2">&#34;r&#34;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&#34;t&#34;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&#34;l&#34;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&#34;b&#34;</span><span class="p">:</span> <span class="mi">0</span><span class="p">})</span>
+
+    <span class="k">return</span> <span class="n">fig</span>
+</code></pre></div><h2 id="3-creating-the-webapp-using-streamlit">3. Creating the webapp using Streamlit</h2>
+<h3 id="31-layout-and-functionality">3.1 Layout and Functionality</h3>
+<p>To create the actual webapp and the layout I use the Streamlit package (see also <a href="../../post/genre_streamlit/">this post</a>). At the top of the dashboard I want to display some key facts and figures: 7-day incidence, new cases, new cases in the last 7 days, total number of cases, new deaths, total number of deaths. There should also be a selectbox in which the user can choose the preferred level of aggregation, i.e. if the data for the whole country is shown, on a federal state level, or for a selected county. To achieve this, <code>st.selectbox()</code> is used to get the user input, which is then used to filter and select the data accordingly. To get a nice and compact layout, I use streamlit&rsquo;s built-in <a href="https://blog.streamlit.io/introducing-new-layout-options-for-streamlit/">columns functionality</a>:</p>
+<p><img src="keyfacts.png" alt="keyfacts.png"></p>
+<p>The choropleth map is then displayed below the key facts, and below the map, I display the top and bottom 5 counties based on the selected metrics. The user can choose between the key facts shown at the top of the dashboard: 7-day incidence, new cases, new cases in the last 7 days, total number of cases, new deaths, total number of deaths.</p>
+<p><img src="map.png" alt="map.png"></p>
+<h3 id="32-app-performance-and-caching">3.2 App Performance and Caching</h3>
+<p>Creating the map object takes some time, hence repeating this step every time the dashboard is loaded is slow and impedes performance of the page and the user experience. Luckily, Streamlit also comes with built-in caching. To cache a function, one can use the <code>@st.cache</code> decorator before defining functions. When the function is then called, Streamlit checks the inputs, variables used inside the function, the function body, and the body of any other function used inside the function. If it is the first time the function is called with a particular set of those values, the function is executed and the results are stored in a local cache. If the function is called again without any changes, the execution is skipped and the cached output is returned instead.</p>
+<p>I use this functionality for the functions that may take some time: loading the data from the .csv file, and creating the map object. Since the data is daily updated, it must be reloaded after an update. However, since the name of the .csv file, and hence the input to the data loading function, does not change, the cached data, i.e. the outdated data, is returned. To avoid this behavior, I define a function which evaluates the timestamp of the last data update. This timestamp is also used as input to the data loading function. Thus, when there is an updated version of the data (and therefore an updated timestamp), the function is executed again and loads the new data into the dashboard.</p>
+<h3 id="33-putting-it-all-together">3.3 Putting it all together</h3>
+<p>Putting all the above described steps together, the complete script that creates the streamlit webapp looks as follows:</p>
+<div class="highlight"><pre class="chroma"><code class="language-python" data-lang="python"><span class="kn">import</span> <span class="nn">pandas</span> <span class="kn">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">requests</span>
+<span class="kn">import</span> <span class="nn">streamlit</span> <span class="kn">as</span> <span class="nn">st</span>
+<span class="kn">import</span> <span class="nn">plotly.graph_objs</span>
+<span class="kn">import</span> <span class="nn">plotly.express</span> <span class="kn">as</span> <span class="nn">px</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span>
+<span class="kn">import</span> <span class="nn">locale</span>
+<span class="n">locale</span><span class="o">.</span><span class="n">setlocale</span><span class="p">(</span><span class="n">locale</span><span class="o">.</span><span class="n">LC_ALL</span><span class="p">,</span> <span class="s2">&#34;de_DE&#34;</span><span class="p">)</span>
+
+<span class="c1"># get timestamp of last data update</span>
+<span class="k">def</span> <span class="nf">get_timestamp</span><span class="p">(</span><span class="nb">file</span><span class="p">):</span>
+    <span class="n">ts</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">getmtime</span><span class="p">(</span><span class="nb">file</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">ts</span>
+
+<span class="c1"># load data into </span>
+<span class="nd">@st.cache</span><span class="p">(</span><span class="n">suppress_st_warning</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">load_data</span><span class="p">(</span><span class="nb">file</span><span class="p">,</span> <span class="n">timestamp</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="nb">file</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">df</span>
+
+<span class="nd">@st.cache</span><span class="p">(</span><span class="n">suppress_st_warning</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">hash_funcs</span><span class="o">=</span><span class="p">{</span><span class="n">plotly</span><span class="o">.</span><span class="n">graph_objs</span><span class="o">.</span><span class="n">Figure</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">_</span><span class="p">:</span> <span class="bp">None</span><span class="p">},</span> <span class="n">allow_output_mutation</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">create_map</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">api_url</span><span class="p">):</span>
+
+    <span class="c1"># get geometry information for plotting</span>
+    <span class="n">response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">api_url</span><span class="p">)</span>
+    <span class="n">kreis_geo</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">kreis</span> <span class="ow">in</span> <span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()[</span><span class="s2">&#34;features&#34;</span><span class="p">]:</span>
+        <span class="n">AdmUnitId</span> <span class="o">=</span> <span class="n">kreis</span><span class="p">[</span><span class="s2">&#34;properties&#34;</span><span class="p">][</span><span class="s2">&#34;AdmUnitId&#34;</span><span class="p">]</span>
+        <span class="n">geometry</span> <span class="o">=</span> <span class="n">kreis</span><span class="p">[</span><span class="s2">&#34;geometry&#34;</span><span class="p">]</span>
+        <span class="n">kreis_geo</span><span class="o">.</span><span class="n">append</span><span class="p">({</span>
+            <span class="s2">&#34;type&#34;</span><span class="p">:</span> <span class="s2">&#34;Feature&#34;</span><span class="p">,</span>
+            <span class="s2">&#34;geometry&#34;</span><span class="p">:</span> <span class="n">geometry</span><span class="p">,</span>
+            <span class="s2">&#34;id&#34;</span><span class="p">:</span> <span class="n">AdmUnitId</span>
+        <span class="p">})</span>
+    <span class="n">geo</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;FeatureCollection&#39;</span><span class="p">,</span> <span class="s1">&#39;features&#39;</span><span class="p">:</span> <span class="n">kreis_geo</span><span class="p">}</span>
+
+    <span class="c1"># keep counties only; 0-16: whole Germany and federal states</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="o">.</span><span class="n">AdmUnitId</span> <span class="o">&gt;</span> <span class="mi">16</span><span class="p">]</span>
+
+    <span class="c1"># create map</span>
+    <span class="n">fig</span> <span class="o">=</span> <span class="n">px</span><span class="o">.</span><span class="n">choropleth</span><span class="p">(</span><span class="n">df</span><span class="p">,</span>
+                        <span class="n">geojson</span><span class="o">=</span><span class="n">geo</span><span class="p">,</span>
+                        <span class="n">scope</span><span class="o">=</span><span class="s2">&#34;europe&#34;</span><span class="p">,</span>
+                        <span class="n">color_continuous_scale</span><span class="o">=</span><span class="s2">&#34;Burgyl&#34;</span><span class="p">,</span>
+                        <span class="n">locations</span><span class="o">=</span><span class="s2">&#34;AdmUnitId&#34;</span><span class="p">,</span>
+                        <span class="n">color</span><span class="o">=</span><span class="s2">&#34;inzidenz7Tage&#34;</span><span class="p">,</span>
+                        <span class="n">template</span><span class="o">=</span><span class="s2">&#34;simple_white&#34;</span><span class="p">,</span>
+                        <span class="n">hover_name</span><span class="o">=</span><span class="s2">&#34;verwaltungseinheit&#34;</span><span class="p">,</span>
+                        <span class="n">hover_data</span><span class="o">=</span><span class="p">(</span><span class="s2">&#34;inzidenz7Tage&#34;</span><span class="p">,</span> <span class="s2">&#34;infektionenNeu&#34;</span><span class="p">,</span> <span class="s2">&#34;todeNeu&#34;</span><span class="p">),</span>
+                        <span class="n">labels</span><span class="o">=</span><span class="p">{</span><span class="s2">&#34;AdmUnitId&#34;</span><span class="p">:</span> <span class="s2">&#34;Landkreis&#34;</span><span class="p">,</span>
+                                <span class="s2">&#34;verwarltungseinheit&#34;</span><span class="p">:</span> <span class="s2">&#34;Landkreis&#34;</span><span class="p">,</span>
+                                <span class="s2">&#34;inzidenz7Tage&#34;</span><span class="p">:</span> <span class="s2">&#34;7-Tage Inzidenz&#34;</span><span class="p">,</span>
+                                <span class="s2">&#34;todeNeu&#34;</span><span class="p">:</span> <span class="s2">&#34;Todesfälle&#34;</span><span class="p">,</span>
+                                <span class="s2">&#34;infektionenNeu&#34;</span><span class="p">:</span> <span class="s2">&#34;Neuinfektionen&#34;</span><span class="p">}</span>
+                        <span class="p">)</span>
+    <span class="n">fig</span><span class="o">.</span><span class="n">update_geos</span><span class="p">(</span><span class="n">fitbounds</span><span class="o">=</span><span class="s2">&#34;locations&#34;</span><span class="p">,</span> <span class="n">visible</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+    <span class="n">fig</span><span class="o">.</span><span class="n">update_layout</span><span class="p">(</span><span class="n">margin</span><span class="o">=</span><span class="p">{</span><span class="s2">&#34;r&#34;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&#34;t&#34;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&#34;l&#34;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&#34;b&#34;</span><span class="p">:</span> <span class="mi">0</span><span class="p">})</span>
+
+    <span class="k">return</span> <span class="n">fig</span>
+
+<span class="c1"># load data and create map object</span>
+<span class="n">ts</span> <span class="o">=</span> <span class="n">get_timestamp</span><span class="p">(</span><span class="s2">&#34;covid_data.csv&#34;</span><span class="p">)</span>
+<span class="n">updated</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">fromtimestamp</span><span class="p">(</span><span class="n">ts</span><span class="p">)</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&#34;</span><span class="si">%d</span><span class="s2">.%m.%Y %H:%M&#34;</span><span class="p">)</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">load_data</span><span class="p">(</span><span class="s2">&#34;covid_data.csv&#34;</span><span class="p">,</span> <span class="n">timestamp</span><span class="o">=</span><span class="n">ts</span><span class="p">,</span> <span class="n">index_col</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">fig</span> <span class="o">=</span> <span class="n">create_map</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="s2">&#34;https://opendata.arcgis.com/datasets/917fc37a709542548cc3be077a786c17_0.geojson&#34;</span><span class="p">)</span>
+
+<span class="c1">##### ACTUAL APP:</span>
+
+<span class="n">st</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&#34;Covid-19 Dashboard: Inzidenz in Deutschland&#34;</span><span class="p">)</span>
+<span class="n">st</span><span class="o">.</span><span class="n">markdown</span><span class="p">(</span><span class="s2">&#34;*Datenstand: &#34;</span> <span class="o">+</span> <span class="n">updated</span> <span class="o">+</span> <span class="s2">&#34;*&#34;</span><span class="p">)</span>
+<span class="n">st</span><span class="o">.</span><span class="n">markdown</span><span class="p">(</span><span class="s2">&#34;&lt;hr style=</span><span class="se">\&#34;</span><span class="s2">height:3px;border:none;background-color:darkgrey</span><span class="se">\&#34;</span><span class="s2">&gt;&#34;</span><span class="p">,</span> <span class="n">unsafe_allow_html</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+
+<span class="c1"># filter data using input</span>
+<span class="n">choices</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">verwaltungseinheit</span><span class="o">.</span><span class="n">unique</span><span class="p">())</span>
+<span class="nb">input</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">selectbox</span><span class="p">(</span><span class="s2">&#34;Wählen Sie eine Aggregationsebene. Sie können entweder einzelne Stadt- und Landkreise auswählen oder die gesamte BRD oder Bundesländer auswählen.&#34;</span><span class="p">,</span> <span class="n">choices</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="n">choices</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="s1">&#39;Bundesrepublik Deutschland&#39;</span><span class="p">))</span>
+
+<span class="n">inzidenz</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="s2">&#34;verwaltungseinheit&#34;</span><span class="p">]</span><span class="o">==</span><span class="nb">input</span><span class="p">]</span><span class="o">.</span><span class="n">inzidenz7Tage</span><span class="p">),</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">fall7tage</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="s2">&#34;verwaltungseinheit&#34;</span><span class="p">]</span><span class="o">==</span><span class="nb">input</span><span class="p">]</span><span class="o">.</span><span class="n">infektionen7Tage</span><span class="p">)</span>
+<span class="n">neuinfektionen</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="s2">&#34;verwaltungseinheit&#34;</span><span class="p">]</span><span class="o">==</span><span class="nb">input</span><span class="p">]</span><span class="o">.</span><span class="n">infektionenNeu</span><span class="p">)</span>
+<span class="n">gesamtinfektionen</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="s2">&#34;verwaltungseinheit&#34;</span><span class="p">]</span><span class="o">==</span><span class="nb">input</span><span class="p">]</span><span class="o">.</span><span class="n">infektionenGesamt</span><span class="p">)</span>
+<span class="n">todeNeu</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="s2">&#34;verwaltungseinheit&#34;</span><span class="p">]</span><span class="o">==</span><span class="nb">input</span><span class="p">]</span><span class="o">.</span><span class="n">todeNeu</span><span class="p">)</span>
+<span class="n">todeGesamt</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="s2">&#34;verwaltungseinheit&#34;</span><span class="p">]</span><span class="o">==</span><span class="nb">input</span><span class="p">]</span><span class="o">.</span><span class="n">todeGesamt</span><span class="p">)</span>
+
+<span class="c1">### KEY FACTS FOR SELECTED AGGREGATION</span>
+
+<span class="n">col1</span><span class="p">,</span> <span class="n">col2</span><span class="p">,</span> <span class="n">col3</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">beta_columns</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+<span class="k">with</span> <span class="n">col1</span><span class="p">:</span>
+    <span class="n">st</span><span class="o">.</span><span class="n">markdown</span><span class="p">(</span><span class="s2">&#34;### *7-Tage-Inzidenz:*&#34;</span><span class="p">)</span>
+    <span class="n">st</span><span class="o">.</span><span class="n">markdown</span><span class="p">(</span><span class="s2">&#34;### &lt;font color=‘#8b0000’&gt;&lt;strong&gt;{:n}&lt;/strong&gt;&lt;/font&gt;&#34;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">inzidenz</span><span class="p">),</span> <span class="n">unsafe_allow_html</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+    <span class="n">st</span><span class="o">.</span><span class="n">markdown</span><span class="p">(</span><span class="s2">&#34;### *7-Tage-Fallzahl:*&#34;</span><span class="p">)</span>
+    <span class="n">st</span><span class="o">.</span><span class="n">markdown</span><span class="p">(</span><span class="s2">&#34;### &lt;font color=‘#8b0000’&gt;&lt;strong&gt;{:n}&lt;/strong&gt;&lt;/font&gt;&#34;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">fall7tage</span><span class="p">),</span> <span class="n">unsafe_allow_html</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+    <span class="n">st</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&#34;</span><span class="se">\n</span><span class="s2">&#34;</span><span class="p">)</span>
+
+<span class="k">with</span> <span class="n">col2</span><span class="p">:</span>
+    <span class="n">st</span><span class="o">.</span><span class="n">markdown</span><span class="p">(</span><span class="s2">&#34;### *Neuinfektionen:*&#34;</span><span class="p">)</span>
+    <span class="n">st</span><span class="o">.</span><span class="n">markdown</span><span class="p">(</span><span class="s2">&#34;### &lt;font color=‘#8b0000’&gt;&lt;strong&gt;{:n}&lt;/strong&gt;&lt;/font&gt;&#34;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">neuinfektionen</span><span class="p">),</span> <span class="n">unsafe_allow_html</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+    <span class="n">st</span><span class="o">.</span><span class="n">markdown</span><span class="p">(</span><span class="s2">&#34;### *Gesamtzahl Fälle:*&#34;</span><span class="p">)</span>
+    <span class="n">st</span><span class="o">.</span><span class="n">markdown</span><span class="p">(</span><span class="s2">&#34;### &lt;font color=‘#8b0000’&gt;&lt;strong&gt;{:n}&lt;/strong&gt;&lt;/font&gt;&#34;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">gesamtinfektionen</span><span class="p">),</span> <span class="n">unsafe_allow_html</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+    <span class="n">st</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&#34;</span><span class="se">\n</span><span class="s2">&#34;</span><span class="p">)</span>
+
+<span class="k">with</span> <span class="n">col3</span><span class="p">:</span>
+    <span class="n">st</span><span class="o">.</span><span class="n">markdown</span><span class="p">(</span><span class="s2">&#34;### *Neue Todesfälle:*&#34;</span><span class="p">)</span>
+    <span class="n">st</span><span class="o">.</span><span class="n">markdown</span><span class="p">(</span><span class="s2">&#34;### &lt;font color=‘#8b0000’&gt;&lt;strong&gt;{:n}&lt;/strong&gt;&lt;/font&gt;&#34;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">todeNeu</span><span class="p">),</span> <span class="n">unsafe_allow_html</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+    <span class="n">st</span><span class="o">.</span><span class="n">markdown</span><span class="p">(</span><span class="s2">&#34;### *Gesamtzahl Todesfälle:*&#34;</span><span class="p">)</span>
+    <span class="n">st</span><span class="o">.</span><span class="n">markdown</span><span class="p">(</span><span class="s2">&#34;### &lt;font color=‘#8b0000’&gt;&lt;strong&gt;{:n}&lt;/strong&gt;&lt;/font&gt;&#34;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">todeGesamt</span><span class="p">),</span> <span class="n">unsafe_allow_html</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+    <span class="n">st</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&#34;</span><span class="se">\n</span><span class="s2">&#34;</span><span class="p">)</span>
+
+<span class="n">st</span><span class="o">.</span><span class="n">markdown</span><span class="p">(</span><span class="s2">&#34;&lt;hr style=</span><span class="se">\&#34;</span><span class="s2">height:3px;border:none;background-color:darkgrey</span><span class="se">\&#34;</span><span class="s2">&gt;&#34;</span><span class="p">,</span> <span class="n">unsafe_allow_html</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+
+<span class="c1">### CHOROPLETH MAP FOR GERMANY</span>
+
+<span class="n">st</span><span class="o">.</span><span class="n">subheader</span><span class="p">(</span><span class="s2">&#34;Infektionsgeschehen in Deutschland:&#34;</span><span class="p">)</span>
+<span class="n">st</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&#34;</span><span class="se">\n</span><span class="s2">&#34;</span><span class="p">)</span>
+<span class="n">st</span><span class="o">.</span><span class="n">plotly_chart</span><span class="p">(</span><span class="n">fig</span><span class="p">)</span>
+<span class="n">st</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&#34;</span><span class="se">\n</span><span class="s2">&#34;</span><span class="p">)</span>
+
+<span class="n">st</span><span class="o">.</span><span class="n">markdown</span><span class="p">(</span><span class="s2">&#34;&lt;hr style=</span><span class="se">\&#34;</span><span class="s2">height:3px;border:none;background-color:darkgrey</span><span class="se">\&#34;</span><span class="s2">&gt;&#34;</span><span class="p">,</span> <span class="n">unsafe_allow_html</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+
+<span class="c1">### TOP 5 / BOTTOM 5</span>
+
+<span class="n">st</span><span class="o">.</span><span class="n">subheader</span><span class="p">(</span><span class="s2">&#34;Landkreise mit den höchsten und niedrigsten Kennzahlen:&#34;</span><span class="p">)</span>
+
+<span class="n">df2</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s2">&#34;verwaltungseinheit&#34;</span><span class="p">)</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+<span class="n">df2</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="s2">&#34;infektionenGesamt&#34;</span><span class="p">:</span><span class="s2">&#34;Gesamtzahl Infektionen&#34;</span><span class="p">,</span> <span class="s2">&#34;todeGesamt&#34;</span><span class="p">:</span> <span class="s2">&#34;Gesamtzahl Todesfälle&#34;</span><span class="p">,</span>
+                    <span class="s2">&#34;infektionenNeu&#34;</span><span class="p">:</span> <span class="s2">&#34;Neuinfektionen&#34;</span><span class="p">,</span> <span class="s2">&#34;todeNeu&#34;</span><span class="p">:</span> <span class="s2">&#34;Neue Todesfälle&#34;</span><span class="p">,</span>
+                    <span class="s2">&#34;infektionen7Tage&#34;</span><span class="p">:</span><span class="s2">&#34;Gesamtzahl Infektionen vergangene 7 Tage&#34;</span><span class="p">,</span> <span class="s2">&#34;inzidenz7Tage&#34;</span><span class="p">:</span> <span class="s2">&#34;7-Tage-Inzidenz&#34;</span><span class="p">},</span>
+           <span class="n">inplace</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+
+<span class="n">metrics</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&#34;7-Tage-Inzidenz&#34;</span><span class="p">,</span> <span class="s2">&#34;Gesamtzahl Infektionen vergangene 7 Tage&#34;</span><span class="p">,</span> <span class="s2">&#34;Neuinfektionen&#34;</span><span class="p">,</span> <span class="s2">&#34;Gesamtzahl Infektionen&#34;</span><span class="p">,</span>
+           <span class="s2">&#34;Neue Todesfälle&#34;</span><span class="p">,</span> <span class="s2">&#34;Gesamtzahl Todesfälle&#34;</span><span class="p">]</span>
+<span class="n">input_number</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">selectbox</span><span class="p">(</span><span class="s2">&#34;Wählen Sie eine Kennzahl.&#34;</span><span class="p">,</span> <span class="n">metrics</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+<span class="n">df2</span> <span class="o">=</span> <span class="n">df2</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">df2</span><span class="o">.</span><span class="n">AdmUnitId</span> <span class="o">&gt;</span> <span class="mi">16</span><span class="p">]</span> <span class="c1"># exclude BRD and federal states aggregation</span>
+<span class="n">df2</span><span class="p">[</span><span class="s2">&#34;7-Tage-Inzidenz&#34;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">df2</span><span class="p">[</span><span class="s2">&#34;7-Tage-Inzidenz&#34;</span><span class="p">],</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">df2</span> <span class="o">=</span> <span class="n">df2</span><span class="p">[[</span><span class="n">input_number</span><span class="p">]]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span> <span class="c1"># make copy of data with relevant data only</span>
+<span class="n">df2</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="bp">None</span> <span class="c1"># remove index name</span>
+<span class="n">pd</span><span class="o">.</span><span class="n">options</span><span class="o">.</span><span class="n">display</span><span class="o">.</span><span class="n">float_format</span> <span class="o">=</span> <span class="s2">&#34;{:,.1f}&#34;</span><span class="o">.</span><span class="n">format</span>
+<span class="n">col4</span><span class="p">,</span> <span class="n">col5</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">beta_columns</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+<span class="k">with</span> <span class="n">col4</span><span class="p">:</span>
+    <span class="n">df2</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="n">input_number</span><span class="p">,</span> <span class="n">ascending</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+    <span class="n">st</span><span class="o">.</span><span class="n">table</span><span class="p">(</span><span class="n">df2</span><span class="o">.</span><span class="n">head</span><span class="p">()</span><span class="o">.</span><span class="n">style</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s2">&#34;{:n}&#34;</span><span class="p">))</span>
+
+<span class="k">with</span> <span class="n">col5</span><span class="p">:</span>
+    <span class="n">df2</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="n">input_number</span><span class="p">,</span> <span class="n">ascending</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+    <span class="n">st</span><span class="o">.</span><span class="n">table</span><span class="p">(</span><span class="n">df2</span><span class="o">.</span><span class="n">head</span><span class="p">()</span><span class="o">.</span><span class="n">style</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s2">&#34;{:n}&#34;</span><span class="p">))</span>
+</code></pre></div><h2 id="4-daily-update-the-data-using-github-actions">4. Daily update the data using GitHub Actions</h2>
+<p>Since the dashboard visualizes information on a daily-changing topic, I need a way to also update the data that is used inside the dashboard daily. To achieve this, I make use of <a href="https://docs.github.com/en/actions">GitHub Actions</a>. GitHub Actions is a tool provided by GitHub that aids in deploying and testing code or automating tasks. Predefined workflows can be created and triggered by a number of events, including code pushes, and pull requests, or can be scheduled to run at specific UTC times. To create workflows, a .yml file needs to be created under a <code>./.github/workflows</code> directory. The .yml file I use in this project looks like the following:</p>
+<div class="highlight"><pre class="chroma"><code class="language-python" data-lang="python"><span class="n">name</span><span class="p">:</span> <span class="n">update</span><span class="o">-</span><span class="n">covid</span><span class="o">-</span><span class="n">data</span>
+<span class="n">on</span><span class="p">:</span>
+  <span class="n">schedule</span><span class="p">:</span>
+    <span class="o">-</span> <span class="n">cron</span><span class="p">:</span> <span class="s2">&#34;30 3 * * *&#34;</span>
+    
+<span class="n">jobs</span><span class="p">:</span>
+  <span class="n">build</span><span class="p">:</span>
+    <span class="n">runs</span><span class="o">-</span><span class="n">on</span><span class="p">:</span> <span class="n">ubuntu</span><span class="o">-</span><span class="n">latest</span> <span class="c1"># run workflow on ubuntu</span>
+    <span class="n">steps</span><span class="p">:</span> <span class="c1"># define the single steps of the job</span>
+    
+      <span class="o">-</span> <span class="n">name</span><span class="p">:</span> <span class="n">checkout</span> <span class="n">repo</span> <span class="n">content</span>
+        <span class="n">uses</span><span class="p">:</span> <span class="n">actions</span><span class="o">/</span><span class="n">checkout</span><span class="nd">@v2</span> <span class="c1"># check out repository and download it to the runner -&gt; to run actions against code</span>
+        
+      <span class="o">-</span> <span class="n">name</span><span class="p">:</span> <span class="n">setup</span> <span class="n">python</span>
+        <span class="n">uses</span><span class="p">:</span> <span class="n">actions</span><span class="o">/</span><span class="n">setup</span><span class="o">-</span><span class="n">python</span><span class="nd">@v2</span> <span class="c1"># install python</span>
+        <span class="k">with</span><span class="p">:</span>
+          <span class="n">python</span><span class="o">-</span><span class="n">version</span><span class="p">:</span> <span class="s2">&#34;3.8.6&#34;</span>
+          
+      <span class="o">-</span> <span class="n">name</span><span class="p">:</span> <span class="n">update</span> <span class="n">data</span>
+        <span class="n">run</span><span class="p">:</span> <span class="o">|</span>
+          <span class="n">python</span> <span class="o">-</span><span class="n">m</span> <span class="n">pip</span> <span class="n">install</span> <span class="o">--</span><span class="n">upgrade</span> <span class="n">pip</span> 
+          <span class="n">pip</span> <span class="n">install</span> <span class="o">-</span><span class="n">r</span> <span class="n">requirements</span><span class="o">.</span><span class="n">txt</span>
+          <span class="n">python</span> <span class="n">ETL</span><span class="o">.</span><span class="n">py</span>
+          
+      <span class="o">-</span> <span class="n">name</span><span class="p">:</span> <span class="n">commit</span> <span class="n">files</span>
+        <span class="n">run</span><span class="p">:</span> <span class="o">|</span>
+          <span class="n">git</span> <span class="n">config</span> <span class="o">--</span><span class="n">local</span> <span class="n">user</span><span class="o">.</span><span class="n">email</span> <span class="s2">&#34;user@email.com&#34;</span>
+          <span class="n">git</span> <span class="n">config</span> <span class="o">--</span><span class="n">local</span> <span class="n">user</span><span class="o">.</span><span class="n">name</span> <span class="s2">&#34;username&#34;</span>
+          <span class="n">git</span> <span class="n">add</span> <span class="o">-</span><span class="n">A</span>
+          <span class="n">git</span> <span class="n">commit</span> <span class="o">-</span><span class="n">m</span> <span class="s2">&#34;update data&#34;</span> <span class="o">-</span><span class="n">a</span>
+          
+      <span class="o">-</span> <span class="n">name</span><span class="p">:</span> <span class="n">push</span> <span class="n">to</span> <span class="n">repo</span>
+        <span class="n">uses</span><span class="p">:</span> <span class="n">ad</span><span class="o">-</span><span class="n">m</span><span class="o">/</span><span class="n">github</span><span class="o">-</span><span class="n">push</span><span class="o">-</span><span class="n">action</span><span class="nd">@v0.6.0</span>
+        <span class="k">with</span><span class="p">:</span>
+          <span class="n">github_token</span><span class="p">:</span> <span class="err">$</span><span class="p">{{</span> <span class="n">secrets</span><span class="o">.</span><span class="n">GITHUB_TOKEN</span> <span class="p">}}</span>
+          <span class="n">branch</span><span class="p">:</span> <span class="n">main</span>
+        
+</code></pre></div><p>The name can be anything you&rsquo;d like and is used as reference in the GitHub Actions tab. The following lines then tell GitHub to run the workflow on a fixed schedule, here at 3:30 AM UTC. You can use <a href="https://crontab.guru/">https://crontab.guru/</a> to create the cron syntax used here. In the following lines the jobs are specified. According to the documentation &ldquo;a job is a set of steps that execute on the same runner.&rdquo;. The next line then tells GitHub Actions that the workflow should be run on a ubuntu machine. The following steps define the single tasks that are to be run. In the .yml file, I often make use of so-called actions. These are pre-defined building blocks that are defined by other users and execute specific tasks. These actions created by the GitHub community can be found in the <a href="https://github.com/marketplace?type=actions">GitHub Marketplace</a>.</p>
+<p>Here, I will only provide a short overview of the single steps. For a more detailed explanation and overview of the syntax you can refer to the GitHub Actions documentation.</p>
+<ul>
+<li><strong>checkout repo content:</strong> checkout the branch such that it can be used by the runner</li>
+<li><strong>setup python</strong>: install python, version 3.8.6</li>
+<li><strong>update data:</strong> 1.) upgrade pip; 2.) pip install the packages specified in requirements.txt; 3.) run the ETL.py script which updates the data</li>
+<li><strong>commit files</strong>: commit updated files</li>
+<li><strong>push to repo:</strong> push the updated data and files to the repository</li>
+</ul>
+<p>Defining the above stated GitHub Actions workflow makes it possible to update the data daily and save the new data in the repository, from which it can then be loaded into the dashboard webapp.</p>
+<h2 id="5-deploying-the-app-to-streamlit-sharing">5. Deploying the app to Streamlit Sharing</h2>
+<p>The app can either be run locally using the code seen in this post or in the corresponding <a href="https://github.com/tlary/covid_dashboard">GitHub repository</a>, or can be accessed online. I deployed the webapp using Streamlit Sharing. The webapp can be accessed via <a href="https://share.streamlit.io/tlary/covid_dashboard/main/app.py">https://share.streamlit.io/tlary/covid_dashboard/main/app.py</a> or by clicking on the badge below.</p>
+<p><a href="https://share.streamlit.io/tlary/covid_dashboard/main/app.py"><img src="https://static.streamlit.io/badges/streamlit_badge_black_white.svg" alt="Open in Streamlit"></a></p>
+
+            </div></div>
+        
+        
+
+        
+    </div>
+    
+
+
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript"
+        src="../../js/jquery.min.86b1e8f819ee2d9099a783e50b49dff24282545fc40773861f9126b921532e4c.js"
+        integrity="sha256-hrHo&#43;BnuLZCZp4PlC0nf8kKCVF/EB3OGH5EmuSFTLkw="
+        crossorigin="anonymous"></script>
+
+
+
+
+<script type="text/javascript"
+        src="../../js/bundle.min.0f9c74cb78f13d1f15f33daff4037c70354f98acfbb97a6f61708966675c3cae.js"
+        integrity="sha256-D5x0y3jxPR8V8z2v9AN8cDVPmKz7uXpvYXCJZmdcPK4="
+        crossorigin="anonymous"></script>
+
+<script type="text/javascript"
+        src="../../js/medium-zoom.min.92f21c856129f84aeb719459b3e6ac621a3032fd7b180a18c04e1d12083f8aba.js"
+        integrity="sha256-kvIchWEp&#43;ErrcZRZs&#43;asYhowMv17GAoYwE4dEgg/iro="
+        crossorigin="anonymous"></script>
+<link rel="stylesheet"
+              href="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.css"
+              integrity="sha384-zB1R0rpPzHqg7Kpt0Aljp8JPLqbXI3bhnPWROx27a9N0Ll6ZP/&#43;DiW/UqRcLbRjq"
+              crossorigin="anonymous"><script defer
+                src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.js"
+                integrity="sha384-y23I5Q6l&#43;B6vatafAwxRu/0oK/79VlbSz7Q9aiSZUvyWYIYsd&#43;qj&#43;o24G5ZU2zJz"
+                crossorigin="anonymous"></script><script defer
+                src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/contrib/auto-render.min.js"
+                integrity="sha384-kWPLUVMOks5AQFrykwIup5lo0m3iMkkHrD0uJ4H5cjeGihAutqP0yW0J6dpFiVkI"
+                crossorigin="anonymous"
+                onload="renderMathInElement(document.body);"></script></body>
+
+</html>
