@@ -1,0 +1,690 @@
+<!DOCTYPE html>
+<html lang="en" data-theme=""><head>
+    <title> Tobias Larysch | Serving ML Models as Microservices with FastAPI, Docker, and Docker-Compose </title>
+
+    
+    <meta charset="utf-8"><meta name="generator" content="Hugo 0.74.3" /><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+    <meta name="description" content="Economist and Data Enthusiast">
+    
+    <link rel="stylesheet"
+          href="../../css/style.min.9a6700e4461b50dccdddfc4f81dc65d77e7fca22c35665e398a0c36568db59c7.css"
+          integrity="sha256-mmcA5EYbUNzN3fxPgdxl135/yiLDVmXjmKDDZWjbWcc="
+          crossorigin="anonymous"
+          type="text/css">
+    
+    <link rel="stylesheet"
+        href="../../css/markupHighlight.min.9755453ffb7bc4cd220f86ebb5922107b49f193cc62fc17e9785d27b33a8bf5b.css"
+        integrity="sha256-l1VFP/t7xM0iD4brtZIhB7SfGTzGL8F&#43;l4XSezOov1s="
+        crossorigin="anonymous"
+        type="text/css">
+    
+        
+        
+        <link rel="stylesheet"
+        href="../../css/custom4.min.0b1de9c512ef08638b8b56b83c45de26dbc6bc978b6d9cdfd89fbf3903b8bcbb.css"
+        integrity="sha256-Cx3pxRLvCGOLi1a4PEXeJtvGvJeLbZzf2J&#43;/OQO4vLs="
+        crossorigin="anonymous"
+        media="screen" />
+    
+        
+        
+        <link rel="stylesheet"
+        href="../../css/friend.min.d0809843e4028aaa20decda8dda26d1a3bae5e47e87311da5a10b607f015390a.css"
+        integrity="sha256-0ICYQ&#43;QCiqog3s2o3aJtGjuuXkfocxHaWhC2B/AVOQo="
+        crossorigin="anonymous"
+        media="screen" />
+    
+    <link rel="stylesheet" 
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css" 
+    integrity="sha512-+4zCK9k+qNFUR5X+cKL9EIR+ZOhtIloNl9GIKS57V1MyNsYpYcUrUeQc9vNfzsWfV28IaLL3i96P9sdNyeRssA==" 
+    crossorigin="anonymous" />
+
+    
+    <link rel="shortcut icon" href="../../favicons/favicon.ico" type="image/x-icon">
+    <link rel="apple-touch-icon" sizes="180x180" href="../../favicons/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="../../favicons/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="../../favicons/favicon-16x16.png">
+
+    <link rel="canonical" href="../../post/fastapi/">
+
+    
+    
+    
+    
+    <script type="text/javascript"
+            src="../../js/anatole-header.min.d8599ee07b7d3f11bafbac30657ccc591e8d7fd36a9f580cd4c09e24e0e4a971.js"
+            integrity="sha256-2Fme4Ht9PxG6&#43;6wwZXzMWR6Nf9Nqn1gM1MCeJODkqXE="
+            crossorigin="anonymous"></script>
+
+
+    <script type="text/javascript"
+            src="../../js/custom.min.adead2e63eefe548b5ce0aa68303df62a2e2e975242f58d58c080fb3a61e11d7.js"
+            integrity="sha256-rerS5j7v5Ui1zgqmgwPfYqLi6XUkL1jVjAgPs6YeEdc="
+            crossorigin="anonymous"></script>
+    <meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Serving ML Models as Microservices with FastAPI, Docker, and Docker-Compose"/>
+<meta name="twitter:description" content="In this project I demonstrate how to deploy a ML model as a microservice. The project contains of two parts: a simple frontend built with Streamlit and an API built with the FastAPI framework. The frontend is used to acquire information from the user on characteristics that are used as input for the predictive model. The API consists of two endpoints - one for preprocessing the data and one for making predictions. The frontend sends requests to this API and gets the preprocessed data and the predictions as responses. Moreover, I show how to containerize both parts using Docker, and eventually how to deploy them together as a multi-container application with Docker-Compose."/>
+
+
+    
+	<script async src="https://cdn.panelbear.com/analytics.js?site=cIJFGgu2o5"></script>
+	<script>
+    	window.panelbear = window.panelbear || function() { (window.panelbear.q = window.panelbear.q || []).push(arguments); };
+    	panelbear('config', { site: 'cIJFGgu2o5'});
+	</script>
+
+
+    
+
+    
+    <script>
+    
+    window.onload = function(){
+    document
+        .getElementById("Linkedin")
+        .addEventListener("click", function (e) {
+        e.preventDefault();
+
+        
+        panelbear("track", "LinkedIn");
+        
+        
+        window.open(this.href, "_tab");
+        
+    });
+    
+    
+    document
+        .getElementById("GitHub")
+        .addEventListener("click", function (e) {
+        e.preventDefault();
+
+        
+        panelbear("track", "GitHub");
+        
+        
+        window.open(this.href, "_blank");
+        
+    });
+    
+
+
+    
+
+    
+    document
+        .getElementById("e-mail")
+        .addEventListener("click", function (e) {
+        e.preventDefault();
+
+        
+        panelbear("track", "Mail");
+        
+        
+        window.open(this.href, "_blank");
+        
+    });
+    
+    
+    document
+        .getElementById("Xing")
+        .addEventListener("click", function (e) {
+        e.preventDefault();
+
+        
+        panelbear("track", "Xing");
+        
+        
+        window.open(this.href, "_blank");
+        
+    });
+    }
+    </script>
+
+
+
+
+
+
+</head>
+<body><div class="sidebar . ">
+    <div class="logo-title">
+        <div class="title">
+            <img src="../../images/foto_cropped_small.jpg" alt="profile picture">
+            <h3 title=""><a href="../../">Tobias Larysch - Portfolio</a></h3>
+            <div class="description">
+                <p>Economist and Data Enthusiast</p>
+            </div>
+        </div>
+    </div>
+    <ul class="social-links">
+        
+            <li>
+                <a href="https://www.linkedin.com/in/tobias-larysch-97981519b/" rel="me" aria-label="Linkedin" id="Linkedin">
+                    <i class="fab fa-linkedin fa-2x" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            <li>
+                <a href="https://github.com/tlary" rel="me" aria-label="GitHub" id="GitHub">
+                    <i class="fab fa-github fa-2x" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            <li>
+                <a href="mailto:tobias-larysch@gmx.net" rel="me" aria-label="e-mail" id="e-mail">
+                    <i class="fas fa-envelope fa-2x" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            <li>
+                <a href="https://www.xing.com/profile/Tobias_Larysch/cv" rel="me" aria-label="Xing" id="Xing">
+                    <i class="fab fa-xing fa-2x" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+    </ul>
+    <div class="footer">
+        <div class="by_farbox">&copy; Tobias Larysch  2021 </div>
+    </div>
+</div>
+<div class="main">
+    <div class="page-top  . ">
+    <a role="button" class="navbar-burger" data-target="navMenu" aria-label="menu" aria-expanded="false">
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+    </a>
+    <ul class="nav" id="navMenu">
+        
+        
+            
+            <li><a 
+                   href="../../"
+                        
+                   title="">Projects </a></li>
+        
+            
+            <li><a 
+                   href="../../publications/"
+                        
+                   title="">Publications</a></li>
+        
+        
+        
+    </ul>
+</div>
+
+    <div class="autopagerize_page_element">
+        <div class="content">
+
+    <div class="post  . ">
+    	
+    	
+    		<nav id="TableOfContents">
+  <ul>
+    <li><a href="#1-brief-introduction-to-microservice-architecture-and-docker">1. Brief Introduction to Microservice Architecture and Docker</a></li>
+    <li><a href="#2-architecture-of-the-webapp">2. Architecture of the Webapp</a></li>
+    <li><a href="#3-backend-functionality---fastapi">3. Backend Functionality - FastAPI</a></li>
+    <li><a href="#4-frontend---streamlit">4. Frontend - Streamlit</a></li>
+    <li><a href="#5-putting-both-parts-together-and-testing-locally">5. Putting both Parts together and testing locally</a></li>
+    <li><a href="#6-containerizing-with-docker">6. Containerizing with Docker</a>
+      <ul>
+        <li><a href="#61-frontend-streamlit-app">6.1 Frontend: Streamlit App</a></li>
+        <li><a href="#62-backend---api">6.2 Backend - API</a></li>
+        <li><a href="#63-running-both-containers">6.3 Running both Containers</a></li>
+      </ul>
+    </li>
+    <li><a href="#7-putting-the-app-together-with-docker-compose">7. Putting the App together with Docker-Compose</a></li>
+  </ul>
+</nav>
+        
+    	
+        <div class="post-content">
+            
+            <div class="post-title">
+                <h2>Serving ML Models as Microservices with FastAPI, Docker, and Docker-Compose</h3>
+                
+                    <div class="info">
+                        <em class="fas fa-calendar-day"></em>
+                        <span class="date"> 
+                                                Mon, Mar 22, 2021
+                                           </span>
+                        <em class="fas fa-stopwatch"></em>
+                        <span class="reading-time">15-minute read</span>
+                    </div>
+                    <div>
+                    	<hr style="height:1px;border-width:0;background-color:rgba(0,0,0,0.15)">
+                    </div>
+                
+            </div>
+            
+            
+	    <div class="post-content-text">
+    	        <p>In two previous blogposts I already wrote about model deployment, once with <a href="../../post/genredeploy/">Flask and Heroku</a>, and once via <a href="../../post/titanic">Streamlit Sharing</a>. However, in this post I am going to demonstrate another way to deploy Machine Learning models to production: deploying them in a docker container and serving them as microservices.</p>
+<p>In the following case, I will use a simple Random Forest model that predicts if passengers would have survived the Titanic disaster taken from <a href="../../post/titanic">this post</a>.</p>
+<h2 id="1-brief-introduction-to-microservice-architecture-and-docker">1. Brief Introduction to Microservice Architecture and Docker</h2>
+<p>In microservice architecture, software is divided into many small microservices that are independent of each other instead of developing the whole project in a single monolithic architecture. Using such an architecture for projects or software has the advantage that every microservice can be maintained, expanded, and also deployed separately. This way, software can easily be optimized or changed without the risk of crashing the entire application, hence allowing to run CI/CD workflows and allowing for frequent software updates and optimizations. It also facilitates ownership of the single microservices and allows to scale each service separately from the other services which eventually saves resources and money.</p>
+<p>One concept that is closely bundled and often mentioned when talking about microservices is containerization. Containers are used to package applications or software together with all the dependencies in isolated environments. These containers can then be run on any system or server since they contain everything needed to actually execute the application. Containers are somewhat similar to virtual machines (VM), however have the advantage that they require much less overhead and are more lightweight compared to VMs since they do not provide hardware virtualization. The most common and well-known solution for containerization is called Docker. Docker facilitates the use of containers in software development by making it easy to build and run applications in containers by providing an additional layer of abstraction to containers.</p>
+<p><img src="docker_vm.png" alt="docker_vm.png"></p>
+<center>Source: <a href="https://www.docker.com/resources/what-container">Docker docs</a></center>
+<p>To define containers, Docker uses so-called Dockerfiles. From these Dockerfiles, images can be built, which are basically blueprints for the containers. The image is all that is needed to create and run the container, assuming Docker is already installed on the system in which the container should be run. Docker even provides a repository from which images can be pulled and run, called <a href="https://hub.docker.com/">Docker Hub</a>.</p>
+<h2 id="2-architecture-of-the-webapp">2. Architecture of the Webapp</h2>
+<p>In the following I will demonstrate how to deploy a small ML webapp. The whole functionality is divided into a frontend and a backend part, both will be containerized with Docker. The containers will be able to communicate via an API: the frontend sends requests to the backend container and receives predictions made by the model in the backend container.</p>
+<p>For the frontend I will use Streamlit to get a visually appealing POC without the need to write HTML and CSS, for the backend I will use the FastAPI package. Both parts will be containerized using Docker. Another tool, Docker-compose, will be used to run both containers on the same network, so they can communicate despite being isolated environments.</p>
+<h2 id="3-backend-functionality---fastapi">3. Backend Functionality - FastAPI</h2>
+<p>The first step of this project (<a href="../../post/titanic">after training the model that is used here</a>), is to build the backend for the application. As stated earlier, our goal is to serve the Titanic prediction model via an API. To build this API, I use the <a href="https://fastapi.tiangolo.com/">FastAPI package</a>. FastAPI is a framework to write APIs in Python and is often used as an alternative to the Flask package. To keep things simple, I will only define two endpoints for the API here: one to create the input data that is passed to the model from the information which is declared in the frontend by the user; and another endpoint which returns the prediction based on the input data.</p>
+<p>To create an API, the first step is to create an object from the FastAPI class. Using this object, the endpoints can then be defined. For example, creating an endpoint that handles get requests to the path &ldquo;/home&rdquo; and returns a key:value pair of &ldquo;message&rdquo;:&ldquo;hello world&rdquo; would look like the following:</p>
+<div class="highlight"><pre class="chroma"><code class="language-python" data-lang="python"><span class="n">api</span> <span class="o">=</span> <span class="n">FastAPI</span><span class="p">()</span>
+
+<span class="nd">@api.get</span><span class="p">(</span><span class="s2">&#34;/home&#34;</span><span class="p">):</span>
+    <span class="k">return</span> <span class="p">{</span><span class="s2">&#34;message&#34;</span><span class="p">:</span><span class="s2">&#34;hello world&#34;</span><span class="p">}</span>
+</code></pre></div><p>As stated above, our API should provide two endpoints: one for data preprocessing and one for prediction. As before, the frontend will collect information on the following criteria: age, passenger class, family size, sex, and starting port.</p>
+<p><img src="streamlit_frontend.png" alt="streamlit_frontend.png"></p>
+<p>This information is then processed and used to create the data in the format as it needs to be forwarded to the model to get predictions. Since the request made to the endpoint need to contain data, I use the post method here:</p>
+<div class="highlight"><pre class="chroma"><code class="language-python" data-lang="python"><span class="c1"># define post method to preprocess data</span>
+<span class="c1"># using the previously defined Pydantic class as request body</span>
+<span class="nd">@api.post</span><span class="p">(</span><span class="s2">&#34;/preprocess/&#34;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">preprocess_data</span><span class="p">(</span><span class="n">data</span><span class="p">:</span> <span class="n">titanicData</span><span class="p">):</span>
+    <span class="c1"># child indicator</span>
+    <span class="n">child</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">Age</span> <span class="o">&lt;=</span> <span class="mi">16</span><span class="p">)</span>
+    
+    <span class="c1"># passenger class</span>
+    <span class="n">Pclass_1</span><span class="o">=</span><span class="mi">0</span>
+    <span class="n">Pclass_2</span><span class="o">=</span><span class="mi">0</span>
+    <span class="n">Pclass_3</span><span class="o">=</span><span class="mi">0</span>
+    <span class="k">if</span> <span class="n">data</span><span class="o">.</span><span class="n">pclassAux</span><span class="o">==</span><span class="mi">1</span><span class="p">:</span>
+        <span class="n">Pclass_1</span><span class="o">=</span><span class="mi">1</span>
+    <span class="k">if</span> <span class="n">data</span><span class="o">.</span><span class="n">pclassAux</span><span class="o">==</span><span class="mi">2</span><span class="p">:</span>
+        <span class="n">Pclass_2</span><span class="o">=</span><span class="mi">1</span>
+    <span class="k">if</span> <span class="n">data</span><span class="o">.</span><span class="n">pclassAux</span><span class="o">==</span><span class="mi">3</span><span class="p">:</span>
+        <span class="n">Pclass_3</span><span class="o">=</span><span class="mi">1</span>
+        
+    <span class="c1"># male/female indicators</span>
+    <span class="n">Sex_female</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">Sex_male</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">if</span> <span class="n">data</span><span class="o">.</span><span class="n">sex</span><span class="o">==</span><span class="s2">&#34;female&#34;</span><span class="p">:</span>
+        <span class="n">Sex_female</span><span class="o">=</span><span class="mi">1</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">Sex_male</span><span class="o">=</span><span class="mi">1</span>
+    
+    <span class="c1"># embarked indicators</span>
+    <span class="n">Embarked_S</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">Embarked_Q</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">Embarked_C</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">if</span> <span class="n">data</span><span class="o">.</span><span class="n">embarked</span><span class="o">==</span><span class="s2">&#34;Cherbourg&#34;</span><span class="p">:</span>
+        <span class="n">Embarked_C</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="k">if</span> <span class="n">data</span><span class="o">.</span><span class="n">embarked</span><span class="o">==</span><span class="s2">&#34;Queenstown&#34;</span><span class="p">:</span>
+        <span class="n">Embarked_Q</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="k">if</span> <span class="n">data</span><span class="o">.</span><span class="n">embarked</span><span class="o">==</span><span class="s2">&#34;Southampton&#34;</span><span class="p">:</span>
+        <span class="n">Embarked_S</span> <span class="o">=</span> <span class="mi">1</span>
+    
+    <span class="c1"># store preprocessed data / model input as dictionary</span>
+    <span class="n">processed</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&#34;Age&#34;</span><span class="p">:</span> <span class="n">data</span><span class="o">.</span><span class="n">Age</span><span class="p">,</span>
+                <span class="s2">&#34;child&#34;</span><span class="p">:</span> <span class="n">child</span><span class="p">,</span>
+                <span class="s2">&#34;family_size&#34;</span><span class="p">:</span> <span class="n">data</span><span class="o">.</span><span class="n">family_size</span><span class="p">,</span>
+                <span class="s2">&#34;Pclass_1&#34;</span><span class="p">:</span> <span class="n">Pclass_1</span><span class="p">,</span>
+                <span class="s2">&#34;Pclass_2&#34;</span><span class="p">:</span> <span class="n">Pclass_2</span><span class="p">,</span>
+                <span class="s2">&#34;Pclass_3&#34;</span><span class="p">:</span> <span class="n">Pclass_3</span><span class="p">,</span>
+                <span class="s2">&#34;Sex_female&#34;</span><span class="p">:</span> <span class="n">Sex_female</span><span class="p">,</span>
+                <span class="s2">&#34;Sex_male&#34;</span><span class="p">:</span> <span class="n">Sex_male</span><span class="p">,</span>
+                <span class="s2">&#34;Embarked_C&#34;</span><span class="p">:</span> <span class="n">Embarked_C</span><span class="p">,</span>
+                <span class="s2">&#34;Embarked_Q&#34;</span><span class="p">:</span> <span class="n">Embarked_Q</span><span class="p">,</span>
+                <span class="s2">&#34;Embarked_S&#34;</span><span class="p">:</span> <span class="n">Embarked_S</span><span class="p">}</span>
+                
+    <span class="c1"># return preprocessed data</span>
+    <span class="k">return</span> <span class="n">processed</span>
+</code></pre></div><p>The second endpoint should receive the data together with the request and return the predicted probability of survical. To do so, the model is loaded, the request body is used as input to the model, and the class probability of survival is returned from the API:</p>
+<div class="highlight"><pre class="chroma"><code class="language-python" data-lang="python"><span class="c1"># define post method to get prediction from model</span>
+<span class="nd">@api.post</span><span class="p">(</span><span class="s2">&#34;/predict/&#34;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">predict_from_preprocessed</span><span class="p">(</span><span class="n">data</span><span class="p">:</span> <span class="n">modelData</span><span class="p">):</span>
+
+    <span class="c1"># get data from request body</span>
+    <span class="n">inputData</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">dict</span><span class="p">()</span>
+    <span class="c1"># convert to pd DF since sklearn cannot predict from dict</span>
+    <span class="n">inputDF</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">inputData</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+    
+    <span class="c1"># load the Random Forest Classifier</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&#34;./rfSimple.pkl&#34;</span><span class="p">,</span> <span class="s1">&#39;rb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="nb">file</span><span class="p">:</span>
+        <span class="n">f</span> <span class="o">=</span> <span class="n">pickle</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="nb">file</span><span class="p">)</span>
+        <span class="c1"># make predictions</span>
+    <span class="n">SurvivalProba</span> <span class="o">=</span> <span class="n">rf</span><span class="o">.</span><span class="n">predict_proba</span><span class="p">(</span><span class="n">inputDF</span><span class="p">)[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">survPerc</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">SurvivalProba</span><span class="o">*</span><span class="mi">100</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    
+    <span class="k">return</span> <span class="n">survPerc</span>
+</code></pre></div><p>Another advantage of FastAPI is that it uses Pydantic to declare request bodies. Pydantic guarantees that the sent data is automatically converted into the correct data types. To make use of this feature, I declare a data model as a class that inherits from Pydantic&rsquo;s BaseModel class. These data models are then used as arguments in the defined functionality for the respective endpoints.</p>
+<div class="highlight"><pre class="chroma"><code class="language-python" data-lang="python"><span class="c1"># using Pydantic models to declare request body</span>
+
+<span class="c1"># base data as derived from Streamlit frontend</span>
+<span class="k">class</span> <span class="nc">titanicData</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+    <span class="n">Age</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="n">pclassAux</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="n">family_size</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="n">sex</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">embarked</span><span class="p">:</span> <span class="nb">str</span>
+    
+<span class="c1"># preprocessed data as returned from API</span>
+<span class="k">class</span> <span class="nc">modelData</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+    <span class="n">Age</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="n">child</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="n">family_size</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="n">Pclass_1</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="n">Pclass_2</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="n">Pclass_3</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="n">Sex_female</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="n">Sex_male</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="n">Embarked_C</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="n">Embarked_Q</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="n">Embarked_S</span><span class="p">:</span> <span class="nb">int</span>
+</code></pre></div><p>After putting all the above things together, the script eventually looks like the following:</p>
+<div class="highlight"><pre class="chroma"><code class="language-python" data-lang="python"><span class="kn">from</span> <span class="nn">fastapi</span> <span class="kn">import</span> <span class="n">FastAPI</span> <span class="c1"># import FastAPI class</span>
+<span class="kn">from</span> <span class="nn">pydantic</span> <span class="kn">import</span> <span class="n">BaseModel</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="kn">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">pickle</span>
+<span class="kn">from</span> <span class="nn">sklearn.ensemble</span> <span class="kn">import</span> <span class="n">RandomForestClassifier</span>
+
+<span class="n">api</span> <span class="o">=</span> <span class="n">FastAPI</span><span class="p">()</span>
+
+<span class="c1"># using Pydantic models to declare request body</span>
+<span class="c1"># base data as derived from Streamlit Frontend</span>
+<span class="k">class</span> <span class="nc">titanicData</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+    <span class="n">Age</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="n">pclassAux</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="n">family_size</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="n">sex</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">embarked</span><span class="p">:</span> <span class="nb">str</span>
+    
+<span class="c1"># preprocessed data as returned from API</span>
+<span class="k">class</span> <span class="nc">modelData</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+    <span class="n">Age</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="n">child</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="n">family_size</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="n">Pclass_1</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="n">Pclass_2</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="n">Pclass_3</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="n">Sex_female</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="n">Sex_male</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="n">Embarked_C</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="n">Embarked_Q</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="n">Embarked_S</span><span class="p">:</span> <span class="nb">int</span>
+
+
+<span class="c1"># define post method to preprocess data</span>
+<span class="c1"># using the previously defined Pydantic class as request body</span>
+<span class="nd">@api.post</span><span class="p">(</span><span class="s2">&#34;/preprocess/&#34;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">preprocess_data</span><span class="p">(</span><span class="n">data</span><span class="p">:</span> <span class="n">titanicData</span><span class="p">):</span>
+    
+    <span class="c1"># child indicator</span>
+    <span class="n">child</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">Age</span> <span class="o">&lt;=</span> <span class="mi">16</span><span class="p">)</span>
+    
+    <span class="c1"># passenger class</span>
+    <span class="n">Pclass_1</span><span class="o">=</span><span class="mi">0</span>
+    <span class="n">Pclass_2</span><span class="o">=</span><span class="mi">0</span>
+    <span class="n">Pclass_3</span><span class="o">=</span><span class="mi">0</span>
+    <span class="k">if</span> <span class="n">data</span><span class="o">.</span><span class="n">pclassAux</span><span class="o">==</span><span class="mi">1</span><span class="p">:</span>
+        <span class="n">Pclass_1</span><span class="o">=</span><span class="mi">1</span>
+    <span class="k">if</span> <span class="n">data</span><span class="o">.</span><span class="n">pclassAux</span><span class="o">==</span><span class="mi">2</span><span class="p">:</span>
+        <span class="n">Pclass_2</span><span class="o">=</span><span class="mi">1</span>
+    <span class="k">if</span> <span class="n">data</span><span class="o">.</span><span class="n">pclassAux</span><span class="o">==</span><span class="mi">3</span><span class="p">:</span>
+        <span class="n">Pclass_3</span><span class="o">=</span><span class="mi">1</span>
+        
+    <span class="c1"># male/female indicators</span>
+    <span class="n">Sex_female</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">Sex_male</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">if</span> <span class="n">data</span><span class="o">.</span><span class="n">sex</span><span class="o">==</span><span class="s2">&#34;female&#34;</span><span class="p">:</span>
+        <span class="n">Sex_female</span><span class="o">=</span><span class="mi">1</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">Sex_male</span><span class="o">=</span><span class="mi">1</span>
+    
+    <span class="c1"># embarked indicators</span>
+    <span class="n">Embarked_S</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">Embarked_Q</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">Embarked_C</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">if</span> <span class="n">data</span><span class="o">.</span><span class="n">embarked</span><span class="o">==</span><span class="s2">&#34;Cherbourg&#34;</span><span class="p">:</span>
+        <span class="n">Embarked_C</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="k">if</span> <span class="n">data</span><span class="o">.</span><span class="n">embarked</span><span class="o">==</span><span class="s2">&#34;Queenstown&#34;</span><span class="p">:</span>
+        <span class="n">Embarked_Q</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="k">if</span> <span class="n">data</span><span class="o">.</span><span class="n">embarked</span><span class="o">==</span><span class="s2">&#34;Southampton&#34;</span><span class="p">:</span>
+        <span class="n">Embarked_S</span> <span class="o">=</span> <span class="mi">1</span>
+    
+    <span class="c1"># store preprocessed data / model input as dictionary</span>
+    <span class="n">processed</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&#34;Age&#34;</span><span class="p">:</span> <span class="n">data</span><span class="o">.</span><span class="n">Age</span><span class="p">,</span>
+                <span class="s2">&#34;child&#34;</span><span class="p">:</span> <span class="n">child</span><span class="p">,</span>
+                <span class="s2">&#34;family_size&#34;</span><span class="p">:</span> <span class="n">data</span><span class="o">.</span><span class="n">family_size</span><span class="p">,</span>
+                <span class="s2">&#34;Pclass_1&#34;</span><span class="p">:</span> <span class="n">Pclass_1</span><span class="p">,</span>
+                <span class="s2">&#34;Pclass_2&#34;</span><span class="p">:</span> <span class="n">Pclass_2</span><span class="p">,</span>
+                <span class="s2">&#34;Pclass_3&#34;</span><span class="p">:</span> <span class="n">Pclass_3</span><span class="p">,</span>
+                <span class="s2">&#34;Sex_female&#34;</span><span class="p">:</span> <span class="n">Sex_female</span><span class="p">,</span>
+                <span class="s2">&#34;Sex_male&#34;</span><span class="p">:</span> <span class="n">Sex_male</span><span class="p">,</span>
+                <span class="s2">&#34;Embarked_C&#34;</span><span class="p">:</span> <span class="n">Embarked_C</span><span class="p">,</span>
+                <span class="s2">&#34;Embarked_Q&#34;</span><span class="p">:</span> <span class="n">Embarked_Q</span><span class="p">,</span>
+                <span class="s2">&#34;Embarked_S&#34;</span><span class="p">:</span> <span class="n">Embarked_S</span><span class="p">}</span>
+                
+    <span class="c1"># return preprocessed data</span>
+    <span class="k">return</span> <span class="n">processed</span>
+
+<span class="c1"># define post method to get prediction from model</span>
+<span class="nd">@api.post</span><span class="p">(</span><span class="s2">&#34;/predict/&#34;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">predict_from_preprocessed</span><span class="p">(</span><span class="n">data</span><span class="p">:</span> <span class="n">modelData</span><span class="p">):</span>
+
+    <span class="c1"># get data from request body</span>
+    <span class="n">inputData</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">dict</span><span class="p">()</span>
+    <span class="c1"># convert to pd DF since sklearn cannot predict from dict</span>
+    <span class="n">inputDF</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">inputData</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+    
+    <span class="c1"># load the Random Forest Classifier</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&#34;./rfSimple.pkl&#34;</span><span class="p">,</span> <span class="s1">&#39;rb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="nb">file</span><span class="p">:</span>
+            <span class="n">rf</span> <span class="o">=</span> <span class="n">pickle</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="nb">file</span><span class="p">)</span>
+        <span class="c1"># make predictions</span>
+    <span class="n">SurvivalProba</span> <span class="o">=</span> <span class="n">rf</span><span class="o">.</span><span class="n">predict_proba</span><span class="p">(</span><span class="n">inputDF</span><span class="p">)[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">survPerc</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">SurvivalProba</span><span class="o">*</span><span class="mi">100</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    
+    <span class="k">return</span> <span class="n">survPerc</span>
+</code></pre></div><p>The command to run the API is <code>uvicorn &lt;filename&gt;:&lt;FastAPIname&gt;</code>, so in this case using <code>uvicorn api:api</code> makes the API available on <code>http://127.0.0.1:8000</code>, since both the .py file and the object from the FastAPI class are named api.</p>
+<p>Another very convenient feature of FastAPI is that it comes with automatic documentation. For example, the endpoint <code>/docs</code> provides automatically generated documentation via the Swagger UI.</p>
+<p><img src="swagger.png" alt="swagger.png"></p>
+<p>This makes it possible to test the API directly from the browser without the need of external tools like Postman. Note that although the age variable is provided as a string, it was accurately converted it into a float for the response.</p>
+<p><img src="testapi.png" alt="testapi.png"></p>
+<h2 id="4-frontend---streamlit">4. Frontend - Streamlit</h2>
+<p>After building the functionality of our API, I need to create a small frontend. I use the same frontend as in the <a href="../../post/titanic/">other blogpost</a> on the Titanic Streamlit page. The only difference is that I again define the Pydantic model classes used for the API and the way that the predictions are made. I start with the part I already explained:</p>
+<div class="highlight"><pre class="chroma"><code class="language-python" data-lang="python"><span class="kn">import</span> <span class="nn">streamlit</span> <span class="kn">as</span> <span class="nn">st</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="kn">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">requests</span>
+<span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">from</span> <span class="nn">pydantic</span> <span class="kn">import</span> <span class="n">BaseModel</span>
+
+<span class="c1"># using Pydantic models to declare request body</span>
+<span class="c1"># base data as derived from Streamlit Frontend</span>
+<span class="k">class</span> <span class="nc">titanicData</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+    <span class="n">Age</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="n">pclassAux</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="n">family_size</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="n">sex</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">embarked</span><span class="p">:</span> <span class="nb">str</span>
+    
+<span class="c1"># preprocessed data as returned from API</span>
+<span class="k">class</span> <span class="nc">modelData</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+    <span class="n">Age</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="n">child</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="n">family_size</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="n">Pclass_1</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="n">Pclass_2</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="n">Pclass_3</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="n">Sex_female</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="n">Sex_male</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="n">Embarked_C</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="n">Embarked_Q</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="n">Embarked_S</span><span class="p">:</span> <span class="nb">int</span>
+
+
+<span class="c1"># get input data from streamlit frontend</span>
+<span class="n">Age</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">sidebar</span><span class="o">.</span><span class="n">number_input</span><span class="p">(</span><span class="s2">&#34;How old are you?&#34;</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">30</span><span class="p">)</span>
+<span class="n">family_size</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">sidebar</span><span class="o">.</span><span class="n">number_input</span><span class="p">(</span><span class="s2">&#34;How many family members are aboard the ship (including yourself)?&#34;</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">pclassAux</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">sidebar</span><span class="o">.</span><span class="n">selectbox</span><span class="p">(</span><span class="s2">&#34;In which passenger class are you traveling?&#34;</span><span class="p">,</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">))</span>
+<span class="n">sex</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">sidebar</span><span class="o">.</span><span class="n">selectbox</span><span class="p">(</span><span class="s2">&#34;Are you male or female?&#34;</span><span class="p">,</span> <span class="p">(</span><span class="s2">&#34;male&#34;</span><span class="p">,</span> <span class="s2">&#34;female&#34;</span><span class="p">),</span> <span class="n">index</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">embarked</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">sidebar</span><span class="o">.</span><span class="n">selectbox</span><span class="p">(</span><span class="s2">&#34;Which is your port of Embarkation?&#34;</span><span class="p">,</span> <span class="p">(</span><span class="s2">&#34;Cherbourg&#34;</span><span class="p">,</span> <span class="s2">&#34;Queenstown&#34;</span><span class="p">,</span> <span class="s2">&#34;Southampton&#34;</span><span class="p">))</span>
+</code></pre></div><p>The way the predictions are made for the information provided by the user is the following:</p>
+<ol>
+<li>combine the input data to a JSON object, and make a post request to the <code>/preprocess/</code> endpoint</li>
+<li>extract the data from the response, and make another post request to the <code>/predict/</code> endpoint</li>
+</ol>
+<div class="highlight"><pre class="chroma"><code class="language-python" data-lang="python"><span class="c1"># combine input to dict</span>
+<span class="n">data</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&#34;Age&#34;</span><span class="p">:</span> <span class="n">Age</span><span class="p">,</span>
+    <span class="s2">&#34;family_size&#34;</span><span class="p">:</span> <span class="n">family_size</span><span class="p">,</span>
+    <span class="s2">&#34;pclassAux&#34;</span><span class="p">:</span> <span class="n">pclassAux</span><span class="p">,</span>
+    <span class="s2">&#34;sex&#34;</span><span class="p">:</span> <span class="n">sex</span><span class="p">,</span>
+    <span class="s2">&#34;embarked&#34;</span><span class="p">:</span> <span class="n">embarked</span><span class="p">}</span>
+<span class="n">dataJSON</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">data</span><span class="p">)</span> <span class="c1"># create json object from dict</span>
+
+<span class="c1"># preprocess data by making post request to the API</span>
+<span class="n">r</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="n">url</span> <span class="o">=</span> <span class="s2">&#34;http://127.0.0.1:8000/preprocess/&#34;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">dataJSON</span><span class="p">)</span>
+<span class="n">preprocessedData</span> <span class="o">=</span> <span class="n">r</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
+<span class="n">preprocessedJSON</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">preprocessedData</span><span class="p">)</span>
+
+<span class="c1"># make prediction by making post request to the API</span>
+<span class="n">pred</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="n">url</span> <span class="o">=</span> <span class="s2">&#34;http://127.0.0.1:8000/predict/&#34;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">preprocessedJSON</span><span class="p">)</span>
+
+<span class="c1"># displaying prediction</span>
+<span class="n">st</span><span class="o">.</span><span class="n">image</span><span class="p">(</span><span class="s2">&#34;./static/titanic.jpg&#34;</span><span class="p">,</span> <span class="n">use_column_width</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+<span class="n">st</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&#34;Your chance of Survival based on the information provided is: {}%.&#34;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">pred</span><span class="o">.</span><span class="n">json</span><span class="p">()))</span>
+</code></pre></div><p>I also add a small section which provides a high-level explanation on how the app works that is hidden by default, but can be shown by ticking a checkbox that reads &ldquo;Show Details&rdquo;:</p>
+<div class="highlight"><pre class="chroma"><code class="language-python" data-lang="python"><span class="k">if</span> <span class="n">st</span><span class="o">.</span><span class="n">checkbox</span><span class="p">(</span><span class="s2">&#34;Show Details&#34;</span><span class="p">):</span>
+    <span class="n">st</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&#34;The data retreived from Streamlit&#39;s Frontend, i.e. the user input is converted into a JSON object and sent to an endpoint of an API that is built with the FastAPI Framework, the `/preprocess/` endpoint. The input data looks as follows:&#34;</span><span class="p">)</span>
+    <span class="n">st</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+    <span class="n">st</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&#34;The preprocessed data that is returned from the API looks like this:&#34;</span><span class="p">)</span>
+    <span class="n">st</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">preprocessedData</span><span class="p">)</span>
+    <span class="n">st</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&#34;In a last call to the API, this preprocessed data is sent via another post request to the `/predict/` endpoint. This endpoint returns the survival probability in percent:&#34;</span><span class="p">)</span>
+    <span class="n">st</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">pred</span><span class="o">.</span><span class="n">json</span><span class="p">())</span> 
+</code></pre></div><p>To get the final script, simply paste these codeblocks into a single script and save as a .py file.</p>
+<h2 id="5-putting-both-parts-together-and-testing-locally">5. Putting both Parts together and testing locally</h2>
+<p>Before using Docker to containerize the application, it can be run and tested locally to see what the result should look like. To do so, we place both the above scripts into the same directory and run both from the terminal. For example, name the files app.py and api.py and run:</p>
+<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash">$ uvicorn api:api
+$ streamlit run app.py
+</code></pre></div><p>Then navigate to <code>http://localhost:8501/</code> and you should be able to see the app in your browser:</p>
+<p><img src="app.png" alt="app.png"></p>
+<h2 id="6-containerizing-with-docker">6. Containerizing with Docker</h2>
+<p>As stated earlier I will now use Docker to package both parts of the application together with their dependencies into containers. For each part of the app, the Streamlit powered frontend and the FastAPI backend, I will use separate containers.</p>
+<h3 id="61-frontend-streamlit-app">6.1 Frontend: Streamlit App</h3>
+<p>As already mentioned in the introduction to containers and Dockers, Docker uses so-called Dockerfiles from which images are automatically built. A Dockerfile is basically a text file that contains the commands that are used by Docker to create an image from this file and is used to automatically build Docker images. The commands used in the Dockerfile are very similar to their equivalent Linux commands.</p>
+<p>I start by creating a Dockerfile in the same directory in which the Streamlit script is located. The Dockerfile to build the frontend container looks like the following:</p>
+<div class="highlight"><pre class="chroma"><code class="language-Docker" data-lang="Docker"><span class="c"># reduced python as base image</span><span class="err">
+</span><span class="err"></span><span class="k">FROM</span><span class="s"> python:3.8-slim-buster </span><span class="err">
+</span><span class="err">
+</span><span class="err"></span><span class="c"># set a directory for the app</span><span class="err">
+</span><span class="err"></span><span class="k">WORKDIR</span><span class="s"> /usr/src/app </span><span class="err">
+</span><span class="err">
+</span><span class="err"></span><span class="c"># copy all the files to the container</span><span class="err">
+</span><span class="err"></span><span class="k">COPY</span> . . <span class="err">
+</span><span class="err">
+</span><span class="err"></span><span class="c"># pip install dependencies</span><span class="err">
+</span><span class="err"></span><span class="k">RUN</span> pip install --no-cache-dir -r requirements.txt<span class="err">
+</span><span class="err">
+</span><span class="err"></span><span class="c"># expose port 8501</span><span class="err">
+</span><span class="err"></span><span class="k">EXPOSE</span><span class="s"> 8501 </span><span class="err">
+</span><span class="err">
+</span><span class="err"></span><span class="c"># command that is run when container is started</span><span class="err">
+</span><span class="err"></span><span class="k">CMD</span> <span class="p">[</span><span class="s2">&#34;streamlit&#34;</span><span class="p">,</span> <span class="s2">&#34;run&#34;</span><span class="p">,</span> <span class="s2">&#34;./app.py&#34;</span><span class="p">]</span><span class="err">
+</span></code></pre></div><p>The first command <code>FROM</code> is used to specify a so-called base image. Base images are predefined images, that can be used as a base for the container, on top of which the remaining parts can be built. Since my application is a Python script, I use the official Python base image, that has Python preinstalled. The tag slim-buster denotes an image that contains only the minimal packages needed to run python. The <code>WORKDIR</code> command is used to create and set the current directory inside the container, and <code>COPY</code> is used to copy all files from the current host directory to the workdir inside the container. <code>RUN</code> is used to declare commands that are run in the building process of the container - in this case, packages listed inside a requirements.txt file are installed with pip. I <code>EXPOSE</code> port 8501 since this one is used by Streamlit by default. Lastly, the <code>CMD</code> command is used to denote the commands that is run inside the container to start the streamlit app.</p>
+<p>This Dockerfile can now be used to build the image from the command line:</p>
+<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash">$ docker build -t streamlitfrontend .
+</code></pre></div><p>The -t flag is used to tag the image using the name &ldquo;streamlitfrontend&rdquo; and the <code>.</code> denotes the current directory, i.e. the directory in which the Dockerfile is located.</p>
+<h3 id="62-backend---api">6.2 Backend - API</h3>
+<p>The Dockerfile to build the image for the FastAPI backend looks very similar to the one used for the Streamlit app:</p>
+<div class="highlight"><pre class="chroma"><code class="language-Docker" data-lang="Docker"><span class="c"># reduced python as base image</span><span class="err">
+</span><span class="err"></span><span class="k">FROM</span><span class="s"> python:3.8-slim-buster </span><span class="err">
+</span><span class="err">
+</span><span class="err"></span><span class="c"># set a directory for the app</span><span class="err">
+</span><span class="err"></span><span class="k">WORKDIR</span><span class="s"> /usr/src/api</span><span class="err">
+</span><span class="err">
+</span><span class="err"></span><span class="c"># copy all the files to the container</span><span class="err">
+</span><span class="err"></span><span class="k">COPY</span> . . <span class="err">
+</span><span class="err">
+</span><span class="err"></span><span class="c"># pip install dependencies</span><span class="err">
+</span><span class="err"></span><span class="k">RUN</span> pip install --no-cache-dir -r requirements.txt<span class="err">
+</span><span class="err">
+</span><span class="err"></span><span class="c"># expose port 8000 </span><span class="err">
+</span><span class="err"></span><span class="k">EXPOSE</span><span class="s"> 8000</span><span class="err">
+</span><span class="err">
+</span><span class="err"></span><span class="c"># command that is run when container is started</span><span class="err">
+</span><span class="err"></span><span class="k">CMD</span> <span class="p">[</span><span class="s2">&#34;uvicorn&#34;</span><span class="p">,</span> <span class="s2">&#34;api:api&#34;</span><span class="p">,</span> <span class="s2">&#34;--host=0.0.0.0&#34;</span><span class="p">]</span><span class="err">
+</span></code></pre></div><p>Again, a base image with preinstalled Python 3.8 is used, a working directory is created (<code>/usr/src/api</code> instead of <code>usr/src/app</code>), all the files are copied to the container, dependencies are pip installed, a port is exposed, and the Uvicorn server with the API is started. The image is built from the Dockerfile using the command:</p>
+<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash">$ docker build -t fastapibackend .
+</code></pre></div><h3 id="63-running-both-containers">6.3 Running both Containers</h3>
+<p>After successfully building the images the containers can now be started by using the <code>docker run</code> command.</p>
+<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash">$ docker run -p 8501:8501 --name frontend streamlitfrontend
+$ docker run -p 8000:8000 --name backend fastapibackend
+</code></pre></div><p>The <code>-p</code> flag tells Docker which ports to use, <code>--name &lt;NAME&gt;</code> adds names to the containers, which can be used to refer to them. After starting the frontend container, the network URL can be used to access the app in the browser. However, the app throws an error message and does not work properly. The error message states that there is a connection error when the Streamlit app tries to make calls to the API:</p>
+<p><img src="dockererror.png" alt="dockererror.png"></p>
+<p>This error stems from the fact that containers are isolated environments that are by default unable to communicate with each other. In the following I will use a tool, Docker-Compose, that is intended to solve this problem and making it easy to run and deploy multi-container applications as the example here.</p>
+<h2 id="7-putting-the-app-together-with-docker-compose">7. Putting the App together with Docker-Compose</h2>
+<p>Docker-Compose is a tool to define and run applications that consist of multiple Docker containers. To do so, Docker-Compose makes use of a YAML file to configure the application&rsquo;s services and containers. In this particular example, I create a <code>docker-compose.yml</code> file that looks as follows:</p>
+<div class="highlight"><pre class="chroma"><code class="language-yaml" data-lang="yaml"><span class="k">version</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;3&#34;</span><span class="w">
+</span><span class="w"></span><span class="k">services</span><span class="p">:</span><span class="w">
+</span><span class="w">  </span><span class="k">streamlit-app</span><span class="p">:</span><span class="w">
+</span><span class="w">    </span><span class="k">image</span><span class="p">:</span><span class="w"> </span>streamlitfrontend<span class="w">
+</span><span class="w">    </span><span class="k">container_name</span><span class="p">:</span><span class="w"> </span>streamlitapp<span class="w">
+</span><span class="w">    </span><span class="k">ports</span><span class="p">:</span><span class="w">
+</span><span class="w">      </span>- <span class="m">8501</span><span class="p">:</span><span class="m">8501</span><span class="w">
+</span><span class="w">    </span><span class="k">working_dir</span><span class="p">:</span><span class="w"> </span>/usr/src/app<span class="w">
+</span><span class="w">    
+</span><span class="w">    
+</span><span class="w">  </span><span class="k">data-api</span><span class="p">:</span><span class="w">
+</span><span class="w">    </span><span class="k">image</span><span class="p">:</span><span class="w"> </span>fastapibackend<span class="w">
+</span><span class="w">    </span><span class="k">container_name</span><span class="p">:</span><span class="w"> </span>titanicapi<span class="w">
+</span><span class="w">    </span><span class="k">ports</span><span class="p">:</span><span class="w">
+</span><span class="w">      </span>- <span class="m">8000</span><span class="p">:</span><span class="m">8000</span><span class="w">
+</span><span class="w">    </span><span class="k">working_dir</span><span class="p">:</span><span class="w"> </span>/usr/src/api<span class="w">
+</span><span class="w">  
+</span></code></pre></div><p>The <code>version</code> defines the version of the syntax used. After that, I define all the services the app consists of: at the parent level, the names of the services are defined - streamlit-app and data-api. The image parameter denotes the images that are used for the respective service, in this case the images we just created. The <code>container_name</code> can be used to define names for the containers. One of Docker-Compose&rsquo;s nice features is that these names can also be used by other containers to communicate with each other. Hence, in the script that defines the Streamlit app, I change the URL to which the requests are made from <code>http://127.0.0.1:8000/&lt;ENDPOINT&gt;/</code> to <code>http://titanicapi:8000/&lt;ENDPOINT&gt;</code>. This ensures that the frontend container can access the container containing the API. Similar to the Dockerfiles above, I further define the working directories for each container. Lastly, to mimic the <code>docker run &lt;CONTAINER&gt;</code> commands, I specify the ports for both containers.<br>
+(Especially in larger projects the <code>docker-compose.yml</code> file may consist of a lot more parameters, for example environment variables for databases, or settings for persistent data storage. For more information, see also the <a href="https://docs.docker.com/compose/">Docker-Compose documentation</a>.)</p>
+<p>After creating and specifying the Docker-Compose configuration file, the environment can easily be created and started by simply using the command <code>docker-compose up</code> in the terminal from the directory in which the docker-compose.yml file is located. To be more specific, this is how my directory for this project looks:</p>
+<p><img src="tree.png" alt="tree.png"></p>
+<p>Now open a terminal, navigate to the directory in which the <code>docker-compose.yml</code> file is located, and run:</p>
+<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash">$ docker-compose up
+</code></pre></div><p>This will eventually create the environment and successfully run the application.</p>
+
+            </div></div>
+        
+        
+
+        
+    </div>
+    
+
+
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript"
+        src="../../js/jquery.min.86b1e8f819ee2d9099a783e50b49dff24282545fc40773861f9126b921532e4c.js"
+        integrity="sha256-hrHo&#43;BnuLZCZp4PlC0nf8kKCVF/EB3OGH5EmuSFTLkw="
+        crossorigin="anonymous"></script>
+
+
+
+
+<script type="text/javascript"
+        src="../../js/bundle.min.0f9c74cb78f13d1f15f33daff4037c70354f98acfbb97a6f61708966675c3cae.js"
+        integrity="sha256-D5x0y3jxPR8V8z2v9AN8cDVPmKz7uXpvYXCJZmdcPK4="
+        crossorigin="anonymous"></script>
+
+<script type="text/javascript"
+        src="../../js/medium-zoom.min.92f21c856129f84aeb719459b3e6ac621a3032fd7b180a18c04e1d12083f8aba.js"
+        integrity="sha256-kvIchWEp&#43;ErrcZRZs&#43;asYhowMv17GAoYwE4dEgg/iro="
+        crossorigin="anonymous"></script>
+<link rel="stylesheet"
+              href="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.css"
+              integrity="sha384-zB1R0rpPzHqg7Kpt0Aljp8JPLqbXI3bhnPWROx27a9N0Ll6ZP/&#43;DiW/UqRcLbRjq"
+              crossorigin="anonymous"><script defer
+                src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.js"
+                integrity="sha384-y23I5Q6l&#43;B6vatafAwxRu/0oK/79VlbSz7Q9aiSZUvyWYIYsd&#43;qj&#43;o24G5ZU2zJz"
+                crossorigin="anonymous"></script><script defer
+                src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/contrib/auto-render.min.js"
+                integrity="sha384-kWPLUVMOks5AQFrykwIup5lo0m3iMkkHrD0uJ4H5cjeGihAutqP0yW0J6dpFiVkI"
+                crossorigin="anonymous"
+                onload="renderMathInElement(document.body);"></script></body>
+
+</html>
