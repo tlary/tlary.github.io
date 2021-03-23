@@ -17,7 +17,7 @@
       <pubDate>Mon, 22 Mar 2021 00:00:00 +0000</pubDate>
       
       <guid>/post/fastapi/</guid>
-      <description>In this project I demonstrate how to deploy a ML model as a microservice. The project contains of two parts: a simple frontend built with Streamlit and an API built with the FastAPI framework. The frontend is used to acquire information from the user on characteristics that are used as input for the predictive model. The API consists of two endpoints - one for preprocessing the data and one for making predictions. The frontend sends requests to this API and gets the preprocessed data and the predictions as responses. Moreover, I show how to containerize both parts using Docker, and eventually how to deploy them together as a multi-container application with Docker-Compose.</description>
+      <description>In this project I demonstrate how to deploy a ML model as a microservice. The project contains two parts: a simple frontend built with Streamlit and an API built with the FastAPI framework. The frontend is used to acquire information from the user on characteristics that are used as input for the predictive model. The API consists of two endpoints - one for preprocessing the data and one for making predictions. The frontend sends requests to this API and gets the preprocessed data and the predictions as responses. Moreover, I show how to containerize both parts using Docker, and eventually how to deploy them together as a multi-container application with Docker-Compose.</description>
     </item>
     
   </channel>
